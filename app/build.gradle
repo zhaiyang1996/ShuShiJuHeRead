@@ -1,0 +1,75 @@
+apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao' // apply plugin
+
+android {
+    compileSdkVersion 27
+    defaultConfig {
+        applicationId "com.shushijuhe.shushijuheread"
+        minSdkVersion 15
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    greendao {
+        schemaVersion 1
+        daoPackage 'com.shushijuhe.shushijuheread.greendao'
+        targetGenDir 'src/main/java'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    implementation 'com.android.support:design:27.1.1'
+
+    implementation 'com.squareup.okhttp3:okhttp:3.9.0'
+    implementation 'com.jakewharton:butterknife:8.8.1'//黄油刀
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    implementation 'com.google.code.gson:gson:2.8.4'
+    implementation 'com.android.support:cardview-v7:27.1.1'
+    implementation 'com.orhanobut:logger:2.2.0'
+    implementation 'com.github.bumptech.glide:glide:4.6.1' //图片框架
+
+
+    //轮播banner
+    implementation 'com.youth.banner:banner:1.4.2'
+
+
+    //net
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava:2.0.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.0.0-beta4'
+    // Rx
+    implementation 'io.reactivex:rxandroid:1.1.0'
+    implementation 'io.reactivex:rxjava:1.1.5'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+    implementation('com.afollestad.material-dialogs:core:0.9.4.5') {
+        exclude group: 'com.android.support'
+    }
+
+    implementation'org.greenrobot:greendao:3.0.1'      //数据库
+    implementation'org.greenrobot:greendao-generator:3.0.0'
+
+    //导入爬虫
+    implementation 'org.jsoup:jsoup:1.9.2'
+    implementation'com.android.support:recyclerview-v7:27.1.1'
+
+    //下拉刷新框架
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.5.1'
+    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.5.1'//没有使用特殊Header，可以不加这行
+}

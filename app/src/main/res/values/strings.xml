@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">书视聚合</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
+
+    <!--播放页相关-->
+    <string name="video_introduce">简介 ></string>
+    <string name="video_circuit">当前引擎:</string>
+    <string name="video_title">播放说明</string>
+    <string name="video_explain">播放内容来自全网聚合搜索，涉及内容与本APP无关，如出现版权问题，请速与本站联系！(请小伙伴支持原创哦)\n如果播放遇到视频无法播放、卡顿、没有资源或无法解析，请按照以下步骤操作：\n
+    1.切换播放引擎\n
+    2.切换线路\n
+    3.联系管理员</string>
+    <string name="video_engine">(点击切换引擎)</string>
+</resources>
