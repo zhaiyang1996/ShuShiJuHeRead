@@ -48,6 +48,7 @@ public class SeekVideoActivity extends BaseActivity {
     MyAdapter myAdapter;
     String req;
     List<VideoSeekBean> videoSeekBeen;
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_seekvideo;
@@ -61,42 +62,46 @@ public class SeekVideoActivity extends BaseActivity {
     @Override
     public void initView() {
         // 顶部设置
-        TopMenuHeader topMenu = new TopMenuHeader(getWindow().getDecorView());
+        TopMenuHeader topMenu = new TopMenuHeader(getWindow().getDecorView(), this);
         //先在布局添加<include layout="@layout/public_header" />
         //设置参数ImageView不需要设置小于0，text不需要设置控字符串""
-        topMenu.setTopMenuHeader(R.mipmap.ic_logo_cntv,-1,-1,"测试");
-        myAdapter = new MyAdapter();
-        listView.setAdapter(myAdapter);
-        topMenu.getView(0).setOnClickListener(new View.OnClickListener() {
+        topMenu.setTopMenuHeader(R.mipmap.title_backtrack, "111",
+                "测试", R.mipmap.title_seek, R.mipmap.title_menu);
+
+        //标题栏点击事件，get相应控件
+        topMenu.getTopIvLeft().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 toast("你点击了左图");
             }
         });
+
+        myAdapter = new MyAdapter();
+        listView.setAdapter(myAdapter);
     }
 
     @Override
     public void initEvent() {
-        if(!Tool.isWifiActive(this)){
+        if (!Tool.isWifiActive(this)) {
             toast("当前不是wifi网络，请注意流量");
         }
         editText.addTextChangedListener(warcher);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!Tool.isNetworkConnected(SeekVideoActivity.this)){
+                if (!Tool.isNetworkConnected(SeekVideoActivity.this)) {
                     toast("无网络连接");
                     return;
                 }
                 final String str = editText.getText().toString();
-                if(str.isEmpty()){
+                if (str.isEmpty()) {
                     finish();
-                }else{
+                } else {
                     showWaitingDialog("搜索中...");
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            req = VideoDataManager.getVideBean("search",str);
+                            req = VideoDataManager.getVideBean("search", str);
                             handler.sendEmptyMessage(0x123);
                         }
                     }).start();
@@ -107,33 +112,35 @@ public class SeekVideoActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(SeekVideoActivity.this, PlayActivty.class);
-                intent.putExtra("id",videoSeekBeen.get(i).getUrl()+"");
+                intent.putExtra("id", videoSeekBeen.get(i).getUrl() + "");
                 startActivity(intent);
             }
         });
     }
+
     @SuppressLint("HandlerLeak")
-    public Handler handler = new Handler(){
+    public Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             disWaitingDialog();
             String str = Tool.unicode2String(req);
-            if (str!=null){
+            if (str != null) {
                 Gson gson = new Gson();
                 try {
                     JSONArray jsonObject = new JSONArray(str);
-                    if (jsonObject!=null){
-                        videoSeekBeen = gson.fromJson(str, new TypeToken<List<VideoSeekBean>>() {}.getType());
+                    if (jsonObject != null) {
+                        videoSeekBeen = gson.fromJson(str, new TypeToken<List<VideoSeekBean>>() {
+                        }.getType());
                         myAdapter.setData(videoSeekBeen);
-                    }else {
+                    } else {
                         String Message = jsonObject.getString(1);
-                        throw  new RuntimeException(Message);
+                        throw new RuntimeException(Message);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }else {
+            } else {
 
             }
         }
@@ -146,9 +153,9 @@ public class SeekVideoActivity extends BaseActivity {
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             String str = editText.getText().toString();
-            if(!str.isEmpty()){
+            if (!str.isEmpty()) {
                 button.setText("搜索");
-            }else{
+            } else {
                 button.setText("返回");
             }
         }
@@ -159,15 +166,17 @@ public class SeekVideoActivity extends BaseActivity {
         }
     };
 
-    class MyAdapter extends BaseAdapter{
+    class MyAdapter extends BaseAdapter {
         List<VideoSeekBean> seekBean;
-        public void setData(List<VideoSeekBean> seekBean){
+
+        public void setData(List<VideoSeekBean> seekBean) {
             this.seekBean = seekBean;
             notifyDataSetChanged();
         }
+
         @Override
         public int getCount() {
-            return seekBean==null?0:seekBean.size();
+            return seekBean == null ? 0 : seekBean.size();
         }
 
         @Override
@@ -182,7 +191,7 @@ public class SeekVideoActivity extends BaseActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View view = View.inflate(SeekVideoActivity.this,R.layout.item_seekvideo,null);
+            View view = View.inflate(SeekVideoActivity.this, R.layout.item_seekvideo, null);
             ImageView imageView = view.findViewById(R.id.item_seekvideo_img);
             TextView name = view.findViewById(R.id.item_seekvideo_name);
             TextView cont = view.findViewById(R.id.item_seekvideo_cont);
