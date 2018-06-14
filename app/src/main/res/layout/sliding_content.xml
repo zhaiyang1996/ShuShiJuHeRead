@@ -47,13 +47,14 @@ android:layout_height="match_parent">
                     android:textSize="12dp"
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"/>
-                <com.zhai.shuyangwx.ui.BatteryView
+
+                <com.shushijuhe.shushijuheread.view.BatteryView
                     android:id="@+id/mybattxxx"
                     android:layout_width="20dp"
-                    android:layout_height="10dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_height="13dp"
+                    android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"/>
+                    android:layout_marginRight="5dp" />
                 <TextView
                     android:id="@+id/zt_time_x"
                     android:layout_width="wrap_content"
