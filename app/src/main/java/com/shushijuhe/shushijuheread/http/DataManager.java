@@ -3,9 +3,11 @@ package com.shushijuhe.shushijuheread.http;
 import com.shushijuhe.shushijuheread.bean.Author_booksBean;
 import com.shushijuhe.shushijuheread.bean.AutoComplete;
 import com.shushijuhe.shushijuheread.bean.BookDetailBean;
+import com.shushijuhe.shushijuheread.bean.BookMixAToc;
 import com.shushijuhe.shushijuheread.bean.Book_infoBean;
 import com.shushijuhe.shushijuheread.bean.CategoriesBean;
 import com.shushijuhe.shushijuheread.bean.Categories_infoBean;
+import com.shushijuhe.shushijuheread.bean.ChapterRead;
 import com.shushijuhe.shushijuheread.bean.RankBean;
 import com.shushijuhe.shushijuheread.bean.Rank_categoryBean;
 import com.shushijuhe.shushijuheread.bean.Sub_CategoriesBean;
@@ -126,8 +128,25 @@ public class DataManager {
         Observable observable=mRetrofitService.getRank(id);
         toSubscribe(observable,listSubscriber);
     }
-    public void getVideoBean(ProgressSubscriber<List<VideoSeekBean>> listSubscriber, String api, String key){
-        Observable observable=mRetrofitService.getVideoBean(api,key);
+
+    /**
+     *获取书籍目录
+     * @param listSubscriber
+     * @param bookid 书籍ID
+     * @param view 固定值：chapters
+     */
+    public void getBookMixAToc(ProgressSubscriber<BookMixAToc> listSubscriber, String bookid, String view){
+        Observable observable=mRetrofitService.getBookMixAToc(bookid,view);
+        toSubscribe(observable,listSubscriber);
+    }
+
+    /**
+     * 获取书籍具体文章
+     * @param listSubscriber
+     * @param url ：目录liek
+     */
+    public void getBookChapter(ProgressSubscriber<ChapterRead> listSubscriber, String url){
+        Observable observable=mRetrofitService.getChapterRead(url);
         toSubscribe(observable,listSubscriber);
     }
 

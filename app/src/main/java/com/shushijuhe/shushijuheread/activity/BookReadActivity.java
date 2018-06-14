@@ -1,5 +1,7 @@
 package com.shushijuhe.shushijuheread.activity;
 
+import com.shushijuhe.shushijuheread.activity.base.BaseActivity;
+
 /**
  * Created by zhaiyang on 2018/6/12.
  */

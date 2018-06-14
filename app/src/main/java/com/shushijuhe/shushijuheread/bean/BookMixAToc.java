@@ -8,7 +8,6 @@ import java.util.List;
  */
 
 public class BookMixAToc  {
-
     /**
      * _id:577e528e2160421a02d7380d
      * name:优质书源

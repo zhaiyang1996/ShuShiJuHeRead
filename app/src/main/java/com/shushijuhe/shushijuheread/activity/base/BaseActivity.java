@@ -1,4 +1,4 @@
-package com.shushijuhe.shushijuheread.activity;
+package com.shushijuhe.shushijuheread.activity.base;
 
 import android.app.ProgressDialog;
 import android.content.Context;

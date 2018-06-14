@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.shushijuhe.shushijuheread.R;
+import com.shushijuhe.shushijuheread.activity.base.BaseActivity;
 import com.shushijuhe.shushijuheread.adapter.DetailsAdapter;
 import com.shushijuhe.shushijuheread.bean.Categories_infoBean;
 import com.shushijuhe.shushijuheread.bean.Sub_CategoriesBean;

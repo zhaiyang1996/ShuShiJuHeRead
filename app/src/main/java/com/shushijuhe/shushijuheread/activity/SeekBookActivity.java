@@ -12,6 +12,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.shushijuhe.shushijuheread.R;
+import com.shushijuhe.shushijuheread.activity.base.BaseActivity;
 import com.shushijuhe.shushijuheread.bean.AutoComplete;
 import com.shushijuhe.shushijuheread.http.DataManager;
 import com.shushijuhe.shushijuheread.http.ProgressSubscriber;
@@ -28,7 +29,7 @@ import butterknife.BindView;
  * Created by zhaiyang on 2018/6/5.
  */
 
-public class SeekBookActivity extends BaseActivity  {
+public class SeekBookActivity extends BaseActivity {
     @BindView(R.id.seekbook_search)
     SearchView acTextView;
     @BindView(R.id.seekbook_seek_btn)

@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.shushijuhe.shushijuheread.R;
+import com.shushijuhe.shushijuheread.activity.base.BaseActivity;
 import com.shushijuhe.shushijuheread.adapter.GridViewAdapter;
 import com.shushijuhe.shushijuheread.adapter.VideoListEngineAdapter;
 import com.shushijuhe.shushijuheread.bean.VideoList;
@@ -57,7 +58,7 @@ import rx.schedulers.Schedulers;
  * Created by zhaiyang on 2018/6/6.
  */
 
-public class PlayActivty extends BaseActivity{
+public class PlayActivty extends BaseActivity {
     /**
      * 作为一个浏览器的示例展示出来，采用android+web的模式
      */

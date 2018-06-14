@@ -13,5 +13,25 @@
     1.切换播放引擎\n
     2.切换线路\n
     3.联系管理员</string>
-    <string name="video_engine">(点击切换引擎)</string>
+    <string name="video_engine">(点击切换引擎)</string>\
+
+    <!--播放页背景与字体-->
+    <drawable name="baibeijin">#d8bfbb</drawable>
+    <drawable name="baiziti">#81556c</drawable>
+
+    <drawable name="hubeijin">#bac3ae</drawable>
+    <drawable name="huziti">#1d3f1f</drawable>
+
+    <drawable name="yebeijin">#1c1e1d</drawable>
+    <drawable name="yeziti">#075473</drawable>
+    <drawable name="lvse">#17942f</drawable>
+
+    <drawable name="zongbeijin">#3c3226</drawable>
+    <drawable name="zongziti">#757473</drawable>
+
+    <drawable name="baise">#fff</drawable>
+    <drawable name="huise">#e6e6e6</drawable>
+
+    <drawable name="niupi">#d1c2a5</drawable>
+    <drawable name="changgui">#f5f6f8</drawable>
 </resources>

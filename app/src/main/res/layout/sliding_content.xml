@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/huadong_beijing"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:background="@drawable/hubeijin"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout2_x"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+            <RelativeLayout
+                android:id="@+id/zhuangtailan_x"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:gravity="center_vertical"
+                android:layout_alignParentBottom="true"
+                android:paddingBottom="5dp">
+                <TextView
+                    android:id="@+id/zt_bookname_x"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_centerVertical="true"
+                    android:textColor="#707070"
+                    android:text="书名"
+                    android:textSize="12dp"/>
+                <TextView
+                    android:id="@+id/zt_bookzj_x"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="章节名"
+                    android:textColor="#707070"
+                    android:layout_marginLeft="5dp"
+                    android:maxEms="9"
+                    android:singleLine="true"
+                    android:focusable="true"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:focusableInTouchMode="true"
+                    android:textSize="12dp"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"/>
+                <com.zhai.shuyangwx.ui.BatteryView
+                    android:id="@+id/mybattxxx"
+                    android:layout_width="20dp"
+                    android:layout_height="10dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"/>
+                <TextView
+                    android:id="@+id/zt_time_x"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#707070"
+                    android:layout_marginRight="30dp"
+                    android:layout_centerVertical="true"
+                    android:textSize="12dp"
+                    android:layout_alignParentRight="true"
+                    />
+            </RelativeLayout>
+            <LinearLayout
+                android:id="@+id/LinearLayout1_x"
+                android:layout_width="match_parent"
+                android:layout_above="@id/zhuangtailan_x"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+                <TextView
+                    android:id="@+id/book_x"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:gravity="top"
+                    android:padding="10dp"
+                    android:lineSpacingMultiplier="1.25"
+                    android:textSize="20sp"
+                    android:textColor="#000"
+                    />
+            </LinearLayout>
+        </RelativeLayout>
+
+    </RelativeLayout>
+</FrameLayout>

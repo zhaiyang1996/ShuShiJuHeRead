@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.shushijuhe.shushijuheread.R;
+import com.shushijuhe.shushijuheread.activity.base.BaseActivity;
 import com.shushijuhe.shushijuheread.bean.VideoSeekBean;
 import com.shushijuhe.shushijuheread.http.VideoDataManager;
 import com.shushijuhe.shushijuheread.utils.Tool;
@@ -37,7 +38,7 @@ import butterknife.BindView;
  * 视频搜索页
  */
 
-public class SeekVideoActivity extends BaseActivity{
+public class SeekVideoActivity extends BaseActivity {
     @BindView(R.id.seekvideo_listview)
     ListView listView;
     @BindView(R.id.seekvideo_btn)
