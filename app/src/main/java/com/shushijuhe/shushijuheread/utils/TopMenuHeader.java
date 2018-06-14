@@ -1,7 +1,9 @@
 package com.shushijuhe.shushijuheread.utils;
 
+import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.shushijuhe.shushijuheread.R;
@@ -13,42 +15,53 @@ import com.shushijuhe.shushijuheread.R;
  */
 
 public class TopMenuHeader {
-    public ImageView topIvLeft, topIvRight, topIvRight2;
-    public TextView topTextTitle;
+    private ImageView topIvLeft, topIvRight, topIvRight2;
+    private TextView topTextcentre, topTextLeft;
+    public View topViewFill;
 
-    public TopMenuHeader(View v) {
-        // 左边按钮图片
+    public TopMenuHeader(View v, Context context) {
+        initView(v);
+        fillBar(context);
+    }
+
+    //初始化控件
+    private void initView(View v) {
+        // top左边图片
         topIvLeft = v.findViewById(R.id.top_iv_left);
+        //top左边文字
+        topTextLeft = v.findViewById(R.id.top_tv_left);
         // 右边按钮图片
         topIvRight = v.findViewById(R.id.top_iv_right);
         // 右边按钮第二个图片
         topIvRight2 = v.findViewById(R.id.top_iv_right2);
         // 顶部中间文字
-        topTextTitle = v.findViewById(R.id.top_tv_title);
-    }
-    public View getView(int i){
-        View view = null;
-        switch (i){
-            case 0:
-                view = topIvLeft;
-                break;
-            case 1:
-                view = topIvRight;
-                break;
-            case 2:
-                view = topIvRight2;
-                break;
-            case 3:
-                view = topTextTitle;
-                break;
-            default:
-                break;
-        }
-        return view;
+        topTextcentre = v.findViewById(R.id.top_tv_centre);
+        //top填充沉浸式状态栏view
+        topViewFill = v.findViewById(R.id.top_view_fill);
     }
 
-    public void setTopMenuHeader(int topImageViewLeft, int topImageViewRight,
-                                 int topImageViewRight2, String topTextViewTitle) {
+//填充沉浸式状态高度
+    private void fillBar(Context context) {
+        //获取状态栏高
+        int statusBarHeight1 = -1;
+        //获取status_bar_height资源的ID
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            //根据资源ID获取响应的尺寸值
+            statusBarHeight1 = context.getResources().getDimensionPixelSize(resourceId);
+        }
+
+        //填充沉浸式状态栏
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) topViewFill.getLayoutParams();
+        //获取当前控件的布局对象
+        params.height = statusBarHeight1;//设置当前控件布局的高度
+        topViewFill.setLayoutParams(params);//将设置好的布局参数应用到控件中
+    }
+
+
+    //设置公共标题栏参数
+    public void setTopMenuHeader(int topImageViewLeft, String topTextViewLeft, String topTextViewCentre,
+                                 int topImageViewRight2, int topImageViewRight) {
         if (topImageViewLeft > 0) {
             topIvLeft.setImageResource(topImageViewLeft);
         } else {
@@ -64,12 +77,35 @@ public class TopMenuHeader {
         } else {
             topIvRight2.setVisibility(View.GONE);
         }
-        if (!topTextViewTitle.equals("")) {
-            topTextTitle.setText(topTextViewTitle);
+        if (!topTextViewCentre.equals("")) {
+            topTextcentre.setText(topTextViewCentre);
         } else {
-            topTextTitle.setVisibility(View.GONE);
+            topTextcentre.setVisibility(View.GONE);
         }
+        if (topTextViewLeft.equals("")) {
+            topTextLeft.setText(topTextViewLeft);
+        } else {
+            topTextLeft.setVisibility(View.GONE);
+        }
+    }
 
+    public ImageView getTopIvLeft() {
+        return topIvLeft;
+    }
 
+    public ImageView getTopIvRight() {
+        return topIvRight;
+    }
+
+    public ImageView getTopIvRight2() {
+        return topIvRight2;
+    }
+
+    public TextView getTopTextTitle() {
+        return topTextcentre;
+    }
+
+    public TextView getTopTextLeft() {
+        return topTextLeft;
     }
 }

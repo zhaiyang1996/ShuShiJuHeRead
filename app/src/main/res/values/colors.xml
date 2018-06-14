@@ -9,4 +9,6 @@
     <color name="colorGray">#707070</color>
     <!--大分类的颜色-->
     <color name="itemBg">#44ccc9c9</color>
+    <!--标题颜色-->
+    <color name="title_black">#000000</color>
 </resources>
