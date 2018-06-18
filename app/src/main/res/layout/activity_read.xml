@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/huadong_beijing_zhu"
     android:background="@drawable/hubeijin"
     android:layout_height="match_parent">
+
     <com.martian.libsliding.SlidingLayout
     android:id="@+id/sliding_container"
     android:layout_width="match_parent"
@@ -421,23 +421,23 @@
         android:layout_alignParentBottom="true"
         android:paddingBottom="5dp">
     </RelativeLayout>
-
-    <ScrollView
+    <LinearLayout
+        android:id="@+id/read_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <TextView
-        android:id="@+id/ceshitxt"
-        android:layout_width="match_parent"
+        android:layout_above="@id/qwe"
         android:layout_height="match_parent"
-        android:gravity="top"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:lineSpacingMultiplier="1.25"
-        android:textSize="20sp"
-        android:visibility="gone"
-        android:text="sssssssssssssssssssssssss"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-    </ScrollView>
+        android:orientation="vertical" >
+        <com.shushijuhe.shushijuheread.view.ReadingTextView
+            android:id="@+id/read_book_x"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:singleLine="false"
+            android:padding="10dp"
+            android:visibility="invisible"
+            android:letterSpacing="0.1"
+            android:lineSpacingMultiplier="1.5"
+            android:textSize="20sp"
+            android:textColor="#000"
+            />
+    </LinearLayout>
 </RelativeLayout>

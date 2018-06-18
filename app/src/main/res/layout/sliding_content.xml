@@ -21,7 +21,8 @@ android:layout_height="match_parent">
                 android:layout_height="20dp"
                 android:gravity="center_vertical"
                 android:layout_alignParentBottom="true"
-                android:paddingBottom="5dp">
+                android:paddingBottom="5dp"
+                >
                 <TextView
                     android:id="@+id/zt_bookname_x"
                     android:layout_width="wrap_content"
@@ -69,17 +70,20 @@ android:layout_height="match_parent">
             <LinearLayout
                 android:id="@+id/LinearLayout1_x"
                 android:layout_width="match_parent"
-                android:layout_above="@id/zhuangtailan_x"
                 android:layout_height="match_parent"
                 android:orientation="vertical" >
-                <TextView
+                <com.shushijuhe.shushijuheread.view.ReadingTextView
                     android:id="@+id/book_x"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_width="match_parent"
-                    android:gravity="top"
-                    android:padding="10dp"
-                    android:lineSpacingMultiplier="1.25"
+                    android:singleLine="false"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="10dp"
+                    android:letterSpacing="0.1"
+                    android:lineSpacingMultiplier="1.5"
                     android:textSize="20sp"
+                    android:paddingBottom="20dp"
                     android:textColor="#000"
                     />
             </LinearLayout>

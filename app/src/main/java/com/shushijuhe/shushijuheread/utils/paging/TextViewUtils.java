@@ -15,12 +15,14 @@ public class TextViewUtils {
      * @param x The horizontal absolute position of a point on screen
      * @param y The vertical absolute position of a point on screen
      * @return the character offset for the character whose position is closest to the specified
-     *  position. Returns -1 if there is no layout.
+     * position. Returns -1 if there is no layout.
      */
     public static int getOffsetForPosition(TextView textView, float x, float y) {
         if (textView.getLayout() == null) return -1;
         final int line = getLineAtCoordinate(textView, y);
         final int offset = getOffsetAtCoordinate(textView, line, x);
+        System.out.println("x："+x+"y："+y);
+        System.out.println("line：" + line + "offset：" + offset);
         return offset;
     }
 
@@ -39,7 +41,7 @@ public class TextViewUtils {
         return textView.getLayout().getLineTop(line);
     }
 
-    public static float getLeftInLine(TextView textView, float y, float x){
+    public static float getLeftInLine(TextView textView, float y, float x) {
         if (textView.getLayout() == null) return -1;
         final int line = getLineAtCoordinate(textView, y);
         final int offset = getOffsetAtCoordinate(textView, line, x);

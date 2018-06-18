@@ -2,10 +2,10 @@ package com.shushijuhe.shushijuheread.activity;
 
 
 import android.annotation.SuppressLint;
-import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +25,9 @@ import com.shushijuhe.shushijuheread.bean.ChapterRead;
 import com.shushijuhe.shushijuheread.http.DataManager;
 import com.shushijuhe.shushijuheread.http.ProgressSubscriber;
 import com.shushijuhe.shushijuheread.http.SubscriberOnNextListenerInstance;
+import com.shushijuhe.shushijuheread.utils.paging.TextViewUtils;
 import com.shushijuhe.shushijuheread.view.BatteryView;
+import com.shushijuhe.shushijuheread.view.ReadingTextView;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -71,28 +73,25 @@ public class ReadActivity extends BaseActivity {
     RelativeLayout zitiShangchengx;
     @BindView(R.id.qwe)
     RelativeLayout qwe;
-    @BindView(R.id.ceshitxt)
-    TextView ceshitxt;
     @BindView(R.id.huadong_beijing_zhu)
     RelativeLayout huadongBeijingZhu;
+    @BindView(R.id.read_book_x)
+    ReadingTextView read_book_x;
 
-    //状态栏控件
-    TextView zt_bookname;
-    TextView zt_bookzj;
-    TextView zt_time;
-    Typeface typeface;
     TestSlidingAdapter myslid;
     OverlappedSlider myover;
-    int dianchi = 100;
-
-    Button shangx,xiax;
     BookMixAToc bookMixAToc;
-    List<ChapterRead> chapterReadList; //书籍详细类容 加载三章
+    String book; //书籍详细类容
+    List<String> bookBodylist;
     int mixAtoc = 0;
     private boolean mPagerMode = true;
-
+    private ArrayList<Integer> offsetArrayList;
     private int statusBarHeight = 0;
-
+    private boolean jianqu = true;
+    private boolean bookNext = false;
+    private boolean bookCurrent = false;
+    private int page = 0;
+    private boolean no_1 = true; //是否是第一次加载
     @Override
     public int getLayoutId() {
         return R.layout.activity_read;
@@ -105,9 +104,8 @@ public class ReadActivity extends BaseActivity {
 
     @Override
     public void initView() {
-
-        chapterReadList = new ArrayList<>();
-        showWaitingDialog("数据加载中...");
+        offsetArrayList = new ArrayList<>();
+        bookBodylist = new ArrayList<>();
         DataManager.getInstance().getBookMixAToc(new ProgressSubscriber<BookMixAToc>(new SubscriberOnNextListenerInstance() {
             @Override
             public void onNext(Object o) {
@@ -137,28 +135,25 @@ public class ReadActivity extends BaseActivity {
      * 设置书籍详细类容
      */
     public void setBooksData(){
-        for(int i=0;i<3;i++){
-            if(i==0&&mixAtoc==0){
-                continue;
-            }
-            if(i==0){
-                --mixAtoc;
-            }else if(i==2){
-                ++mixAtoc;
-            }
-            final int finalI = i;
+        if(bookBodylist.size()>0)
+        bookBodylist.removeAll(bookBodylist);
+        bookBodylist.add(bookMixAToc.mixToc.chapters.get(mixAtoc).title);
+        showWaitingDialog("数据加载中...");
             DataManager.getInstance().getBookChapter(new ProgressSubscriber<ChapterRead>(new SubscriberOnNextListenerInstance() {
                 @Override
                 public void onNext(Object o) {
                     ChapterRead chapterRead = (ChapterRead) o;
-                    chapterReadList.add(chapterRead);
-                    if(finalI==2){
-                        handler.sendEmptyMessage(0x123);
-                    }
+                    book = chapterRead.chapter.body;
+                    read_book_x.setText(book);
+                    bookBodylist.add(book);
+                    //加载书籍文章
+                    DisplayMetrics display = mContext.getResources().getDisplayMetrics();
+                    height = display.heightPixels;
+                    width = display.widthPixels;
+                    handler.sendEmptyMessage(0x223);
                 }
             },this,null),bookMixAToc.mixToc.chapters.get(mixAtoc).link);
         }
-    }
     @SuppressLint("HandlerLeak")
     public Handler handler = new Handler(){
         @Override
@@ -167,7 +162,40 @@ public class ReadActivity extends BaseActivity {
             disWaitingDialog();
             switch (msg.what){
                 case 0x123:
+                    if(bookCurrent){
+                        page = bookBodylist.size()-1;
+                    }else{
+                        page = 0;
+                    }
                     setBookData();
+                    disWaitingDialog();
+                    break;
+                case 0x223:
+                    int offset = TextViewUtils.getOffsetForPosition(read_book_x, width - read_book_x.getPaddingRight(),
+                            height - getStatusBarHeight() - read_book_x.getPaddingBottom()-25);
+                    System.out.println("原字符长度："+book.length()+"截取后的长度："+offset);
+                    if (offset != -1 && offset < book.length()) {
+                        book = book.substring(offset + 1);
+                        boolean o = false;
+                        for(String p:bookBodylist){
+                            if(!p.equals(book)){
+                                o = true;
+                            }
+                        }
+                        if(o){
+                            bookBodylist.add(book);
+                        }
+                        offsetArrayList.add(offset);
+                        jianqu = true;
+                    }else{
+                        jianqu = false;
+                    }
+                    read_book_x.setText(book);
+                    if(jianqu){
+                        handler.sendEmptyMessage(0x223);
+                    }else{
+                        handler.sendEmptyMessage(0x123);
+                    }
                     break;
             }
 
@@ -199,67 +227,117 @@ public class ReadActivity extends BaseActivity {
         switchSlidingMode();
 
     }
-
-    class TestSlidingAdapter extends SlidingAdapter<List<ChapterRead> >{
-        TextView bookName;
-        TextView bookZj;
-        BatteryView mBattery;//电池控件
-        TextView bookTime;
-        TextView bookBody;
-        private int index =0;
-        String book; //当前章的内容
+    TextView bookName;
+    TextView bookZj;
+    BatteryView mBattery;//电池控件
+    TextView bookTime;
+    ReadingTextView bookBody;
+    class TestSlidingAdapter extends SlidingAdapter<String>{
         @Override
-        public View getView(View contentView, List<ChapterRead> chapterReads) {
+        public View getView(View contentView, String strings) {
+            if(contentView == null)
             contentView = getLayoutInflater().inflate(R.layout.sliding_content, null);
             init(contentView);
-            if(chapterReads == null)
+            if(bookBodylist == null||bookBodylist.size()==0)
                 return contentView;
             bookName.setText("法师");
-            bookZj.setText(bookMixAToc.mixToc.chapters.get(1).title);
-            bookBody.setText(chapterReads.get(1).chapter.body);
+            bookZj.setText(bookMixAToc.mixToc.chapters.get(0).title);
+            bookBody.setText(strings);
+            bookBody.setGravity(Gravity.CENTER_VERTICAL);
+            toast(page+"");
             return contentView;
         }
 
         @Override
-        public List<ChapterRead> getCurrent() {
+        public String getCurrent() {
             // 获取当前要显示的内容实例
-            return chapterReadList;
+            if(page == 0){
+                bookCurrent = true;
+            }else{
+                bookCurrent = false;
+            }
+            return bookBodylist.size()>0?bookBodylist.get(page):"";
         }
 
         @Override
-        public List<ChapterRead> getNext() {
+        public String getNext() {
             // 获取下一个要显示的内容实例
-            return chapterReadList;
+            if(bookNext){
+                setBooksData();
+                return "";
+            }
+            return bookBodylist.size()>0?bookBodylist.get(page+1):"";
         }
 
         @Override
-        public List<ChapterRead> getPrevious() {
+        public String getPrevious() {
             // 获取前一个要显示的内容实例
-            return chapterReadList;
+            if(bookCurrent){
+                setBooksData();
+                return "";
+            }
+            return bookBodylist.size()>0?bookBodylist.get(page-1):"";
         }
 
         @Override
         public boolean hasNext() {
+            boolean is = false;
             // 判断当前是否还有下一个内容实例
-            return false;
+            if(page < bookBodylist.size()-1){
+                is = true;
+            }else if(bookNext){
+                if(mixAtoc<bookBodylist.size()){
+                    is = true;
+                    mixAtoc++;
+                }else{
+                    toast("已经是最后一章了");
+                    is = false;
+                }
+            }
+            return is;
         }
 
         @Override
         public boolean hasPrevious() {
             // 判断当前是否还有前一个内容实例
-            return false;
+            boolean is = false;
+            if(page>0){
+                is = true;
+            }else if(bookCurrent){
+                if(mixAtoc>0){
+                    is = true;
+                    mixAtoc--;
+                }else{
+                    if(!no_1)
+                    toast("已经是第一章了");
+                    no_1 = false;
+                    is = false;
+                }
+            }
+            return is;
         }
 
         @Override
         protected void computeNext() {
             // 实现如何从当前的实例移动到下一个实例
+            if(page==bookBodylist.size()-2){
+               toast("可向下翻页");
+                bookNext = true;
+            }else{
+                bookNext = false;
+            }
+            ++page;
         }
 
         @Override
         protected void computePrevious() {
             // 实现如何从当前的实例移动到前一个实例
+            if(page+1==0){
+                toast("可向上翻");
+            }
+            --page;
         }
-        //初始化恐惧
+        //初始化控件
         public void init(View view){
             bookName = view.findViewById(R.id.zt_bookname_x);
             bookZj = view.findViewById(R.id.zt_bookzj_x);
@@ -267,31 +345,9 @@ public class ReadActivity extends BaseActivity {
             bookTime = view.findViewById(R.id.zt_time_x);
             bookBody = view.findViewById(R.id.book_x);
         }
-//        public void getBookpage(){
-//            DisplayMetrics display = mContext.getResources().getDisplayMetrics();
-//            int height = display.heightPixels;
-//            int width = display.widthPixels;
-//            int offset = TextViewUtils.getOffsetForPosition(bookBody, width - bookBody.getPaddingRight(),
-//                    height - getStatusBarHeight() - bookBody.getPaddingBottom()-25);
-//            System.out.println("原字符长度："+book.length()+"截取后的长度："+offset);
-//            if (offset != -1 && offset < book.length()) {
-//                book = book.substring(offset + 1);
-//                boolean o = false;
-//                for(String p:mylist){
-//                    if(!p.equals(contentText)){
-//                        o = true;
-//                    }
-//                }
-//                if(o){
-//                    mylist.add(contentText);
-//                }
-//                offsetArrayList.add(offset);
-//            }else{
-//                i=false;
-//            }
-//        }
     }
-
+    int height;
+    int width;
     /**
      * 获取重新规划后的文字排版
      *
