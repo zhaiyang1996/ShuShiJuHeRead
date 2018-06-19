@@ -2,7 +2,9 @@ package com.shushijuhe.shushijuheread.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,8 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.shushijuhe.shushijuheread.R;
 import com.shushijuhe.shushijuheread.activity.base.BaseActivity;
 import com.shushijuhe.shushijuheread.adapter.DetailsAdapter;
@@ -38,14 +43,18 @@ import butterknife.OnClick;
 
 public class CategoryDetailsActivity extends BaseActivity {
 
+    private Categories_infoBean bean;
     private MinorAdapter minorAdapter;
     private DetailsAdapter detailsAdapter;
     private Map<String, List<String>> map;
     private String minor = "";
     private String type;
+    private int itemPosition = 0;
     public static String name;
     public static String gender;
     private int start = 0;
+    @BindView(R.id.details_srl_refresh)
+    SmartRefreshLayout srlRefresh;
     @BindView(R.id.details_rv_minor)
     RecyclerView rv_minor;
     @BindView(R.id.details_rv_book)
@@ -71,27 +80,45 @@ public class CategoryDetailsActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        // TODO: add setContentView(...) invocation
         ButterKnife.bind(this);
         minorAdapter = new MinorAdapter();
         detailsAdapter = new DetailsAdapter(this);
-        map = new HashMap<>();
-        DataManager.getInstance().getSub_CategoriesBean(new ProgressSubscriber<Sub_CategoriesBean>(new SubscriberOnNextListenerInstance() {
+        bean = new Categories_infoBean();
+        bean.books = new ArrayList<>();
+        srlRefresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
-            public void onNext(Object o) {
-                Sub_CategoriesBean sub = (Sub_CategoriesBean) o;
-                if (gender.equals("male")) {
-                    for (int i = 0; i < sub.male.size(); i++) {
-                        map.put(sub.male.get(i).major, sub.male.get(i).mins);
-                    }
-                } else {
-                    for (int i = 0; i < sub.female.size(); i++) {
-                        map.put(sub.female.get(i).major, sub.female.get(i).mins);
-                    }
-                }
-
-                setRv();
+            public void onRefresh(RefreshLayout refreshLayout) {
+                setData(type, null, "正在刷新中...");
+                refreshLayout.finishRefresh();
             }
-        }, this, "数据加载中..."));
+        });
+
+        srlRefresh.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(RefreshLayout refreshLayout) {
+                addItem();
+                refreshLayout.finishLoadMore();
+            }
+        });
+        map = new HashMap<>();
+        DataManager.getInstance().getSub_CategoriesBean(new ProgressSubscriber<Sub_CategoriesBean>(
+                new SubscriberOnNextListenerInstance() {
+                    @Override
+                    public void onNext(Object o) {
+                        Sub_CategoriesBean sub = (Sub_CategoriesBean) o;
+                        if (gender.equals("male")) {
+                            for (int i = 0; i < sub.male.size(); i++) {
+                                map.put(sub.male.get(i).major, sub.male.get(i).mins);
+                            }
+                        } else {
+                            for (int i = 0; i < sub.female.size(); i++) {
+                                map.put(sub.female.get(i).major, sub.female.get(i).mins);
+                            }
+                        }
+                        setRv();
+                    }
+                }, this, "数据加载中"));
     }
 
     private void setRv() {
@@ -106,9 +133,8 @@ public class CategoryDetailsActivity extends BaseActivity {
 
         rv_book.setAdapter(detailsAdapter);
         rv_book.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        SpacesItemDecoration decoration = new SpacesItemDecoration();
-        rv_book.addItemDecoration(decoration);
-        setData("hot");
+        rv_book.addItemDecoration(new SpacesItemDecoration());
+        setData("hot", tvHot, "正在搜索中...");
     }
 
     @Override
@@ -125,38 +151,46 @@ public class CategoryDetailsActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.details_tv_hot:
-                setData("hot");
+                setData("hot", tvHot, "正在搜索中...");
                 break;
             case R.id.details_tv_new:
-                setData("new");
+                setData("new", tvNew, "正在搜索中...");
                 break;
             case R.id.details_tv_reputation:
-                setData("reputation");
+                setData("reputation", tvReputation, "正在搜索中...");
                 break;
             case R.id.details_tv_over:
-                setData("over");
+                setData("over", tvOver, "正在搜索中...");
                 break;
         }
     }
 
     private void addItem() {
-
+        start += 20;
+        setData(type, null, null);
     }
 
-    private void setData(final String type) {
+    private void setData(final String type, TextView tv, String texts) {
         this.type = type;
+
         DataManager.getInstance().getCategories_info(
                 new ProgressSubscriber<Categories_infoBean>(
                         new SubscriberOnNextListenerInstance() {
                             @Override
                             public void onNext(Object o) {
-                                Categories_infoBean bean = (Categories_infoBean) o;
+                                bean.books.addAll(((Categories_infoBean) o).books);
                                 detailsAdapter.setBean(bean);
-                                toast(bean.books.size()+"");
-                                Toast.makeText(CategoryDetailsActivity.this, "type--->" + type + "minor--->" + minor + "请求完毕", Toast.LENGTH_SHORT).show();
                             }
-                        }, this, "正在搜索中..."), gender,
+                        }, this, texts), gender,
                 type, name, minor, start + "", "20");
+
+        if (tv != null) {
+            tvNew.setTextColor(Color.parseColor("#747474"));
+            tvHot.setTextColor(Color.parseColor("#747474"));
+            tvOver.setTextColor(Color.parseColor("#747474"));
+            tvReputation.setTextColor(Color.parseColor("#747474"));
+            tv.setTextColor(Color.parseColor("#5500ffff"));
+        }
     }
 
     class MinorAdapter extends RecyclerView.Adapter<MinorAdapter.MyViewHolder> {
@@ -175,15 +209,26 @@ public class CategoryDetailsActivity extends BaseActivity {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
+        public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
+            setTextColor(position, holder);
             holder.tv_minor.setText(list.get(position));
             holder.tv_minor.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     minor = list.get(position);
-                    setData(type);
+                    itemPosition = position;
+                    setData(type, null, "正在搜索中...");
+                    notifyDataSetChanged();
                 }
             });
+        }
+
+        private void setTextColor(int position, MyViewHolder holder) {
+            if (position == itemPosition) {
+                holder.tv_minor.setTextColor(Color.parseColor("#5500ffff"));
+            } else {
+                holder.tv_minor.setTextColor(Color.parseColor("#747474"));
+            }
         }
 
         @Override
@@ -202,7 +247,6 @@ public class CategoryDetailsActivity extends BaseActivity {
 
             public MyViewHolder(View itemView) {
                 super(itemView);
-
                 tv_minor = itemView.findViewById(R.id.minor_tv_minor_type);
             }
         }
@@ -215,8 +259,8 @@ public class CategoryDetailsActivity extends BaseActivity {
 
         @Override
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            outRect.left = Tool.dip2px(CategoryDetailsActivity.this,10);
-            outRect.bottom = Tool.dip2px(CategoryDetailsActivity.this,10);
+            outRect.left = Tool.dip2px(CategoryDetailsActivity.this, 10);
+            outRect.bottom = Tool.dip2px(CategoryDetailsActivity.this, 10);
         }
     }
 }

@@ -68,4 +68,5 @@ dependencies {
     implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.5.1'
     //没有使用特殊Header，可以不加这行
     implementation project(':libsliding')
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.3'//一个开源gif控件
 }
