@@ -6,7 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-
+/**
+ * 书架适配器
+ */
 public class BookrackAdapter extends RecyclerView.Adapter<BookrackAdapter.MyViewHolder> {
     public BookrackAdapter(Context context) {
     }
