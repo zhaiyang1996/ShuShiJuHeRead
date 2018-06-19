@@ -46,7 +46,7 @@ public class SeekBookActivity extends BaseActivity {
 
     @Override
     public int getLayoutId() {
-        return R.layout.activcity_seekbook;
+        return R.layout.activity_seekbook;
     }
 
     @Override
