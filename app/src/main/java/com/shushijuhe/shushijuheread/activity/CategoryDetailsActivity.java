@@ -3,8 +3,6 @@ package com.shushijuhe.shushijuheread.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Rect;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -26,13 +23,12 @@ import com.shushijuhe.shushijuheread.bean.Sub_CategoriesBean;
 import com.shushijuhe.shushijuheread.http.DataManager;
 import com.shushijuhe.shushijuheread.http.ProgressSubscriber;
 import com.shushijuhe.shushijuheread.http.SubscriberOnNextListenerInstance;
-import com.shushijuhe.shushijuheread.utils.Tool;
+import com.shushijuhe.shushijuheread.utils.SpacesItemDecoration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -133,7 +129,7 @@ public class CategoryDetailsActivity extends BaseActivity {
 
         rv_book.setAdapter(detailsAdapter);
         rv_book.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        rv_book.addItemDecoration(new SpacesItemDecoration());
+        rv_book.addItemDecoration(new SpacesItemDecoration(this));
         setData("hot", tvHot, "正在搜索中...");
     }
 
@@ -249,18 +245,6 @@ public class CategoryDetailsActivity extends BaseActivity {
                 super(itemView);
                 tv_minor = itemView.findViewById(R.id.minor_tv_minor_type);
             }
-        }
-    }
-
-    class SpacesItemDecoration extends RecyclerView.ItemDecoration {
-
-        public SpacesItemDecoration() {
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            outRect.left = Tool.dip2px(CategoryDetailsActivity.this, 10);
-            outRect.bottom = Tool.dip2px(CategoryDetailsActivity.this, 10);
         }
     }
 }
