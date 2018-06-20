@@ -58,15 +58,15 @@ public class SeekBookActivity extends BaseActivity {
     public void initView() {
         List record = Tool.getJiLu();
         adapter = new SimpleAdapter(this, record,
-                R.layout.item_seek_record, new String[] { "jilu" },
-                new int[] { R.id.item_seek_record });
+                R.layout.item_seek_record, new String[]{"jilu"},
+                new int[]{R.id.item_seek_record});
         if (record != null) {
             Collections.reverse(record);
             listView.setAdapter(adapter);
             listView.setOnItemClickListener(listener);
         }
         strings = new ArrayList<>();
-        seekAdapter = new ArrayAdapter<>(SeekBookActivity.this,android.R.layout.simple_dropdown_item_1line, strings);
+        seekAdapter = new ArrayAdapter<>(SeekBookActivity.this, android.R.layout.simple_dropdown_item_1line, strings);
         listView_seek.setAdapter(seekAdapter);
         listView_seek.setOnItemClickListener(itemClick);
     }
@@ -92,6 +92,7 @@ public class SeekBookActivity extends BaseActivity {
             starSeekActvivty(strings.get(position));
         }
     };
+
     @Override
     public void initEvent() {
         acTextView.setOnQueryTextListener(watcher);
@@ -99,11 +100,13 @@ public class SeekBookActivity extends BaseActivity {
         button.setOnClickListener(onClick);
         button_2.setOnClickListener(onClick);
     }
+
     View.OnClickListener onClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
+            switch (v.getId()) {
                 case R.id.seekbook_seek_btn:
+                    SeekBookResultActivity.start(SeekBookActivity.this);
                     finish();
                     break;
                 case R.id.seekbook_btn:
@@ -140,9 +143,9 @@ public class SeekBookActivity extends BaseActivity {
                         seekAdapter.clear();
                         seekAdapter.addAll(autoComplete.keywords);
                     }
-                },SeekBookActivity.this,null),a);
+                }, SeekBookActivity.this, null), a);
             } else {
-                if(strings!=null){
+                if (strings != null) {
                     seekAdapter.clear();
                 }
                 seekAdapter.notifyDataSetChanged();
@@ -166,8 +169,8 @@ public class SeekBookActivity extends BaseActivity {
         @Override
         public void onClick(View v) {
             // 为推荐导航设置点击事件
-            Intent it = new Intent(SeekBookActivity.this,SeekBookActivity.class);
-            switch(v.getId()){
+            Intent it = new Intent(SeekBookActivity.this, SeekBookActivity.class);
+            switch (v.getId()) {
                 case R.id.seekbook_btn1:
                     it.putExtra("name", "绝世唐门");
                     startActivity(it);
@@ -218,8 +221,9 @@ public class SeekBookActivity extends BaseActivity {
             }
         }
     };
-    public void starSeekActvivty(String a){
-        Tool.setJiLu(SeekBookActivity.this,a);
+
+    public void starSeekActvivty(String a) {
+        Tool.setJiLu(SeekBookActivity.this, a);
         Intent it = new Intent(SeekBookActivity.this, SeekBookActivity.class);
         it.putExtra("name", a);
         startActivity(it);

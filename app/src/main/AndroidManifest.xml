@@ -59,8 +59,9 @@
         <activity android:name=".activity.ReadActivity">
 
         </activity>
-        <activity android:name=".activity.BookrackActivity"></activity>
-        <activity android:name=".activity.BooksDetailsActivity"></activity>
+        <activity android:name=".activity.BookrackActivity"/>
+        <activity android:name=".activity.BooksDetailsActivity"/>
+        <activity android:name=".activity.SeekBookResultActivity"/>
     </application>
 
 </manifest>
