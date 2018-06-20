@@ -11,4 +11,5 @@
     <color name="itemBg">#44ccc9c9</color>
     <!--标题颜色-->
     <color name="title_black">#000000</color>
+    <color name="red">#ff0000</color>
 </resources>
