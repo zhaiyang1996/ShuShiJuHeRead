@@ -530,7 +530,6 @@ public class PlayActivty extends BaseActivity {
                 engine = engines[position];
                 playlist = listurl[position].split("\\$");
                 playVideo(collect-1);
-                toast(engine);
                 dialog.dismiss();
             }
         });

@@ -58,7 +58,7 @@ public class ReaderActivity extends BaseActivity {
                             }
                             textView.setText(string);
                         }
-                    },ReaderActivity.this,"搜索中..."),str);
+                    },ReaderActivity.this, "搜索中..."),str);
                 }else{
                     toast("搜索内容不能为空");
                 }

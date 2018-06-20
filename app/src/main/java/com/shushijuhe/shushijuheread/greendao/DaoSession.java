@@ -38,7 +38,7 @@ public class DaoSession extends AbstractDaoSession {
     }
     
     public void clear() {
-        bookshelfBeanDaoConfig.getIdentityScope().clear();
+        bookshelfBeanDaoConfig.clearIdentityScope();
     }
 
     public BookshelfBeanDao getBookshelfBeanDao() {

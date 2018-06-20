@@ -22,7 +22,7 @@ public class BookshelfBeanDao extends AbstractDao<BookshelfBean, Long> {
     /**
      * Properties of entity BookshelfBean.<br/>
      * Can be used for QueryBuilder and for referencing column names.
-    */
+     */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
@@ -30,7 +30,7 @@ public class BookshelfBeanDao extends AbstractDao<BookshelfBean, Long> {
         public final static Property Date = new Property(3, String.class, "date", false, "DATE");
         public final static Property Time = new Property(4, String.class, "time", false, "TIME");
         public final static Property Chapter = new Property(5, String.class, "chapter", false, "CHAPTER");
-    };
+    }
 
 
     public BookshelfBeanDao(DaoConfig config) {
@@ -162,6 +162,11 @@ public class BookshelfBeanDao extends AbstractDao<BookshelfBean, Long> {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public boolean hasKey(BookshelfBean entity) {
+        return entity.getId() != null;
     }
 
     @Override

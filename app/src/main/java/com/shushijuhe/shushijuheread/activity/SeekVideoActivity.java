@@ -61,6 +61,8 @@ public class SeekVideoActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        //设置极光推送界面
+        setJGTJ("视频搜索界面："+this.getClass().getCanonicalName());
         // 顶部设置
         TopMenuHeader topMenu = new TopMenuHeader(getWindow().getDecorView(), this);
         //先在布局添加<include layout="@layout/public_header" />

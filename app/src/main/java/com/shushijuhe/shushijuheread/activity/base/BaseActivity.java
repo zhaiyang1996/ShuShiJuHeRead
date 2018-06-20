@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import butterknife.ButterKnife;
+import cn.jiguang.analytics.android.api.JAnalyticsInterface;
 
 /**
  * Created by zhaiyang on 2018/6/1.
@@ -26,6 +27,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected Context mContext;
     protected ProgressDialog waitingDialog;
+    protected String activityName;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,8 +43,22 @@ public abstract class BaseActivity extends AppCompatActivity {
 //            setSupportActionBar(mCommonToolbar);
         initView();
         initEvent();
+        activityName = this.getClass().getCanonicalName();
+        setJGTJ(activityName);
+    }
+    /**
+     * 逻辑使用区
+     */
+    protected void processLogic(){
     }
 
+    /**
+     * 极光页面统计api
+     */
+    public void setJGTJ(String name){
+        activityName = name;
+        JAnalyticsInterface.onPageStart(this,activityName);
+    }
     /**
      * 等待条diaglog
      * @param msg
@@ -70,6 +86,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        JAnalyticsInterface.onPageEnd(this,activityName);
     }
     public void toast(String str){
         Toast.makeText(this,str,Toast.LENGTH_LONG).show();
