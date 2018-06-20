@@ -10,8 +10,9 @@ public class Constants {
     public static final String API_BASE_URL = "http://api.zhuishushenqi.com";
     public static final String DAO_BOOKSHELF = "dao_bookshelf";//书架表
     public static final String[] CIRCUIT = {"http://beta.metmt.com/?url=",
-                                             "https://www.ckplayer.tv/kuku/index.php?url=",
-                                            "http://www.itono.cn/ty/mdparse/index.php?id="};
+                                            "http://www.itono.cn/ty/mdparse/index.php?id=",
+                                             "https://www.ckplayer.tv/kuku/index.php?url="
+                                            };
     public static final String[] CIRCUIT_NAME = {"默认线路",
             "高清线路",
             "线路零二",

@@ -37,18 +37,19 @@
 
         </activity>
         <activity android:name=".activity.SeekBookActivity">
+
+        </activity>
+        <activity
+            android:name=".activity.PlayActivty"
+            android:configChanges="orientation|screenSize|keyboardHidden">
+
+        </activity>
+        <activity android:name=".activity.SeekVideoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".activity.PlayActivty"
-            android:configChanges="orientation|screenSize|keyboardHidden">
-        </activity>
-        <activity android:name=".activity.SeekVideoActivity">
-
         </activity>
         <activity android:name=".activity.BookCategoryActivity">
 
@@ -57,10 +58,18 @@
         <activity android:name=".activity.BookReadActivity">
 
         </activity>
-        <!--极光推送-->
-        <service android:name="cn.jpush.android.service.PushService"
-            android:process=":multiprocess"
-            tools:node="replace" >
+
+        <!-- since 1.8.0 option 可选项。用于同一设备中不同应用的JPush服务相互拉起的功能。 -->
+        <!-- 若不启用该功能可删除该组件，将不拉起其他应用也不能被其他应用拉起 -->
+        <service
+            android:name="cn.jpush.android.service.DaemonService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.DaemonService" />
+                <category android:name="com.shushijuhe.shushijuheread" />
+            </intent-filter>
+
         </service>
     </application>
 
