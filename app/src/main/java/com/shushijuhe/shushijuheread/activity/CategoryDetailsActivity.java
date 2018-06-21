@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -79,7 +81,7 @@ public class CategoryDetailsActivity extends BaseActivity {
         // TODO: add setContentView(...) invocation
         ButterKnife.bind(this);
         minorAdapter = new MinorAdapter();
-        detailsAdapter = new DetailsAdapter(this);
+        detailsAdapter = new DetailsAdapter(this, 1);
         bean = new Categories_infoBean();
         bean.books = new ArrayList<>();
         srlRefresh.setOnRefreshListener(new OnRefreshListener() {

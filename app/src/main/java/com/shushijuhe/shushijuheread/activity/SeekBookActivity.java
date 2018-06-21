@@ -80,7 +80,7 @@ public class SeekBookActivity extends BaseActivity {
         public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                                 long arg3) {
             // TODO Auto-generated method stub
-            TextView sousuojilu = (TextView) arg1.findViewById(R.id.item_seek_record);
+            TextView sousuojilu = arg1.findViewById(R.id.item_seek_record);
             String name = sousuojilu.getText().toString();
             starSeekActvivty(name);
         }
@@ -106,7 +106,6 @@ public class SeekBookActivity extends BaseActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.seekbook_seek_btn:
-                    SeekBookResultActivity.start(SeekBookActivity.this);
                     finish();
                     break;
                 case R.id.seekbook_btn:
@@ -224,10 +223,8 @@ public class SeekBookActivity extends BaseActivity {
 
     public void starSeekActvivty(String a) {
         Tool.setJiLu(SeekBookActivity.this, a);
-        Intent it = new Intent(SeekBookActivity.this, SeekBookActivity.class);
-        it.putExtra("name", a);
-        startActivity(it);
-        SeekBookActivity.this.finish();
+        SeekBookResultActivity.start(this, a);
+//        SeekBookActivity.this.finish();
     }
 //    AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
 //

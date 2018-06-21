@@ -38,7 +38,11 @@
 
         </activity>
         <activity android:name=".activity.SeekBookActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".activity.PlayActivty"
@@ -49,11 +53,7 @@
 
         </activity>
         <activity android:name=".activity.BookCategoryActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".activity.CategoryDetailsActivity" />
         <activity android:name=".activity.ReadActivity">
