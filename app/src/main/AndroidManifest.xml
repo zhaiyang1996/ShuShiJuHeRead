@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.shushijuhe.shushijuheread"
-    xmlns:tools="http://schemas.android.com/tools">
+    tools:ignore="ProtectedPermissions">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -19,7 +20,7 @@
     <uses-permission android:name="android.permission.GET_TASKS" />
 
     <application
-        android:name=".application.app"
+        android:name=".app"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -37,7 +38,11 @@
 
         </activity>
         <activity android:name=".activity.SeekBookActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".activity.PlayActivty"
@@ -45,32 +50,18 @@
 
         </activity>
         <activity android:name=".activity.SeekVideoActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".activity.BookCategoryActivity">
 
         </activity>
         <activity android:name=".activity.CategoryDetailsActivity" />
-        <activity android:name=".activity.BookReadActivity">
+        <activity android:name=".activity.ReadActivity">
 
         </activity>
-
-        <!-- since 1.8.0 option 可选项。用于同一设备中不同应用的JPush服务相互拉起的功能。 -->
-        <!-- 若不启用该功能可删除该组件，将不拉起其他应用也不能被其他应用拉起 -->
-        <service
-            android:name="cn.jpush.android.service.DaemonService"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="cn.jpush.android.intent.DaemonService" />
-                <category android:name="com.shushijuhe.shushijuheread" />
-            </intent-filter>
-
-        </service>
+        <activity android:name=".activity.BookrackActivity"/>
+        <activity android:name=".activity.BooksDetailsActivity"/>
+        <activity android:name=".activity.SeekBookResultActivity"/>
     </application>
 
 </manifest>

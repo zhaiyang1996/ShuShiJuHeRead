@@ -46,7 +46,7 @@ public class SeekBookActivity extends BaseActivity {
 
     @Override
     public int getLayoutId() {
-        return R.layout.activcity_seekbook;
+        return R.layout.activity_seekbook;
     }
 
     @Override
@@ -56,8 +56,6 @@ public class SeekBookActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        //设置极光推送界面
-        setJGTJ("书籍搜索界面："+this.getClass().getCanonicalName());
         List record = Tool.getJiLu();
         adapter = new SimpleAdapter(this, record,
                 R.layout.item_seek_record, new String[]{"jilu"},

@@ -72,8 +72,8 @@ public class DataManager {
     }
 
     /**
-     * 获取书籍搜索结果
-     * @param query :书籍关键字（作者、书名等）
+     * 获取书籍详情
+     * @param query :书籍id
      */
     public void getBook_info(ProgressSubscriber<Book_infoBean> listSubscriber, String query){
         Observable observable=mRetrofitService.getBook_info(query);

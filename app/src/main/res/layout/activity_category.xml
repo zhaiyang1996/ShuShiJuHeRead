@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/fffff"
-        android:name="com.zhai.sunshineread.fragment.BookCategoryFragment"
+        android:name="com.shushijuhe.shushijuheread.fragment.BookCategoryFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

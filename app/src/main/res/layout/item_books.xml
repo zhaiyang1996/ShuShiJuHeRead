@@ -1,17 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_books_cover_cd"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:id="@+id/item_books_cover_cd"
     android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/books_cover"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:scaleType="fitXY"
-            android:background="@drawable/card_black"
-            android:src="@drawable/ic_menu_camera"/>
+    <TextView
+        android:id="@+id/books_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/tips"
+        android:gravity="center"
+        android:paddingBottom="18dp"
+        android:text="小技巧\n长按可查看书籍简介信息"
+        android:textColor="#ff0000"
+        android:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/books_cover"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/books_tip"
+        android:adjustViewBounds="true"
+        android:background="@drawable/card_black"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_menu_camera" />
+
+    <TextView
+        android:id="@+id/books_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/books_cover"
+        android:gravity="center"
+        android:textColor="@color/title_black"
+        android:textSize="18dp" />
 
 </RelativeLayout>

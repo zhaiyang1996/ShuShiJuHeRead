@@ -94,7 +94,7 @@
           android:id="@+id/play_circuitcuit"
           android:layout_width="60dp"
           android:layout_height="wrap_content"
-          android:text="默认线路"
+          android:text="天地玄黄"
           android:textColor="@color/colorGray"
           android:layout_toRightOf="@id/play_type"
           android:background="@drawable/frame_grey"

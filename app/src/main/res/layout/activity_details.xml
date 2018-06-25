@@ -56,12 +56,27 @@
         android:layout_width="match_parent"
         android:layout_height="40dp" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/details_rv_book"
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/details_srl_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingRight="10dp">
+        android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
+        <pl.droidsonroids.gif.GifImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/gif_srl_head" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/details_rv_book"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingRight="10dp" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="0.1dp" />
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
 
 </LinearLayout>
