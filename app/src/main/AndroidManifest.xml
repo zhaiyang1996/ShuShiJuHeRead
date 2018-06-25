@@ -20,7 +20,7 @@
     <uses-permission android:name="android.permission.GET_TASKS" />
 
     <application
-        android:name=".app"
+        android:name=".application.app"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -61,7 +61,6 @@
         </activity>
         <activity android:name=".activity.BookrackActivity"/>
         <activity android:name=".activity.BooksDetailsActivity"/>
-        <activity android:name=".activity.SeekBookResultActivity"/>
     </application>
 
 </manifest>
