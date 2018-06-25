@@ -223,7 +223,7 @@ public class SeekBookActivity extends BaseActivity {
 
     public void starSeekActvivty(String a) {
         Tool.setJiLu(SeekBookActivity.this, a);
-        SeekBookResultActivity.start(this, a);
+//        SeekBookResultActivity.start(this, a);
 //        SeekBookActivity.this.finish();
     }
 //    AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
