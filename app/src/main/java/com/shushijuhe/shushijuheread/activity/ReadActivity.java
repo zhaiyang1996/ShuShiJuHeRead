@@ -2,12 +2,18 @@ package com.shushijuhe.shushijuheread.activity;
 
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -20,6 +26,7 @@ import com.martian.libsliding.slider.OverlappedSlider;
 import com.martian.libsliding.slider.PageSlider;
 import com.shushijuhe.shushijuheread.R;
 import com.shushijuhe.shushijuheread.activity.base.BaseActivity;
+import com.shushijuhe.shushijuheread.animation.Read_ainmation;
 import com.shushijuhe.shushijuheread.bean.BookMixAToc;
 import com.shushijuhe.shushijuheread.bean.ChapterRead;
 import com.shushijuhe.shushijuheread.http.DataManager;
@@ -30,20 +37,22 @@ import com.shushijuhe.shushijuheread.view.BatteryView;
 import com.shushijuhe.shushijuheread.view.ReadingTextView;
 
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
 
 
-public class ReadActivity extends BaseActivity {
+public class ReadActivity extends BaseActivity implements View.OnClickListener{
     @BindView(R.id.sliding_container)
     SlidingLayout slidingContainer;
-    @BindView(R.id.btn_shangx)
-    Button btnShangx;
-    @BindView(R.id.btn_xiax)
-    Button btnXiax;
-    @BindView(R.id.button)
+    @BindView(R.id.btn_up)
+    Button btnUp;
+    @BindView(R.id.btn_down)
+    Button btnDown;
+    @BindView(R.id.read_button)
     Button button;
     @BindView(R.id.book_zitisizex)
     TextView bookZitisizex;
@@ -88,10 +97,11 @@ public class ReadActivity extends BaseActivity {
     private ArrayList<Integer> offsetArrayList;
     private int statusBarHeight = 0;
     private boolean jianqu = true;
-    private boolean bookNext = false;
     private boolean bookCurrent = false;
     private int page = 0;
     private boolean no_1 = true; //是否是第一次加载
+    private BatteryView mBattery;//电池控件
+    private int cell = 100; //电量
     @Override
     public int getLayoutId() {
         return R.layout.activity_read;
@@ -99,13 +109,19 @@ public class ReadActivity extends BaseActivity {
 
     @Override
     public void initToolBar() {
-
+        Window window = this.getWindow();
+        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     @Override
     public void initView() {
         offsetArrayList = new ArrayList<>();
         bookBodylist = new ArrayList<>();
+        btnUp.setOnClickListener(this);
+        btnDown.setOnClickListener(this);
+        button.setOnClickListener(this);
+        bookQuxiaocaidanx.setOnClickListener(this);
         DataManager.getInstance().getBookMixAToc(new ProgressSubscriber<BookMixAToc>(new SubscriberOnNextListenerInstance() {
             @Override
             public void onNext(Object o) {
@@ -168,35 +184,44 @@ public class ReadActivity extends BaseActivity {
                         page = 0;
                     }
                     setBookData();
-                    disWaitingDialog();
                     break;
                 case 0x223:
-                    int offset = TextViewUtils.getOffsetForPosition(read_book_x, width - read_book_x.getPaddingRight(),
-                            height - getStatusBarHeight() - read_book_x.getPaddingBottom()-25);
-                    System.out.println("原字符长度："+book.length()+"截取后的长度："+offset);
-                    if (offset != -1 && offset < book.length()) {
-                        book = book.substring(offset + 1);
-                        boolean o = false;
-                        for(String p:bookBodylist){
-                            if(!p.equals(book)){
-                                o = true;
+                    while (true){
+                        int offset = TextViewUtils.getOffsetForPosition(read_book_x, width - read_book_x.getPaddingRight(),
+                                height - getStatusBarHeight() - read_book_x.getPaddingBottom()-25);
+                        System.out.println("原字符长度："+book.length()+"截取后的长度："+offset);
+                        if (offset != -1 && offset < book.length()) {
+                            book = book.substring(offset + 1);
+                            boolean o = false;
+                            for(String p:bookBodylist){
+                                if(!p.equals(book)){
+                                    o = true;
+                                }
                             }
+                            if(o){
+                                bookBodylist.add(book);
+                            }
+                            offsetArrayList.add(offset);
+                            jianqu = true;
+                        }else{
+                            jianqu = false;
                         }
-                        if(o){
-                            bookBodylist.add(book);
+                        read_book_x.setText(book);
+                        if(!jianqu){
+                            handler.sendEmptyMessage(0x123);
+                            break;
                         }
-                        offsetArrayList.add(offset);
-                        jianqu = true;
-                    }else{
-                        jianqu = false;
-                    }
-                    read_book_x.setText(book);
-                    if(jianqu){
-                        handler.sendEmptyMessage(0x223);
-                    }else{
-                        handler.sendEmptyMessage(0x123);
                     }
                     break;
+                case 0x677:
+                    mBattery.setPower(cell);
+                    break;
+                case 0x667:
+                    Calendar c = Calendar.getInstance();
+                    SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+                    String formattedDate = df.format(c.getTime());
+                    bookTime.setText(formattedDate);
+                break;
             }
 
         }
@@ -229,102 +254,67 @@ public class ReadActivity extends BaseActivity {
     }
     TextView bookName;
     TextView bookZj;
-    BatteryView mBattery;//电池控件
     TextView bookTime;
     ReadingTextView bookBody;
+
+
+
     class TestSlidingAdapter extends SlidingAdapter<String>{
         @Override
         public View getView(View contentView, String strings) {
             if(contentView == null)
             contentView = getLayoutInflater().inflate(R.layout.sliding_content, null);
             init(contentView);
-            if(bookBodylist == null||bookBodylist.size()==0)
-                return contentView;
             bookName.setText("法师");
-            bookZj.setText(bookMixAToc.mixToc.chapters.get(0).title);
+            bookZj.setText(bookMixAToc.mixToc.chapters.get(mixAtoc).title);
             bookBody.setText(strings);
             bookBody.setGravity(Gravity.CENTER_VERTICAL);
-            toast(page+"");
+//            toast(page+"");
             return contentView;
         }
 
         @Override
         public String getCurrent() {
-            // 获取当前要显示的内容实例
             if(page == 0){
-                bookCurrent = true;
-            }else{
-                bookCurrent = false;
+                btnUp.setVisibility(View.VISIBLE);
             }
-            return bookBodylist.size()>0?bookBodylist.get(page):"";
+            btnDown.setVisibility(View.INVISIBLE);
+            // 获取当前要显示的内容实例
+            return bookBodylist.size()>0?bookBodylist.get(page):"内容获取失败......";
         }
 
         @Override
         public String getNext() {
             // 获取下一个要显示的内容实例
-            if(bookNext){
-                setBooksData();
-                return "";
-            }
-            return bookBodylist.size()>0?bookBodylist.get(page+1):"";
+            return bookBodylist.size()>0?bookBodylist.get(page+1):"内容获取失败......";
         }
 
         @Override
         public String getPrevious() {
             // 获取前一个要显示的内容实例
-            if(bookCurrent){
-                setBooksData();
-                return "";
-            }
             return bookBodylist.size()>0?bookBodylist.get(page-1):"";
         }
 
         @Override
         public boolean hasNext() {
-            boolean is = false;
             // 判断当前是否还有下一个内容实例
-            if(page < bookBodylist.size()-1){
-                is = true;
-            }else if(bookNext){
-                if(mixAtoc<bookBodylist.size()){
-                    is = true;
-                    mixAtoc++;
-                }else{
-                    toast("已经是最后一章了");
-                    is = false;
-                }
-            }
-            return is;
+            return page < bookBodylist.size()-1;
         }
 
         @Override
         public boolean hasPrevious() {
             // 判断当前是否还有前一个内容实例
-            boolean is = false;
-            if(page>0){
-                is = true;
-            }else if(bookCurrent){
-                if(mixAtoc>0){
-                    is = true;
-                    mixAtoc--;
-                }else{
-                    if(!no_1)
-                    toast("已经是第一章了");
-                    no_1 = false;
-                    is = false;
-                }
-            }
-            return is;
+            return page>0;
         }
 
         @Override
         protected void computeNext() {
             // 实现如何从当前的实例移动到下一个实例
+            btnUp.setVisibility(View.INVISIBLE);
             if(page==bookBodylist.size()-2){
-               toast("可向下翻页");
-                bookNext = true;
+                btnDown.setVisibility(View.VISIBLE);
             }else{
-                bookNext = false;
+                btnDown.setVisibility(View.INVISIBLE);
             }
             ++page;
         }
@@ -333,8 +323,11 @@ public class ReadActivity extends BaseActivity {
         protected void computePrevious() {
             // 实现如何从当前的实例移动到前一个实例
             if(page+1==0){
-                toast("可向上翻");
+                btnUp.setVisibility(View.VISIBLE);
+            }else{
+                btnUp.setVisibility(View.INVISIBLE);
             }
+            btnDown.setVisibility(View.INVISIBLE);
             --page;
         }
         //初始化控件
@@ -344,7 +337,74 @@ public class ReadActivity extends BaseActivity {
             mBattery = view.findViewById(R.id.mybattxxx);
             bookTime = view.findViewById(R.id.zt_time_x);
             bookBody = view.findViewById(R.id.book_x);
+            //开启时间监控
+            getTime();
+            //开启电池监控
+            getDian();
         }
+    }
+    //更新时间
+    public void getTime(){
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+        String formattedDate = df.format(c.getTime());
+        bookTime.setText(formattedDate);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                do {
+                    try {
+                        Thread.sleep(1000);
+                        Message msg = new Message();
+                        handler.sendEmptyMessage(0x667);
+                    }
+                    catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } while(true);
+            }
+        }).start();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //开启电池监控广播
+        register();
+    }
+
+    private void register() {
+        registerReceiver(batteryChangedReceiver,  new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+    }
+    // 接受广播,接听电池电量
+    private BroadcastReceiver batteryChangedReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            if (Intent.ACTION_BATTERY_CHANGED.equals(intent.getAction())) {
+                int level = intent.getIntExtra("level", 0);
+                int scale = intent.getIntExtra("scale", 100);
+                int power = level * 100 / scale;
+                System.out.println("进入电池监控："+power);
+                cell = power;
+            }
+        }
+    };
+    public void getDian(){
+        mBattery.setPower(cell);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                do {
+                    try {
+                        Thread.sleep(1000);
+                        Message msg = new Message();
+                        handler.sendEmptyMessage(0x677);
+                    }
+                    catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } while(true);
+            }
+        }).start();
     }
     int height;
     int width;
@@ -382,5 +442,40 @@ public class ReadActivity extends BaseActivity {
             }
         }
         return statusBarHeight;
+    }
+
+    /**
+     * 点击事件
+     * @param v
+     */
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btn_up:
+                if(mixAtoc>0){
+                        --mixAtoc;
+                         bookCurrent = true;
+                        setBooksData();
+                }else{
+                    toast("已经是第一章啦~");
+                }
+                break;
+            case R.id.btn_down:
+                if(mixAtoc<bookMixAToc.mixToc.chapters.size()-1){
+                    ++mixAtoc;
+                    bookCurrent = false;
+                    setBooksData();
+                }else{
+                    toast("已经是最后一章啦~");
+                }
+                break;
+            case R.id.read_button:
+                //调用平移动画，打开菜单
+                Read_ainmation.showMenuAinm(this,bookCaidanweix,bookCaidanToux,bookQuxiaocaidanx);
+                break;
+            case R.id.book_quxiaocaidanx:
+                //取消菜单
+                Read_ainmation.disMenuAinm(this,bookCaidanweix,bookCaidanToux,bookQuxiaocaidanx);
+        }
     }
 }

@@ -10,37 +10,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
         android:visibility="invisible"/>
-    <LinearLayout
+
+    <RelativeLayout
         android:layout_width="fill_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
-        android:gravity="center|bottom"
-        android:layout_height="match_parent">
+        android:gravity="center|bottom">
         <Button
-            android:id="@+id/btn_shangx"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:background="#2f000000"
-            android:layout_height="70dp"
+            android:id="@+id/btn_up"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:gravity="center"
+            android:textColor="#fff"
+            android:textSize="16sp"
+            android:background="#2fff0000"
             android:visibility="invisible"
-            android:text="上一章"
-            android:layout_marginBottom="50dp" />
+            android:text="@string/read_str_up" />
         <Button
-            android:id="@+id/btn_xiax"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="70dp"
+            android:id="@+id/btn_down"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:gravity="center"
+            android:textColor="#fff"
+            android:textSize="16sp"
+            android:background="#2fff0000"
             android:visibility="invisible"
-            android:text="下一章"
-            android:background="#2f000000"
-            android:layout_marginBottom="50dp" />
-    </LinearLayout>
+            android:text="@string/read_str_down" />
+    </RelativeLayout>
     <Button
         android:layout_width="100dp"
         android:layout_height="120dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:alpha="0"
-        android:id="@+id/button" />
+        android:id="@+id/read_button" />
 
     <LinearLayout
         android:id="@+id/book_caidanweix"
@@ -60,7 +63,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:text="提示："
+                android:text="@string/read_str_msg"
                 android:gravity="center_vertical"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
@@ -69,7 +72,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:text="左右滑动查看上下章"
+                android:text="@string/read_str_msg_x"
                 android:gravity="center_vertical"
                 android:textSize="15sp"
                 android:textColor="#fff"/>
@@ -82,7 +85,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:text="字体："
+                android:text="@string/read_str_typeface"
                 android:gravity="center_vertical"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
@@ -115,7 +118,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="体"
+                android:text="@string/read_str_typeface_x"
                 android:layout_marginLeft="5dp"
                 android:gravity="center_vertical"
                 android:textSize="15sp"
@@ -130,7 +133,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:text="主题："
+                android:text="@string/read_str_theme"
                 android:gravity="center_vertical"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
@@ -258,7 +261,7 @@
             android:layout_weight="1"
             android:gravity="center_horizontal|center_vertical"
             android:height="0dp"
-            android:text="章节获取失败......"
+            android:text="@string/read_str_error"
             android:textSize="20sp" />
 
         <LinearLayout
@@ -275,7 +278,7 @@
                 android:layout_height="fill_parent"
                 android:gravity="center_vertical"
                 android:layout_marginLeft="10dp"
-                android:text="点击重新加载"/>
+                android:text="@string/read_str_error_x"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -298,7 +301,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:textColor="#000"
-                android:text="已有字体"/>
+                android:text="@string/read_str_typeface_sp"/>
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
@@ -332,7 +335,7 @@
             android:textColor="#000"
             android:gravity="center_vertical|center_horizontal"
             android:background="#cff"
-            android:text="字体商城"
+            android:text="@string/read_str_typeface_sp_x"
             android:textSize="18sp"/>
         <TextView
             android:id="@+id/meiyouzitix"
@@ -343,7 +346,7 @@
             android:layout_height="240dp"
             android:gravity="center_vertical|center_horizontal"
             android:visibility="invisible"
-            android:text="还没有字体哦，去下载吧~"
+            android:text="@string/read_str_typeface_sp_msg"
             />
     </RelativeLayout>
 
@@ -399,7 +402,7 @@
             android:layout_height="fill_parent"
             android:textColor="#000"
             android:gravity="center_vertical|center_horizontal"
-            android:text="书阳小说"
+            android:text="@string/app_name"
             android:textSize="18sp"/>
         <TextView
             android:id="@+id/ziti_shangcheng_meiyoux"
@@ -421,23 +424,25 @@
         android:layout_alignParentBottom="true"
         android:paddingBottom="5dp">
     </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/read_layout"
         android:layout_width="match_parent"
-        android:layout_above="@id/qwe"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
+
         <com.shushijuhe.shushijuheread.view.ReadingTextView
             android:id="@+id/read_book_x"
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:singleLine="false"
-            android:padding="10dp"
-            android:visibility="invisible"
+            android:layout_height="wrap_content"
             android:letterSpacing="0.1"
             android:lineSpacingMultiplier="1.5"
-            android:textSize="20sp"
+            android:padding="10dp"
+            android:singleLine="false"
             android:textColor="#000"
-            />
+            android:textSize="20sp"
+            android:visibility="invisible" />
     </LinearLayout>
 </RelativeLayout>
