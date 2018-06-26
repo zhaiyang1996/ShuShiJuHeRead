@@ -19,6 +19,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@id/dialog_long_bookinfo_cover"
+        android:maxLines="2"
         android:text="书 名："
         android:textColor="#000000"
         android:textSize="17dp" />
@@ -32,6 +33,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@id/dialog_long_bookinfo_cover"
+        android:maxLines="1"
         android:text="作 者："
         android:textColor="@color/colorGray"
         android:textSize="15dp" />

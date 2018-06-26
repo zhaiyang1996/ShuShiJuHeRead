@@ -1,15 +1,14 @@
 package com.shushijuhe.shushijuheread.fragment;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.shushijuhe.shushijuheread.R;
 import com.shushijuhe.shushijuheread.adapter.BookCategoryAdapter;
 import com.shushijuhe.shushijuheread.bean.CategoriesBean;
@@ -59,7 +58,7 @@ public class BookCategoryFragment extends Fragment implements View.OnClickListen
                 adapter_female.setList((CategoriesBean) o, 0);
                 adapter_male.setList((CategoriesBean) o, 1);
             }
-        }, getActivity(), "获取分类信息中..."));
+        }, getActivity(), "获取分类信息中。。。"));
     }
 
     @Override

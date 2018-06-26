@@ -19,8 +19,8 @@ android:layout_height="match_parent">
                 android:id="@+id/zhuangtailan_x"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:gravity="center_vertical"
                 android:layout_alignParentBottom="true"
+                android:gravity="center_vertical"
                 android:paddingBottom="5dp"
                 >
                 <TextView
@@ -54,8 +54,8 @@ android:layout_height="match_parent">
                     android:layout_width="20dp"
                     android:layout_height="13dp"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="5dp" />
+                    android:layout_marginRight="5dp"
+                    android:layout_centerVertical="true"/>
                 <TextView
                     android:id="@+id/zt_time_x"
                     android:layout_width="wrap_content"
@@ -74,7 +74,7 @@ android:layout_height="match_parent">
                 android:orientation="vertical" >
                 <com.shushijuhe.shushijuheread.view.ReadingTextView
                     android:id="@+id/book_x"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_width="match_parent"
                     android:singleLine="false"
                     android:paddingLeft="10dp"

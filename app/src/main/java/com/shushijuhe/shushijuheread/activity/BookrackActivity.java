@@ -6,6 +6,10 @@ import android.widget.ImageView;
 import com.shushijuhe.shushijuheread.R;
 import com.shushijuhe.shushijuheread.activity.base.BaseActivity;
 import com.shushijuhe.shushijuheread.adapter.BookrackAdapter;
+import com.shushijuhe.shushijuheread.bean.Book_infoBean;
+import com.shushijuhe.shushijuheread.http.DataManager;
+import com.shushijuhe.shushijuheread.http.ProgressSubscriber;
+import com.shushijuhe.shushijuheread.http.SubscriberOnNextListenerInstance;
 import com.shushijuhe.shushijuheread.utils.TopMenuHeader;
 
 import butterknife.BindView;

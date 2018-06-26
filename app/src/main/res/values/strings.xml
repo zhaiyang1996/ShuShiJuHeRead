@@ -34,4 +34,18 @@
 
     <drawable name="niupi">#d1c2a5</drawable>
     <drawable name="changgui">#f5f6f8</drawable>
+
+    <!--书籍阅读页相关-->
+    <string name="read_str_up">上一章</string>
+    <string name="read_str_down">下一章</string>
+    <string name="read_str_msg">小提示：</string>
+    <string name="read_str_msg_x">加入官方群获取最新资讯：215636017</string>
+    <string name="read_str_typeface">字体：</string>
+    <string name="read_str_typeface_x">体</string>
+    <string name="read_str_theme">主题：</string>
+    <string name="read_str_error">数据获取失败......</string>
+    <string name="read_str_error_x">点击重新加载</string>
+    <string name="read_str_typeface_sp">已有字体</string>
+    <string name="read_str_typeface_sp_x">在线字体</string>
+    <string name="read_str_typeface_sp_msg">还没有字体哦，去下载吧~</string>
 </resources>

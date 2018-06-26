@@ -40,7 +40,7 @@ public class app extends Application{
     public static DaoSession getDaoSessiondaoBooksheif() {
         return daoSessionBooksheif;
     }
-    /**
+     /**
      *初始化X5
      */
     private void initX5() {

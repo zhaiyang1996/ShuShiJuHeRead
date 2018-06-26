@@ -530,6 +530,7 @@ public class PlayActivty extends BaseActivity {
                 engine = engines[position];
                 playlist = listurl[position].split("\\$");
                 playVideo(collect-1);
+                toast(engine);
                 dialog.dismiss();
             }
         });
@@ -561,7 +562,7 @@ public class PlayActivty extends BaseActivity {
                 circuit_id = 0;
                 mHomeUrl = Constants.CIRCUIT[position];
                 play_circuitcuit.setText(Constants.CIRCUIT_NAME[position]);
-                playVideo(collect-1);
+                playVideo(collect-1);     
                 dialog.dismiss();
             }
         });

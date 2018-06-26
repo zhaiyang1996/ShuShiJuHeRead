@@ -7,9 +7,11 @@ import android.widget.Toast;
 
 import com.shushijuhe.shushijuheread.R;
 import com.shushijuhe.shushijuheread.activity.base.BaseActivity;
+import com.shushijuhe.shushijuheread.http.RetrofitService;
 import com.shushijuhe.shushijuheread.utils.TopMenuHeader;
 
 import butterknife.BindView;
+import rx.Observable;
 
 /**
  * 书籍 详情
@@ -35,6 +37,8 @@ public class BooksDetailsActivity extends BaseActivity {
     TextView synopsis;//内容简介
     @BindView(R.id.booksdetails_iv_cover)
     ImageView cover;//内容简介
+
+    private RetrofitService mRetrofitService;
 
     @Override
     public int getLayoutId() {
