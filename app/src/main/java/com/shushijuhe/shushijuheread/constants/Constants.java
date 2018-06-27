@@ -1,5 +1,7 @@
 package com.shushijuhe.shushijuheread.constants;
 
+import java.io.File;
+
 /**
  * Created by zhaiyang on 2018/6/4.
  * 全局常量
@@ -17,5 +19,4 @@ public class Constants {
             "流氓线路",
             "女王线路",
             "更多线路正在开发中"};
-
 }

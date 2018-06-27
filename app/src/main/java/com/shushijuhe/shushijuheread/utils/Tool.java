@@ -3,6 +3,7 @@ package com.shushijuhe.shushijuheread.utils;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -10,14 +11,22 @@ import android.os.Build;
 import android.util.DisplayMetrics;
 import android.widget.Toast;
 
+import com.shushijuhe.shushijuheread.activity.base.TxtPageBean;
+import com.shushijuhe.shushijuheread.bean.ReadPatternBean;
+
+import org.w3c.dom.Text;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -278,5 +287,44 @@ public class Tool {
             statusBarHeight1 = con.getResources().getDimensionPixelSize(resourceId);
         }
         return  statusBarHeight1;
+    }
+
+    //缓存看小说部分的界面布局（文字大小，字体，模式等）；
+    public static void setBuJu(Context con, int size, String font, int buju, int fontcr){
+        SharedPreferences sharedPreferences = con.getSharedPreferences("buju",
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();// 获取编辑器
+        editor.putInt("size", size);
+        editor.putString("font", font);
+        editor.putInt("buju", buju);
+        editor.putInt("fontcr", fontcr);
+        editor.commit();// 提交修改
+    }
+    //取出保存模式
+    public static ReadPatternBean getBuJu(Context con){
+        SharedPreferences preferences = con.getSharedPreferences("buju",
+                Context.MODE_PRIVATE);
+        int size = preferences.getInt("size", 22);
+        String font = preferences.getString("font", "1");
+        int buju = preferences.getInt("buju", 3);
+        int fontcr = preferences.getInt("fontcr", 0);
+        ReadPatternBean yd = new ReadPatternBean();
+        yd.setSize(size);
+        yd.setFont(font);
+        yd.setBuju(buju);
+        yd.setFontcr(fontcr);
+        return yd;
+    }
+
+    /**
+     * 将String转换成字符缓冲流
+     * @param s
+     * @return
+     */
+    public static BufferedReader toString_BufferedReader(String s){
+        byte[] by = s.getBytes();
+        InputStreamReader isr = new InputStreamReader(new ByteArrayInputStream(by));
+        BufferedReader reader = new BufferedReader(isr);
+        return reader;
     }
 }
