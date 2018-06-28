@@ -59,6 +59,7 @@ import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -130,14 +131,19 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     Button readRijianbeijing;
     @BindView(R.id.read_yejianbeijing)
     Button readYejianbeijing;
+    @BindView(R.id.read_text_a)
+    Button readTextA;
+    @BindView(R.id.read_text_b)
+    Button readTextB;
 
 
     private TestSlidingAdapter myslid;
     private OverlappedSlider myover;
     private BookMixAToc bookMixAToc;
     private String book; //书籍详细类容
+    private String bookx; //书籍详细类容备份
     private List<String> bookBodylist;
-    int mixAtoc = 0;//章节
+    int mixAtoc = 1;//章节
     private boolean mPagerMode = true;
     private ArrayList<Integer> offsetArrayList;
     private int statusBarHeight = 0;
@@ -150,7 +156,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     private ReadPatternBean yd;
     private int ziticr = 0;
     private int buju = 0;
-    private int zitidaxiao = 10;//字体大小
+    private int zitidaxiao = 20;//字体大小
     private Drawable drawable;
     private String fontsrc = "1";
     private int fontcor;
@@ -163,6 +169,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     public static String BOOKISONLINE = "BOOKISONLINE"; //是否为在线阅读
     public List<TxtPageBean> txtPageBeans; //章节分页list
     public boolean isOnline = true;
+    boolean isRefresh = false; //是否需要刷新
     @Override
     public int getLayoutId() {
         return R.layout.activity_read;
@@ -182,10 +189,9 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
         if (yd != null) {
             ziticr = yd.getFontcr();
             buju = yd.getBuju();
-//            zitidaxiao = yd.getSize();
+            zitidaxiao = yd.getSize();
             getMoShi();
         }
-        read_book_x.setTextSize(zitidaxiao);
         ZhuBeiJing.setBackground(drawable);
         offsetArrayList = new ArrayList<>();
         bookBodylist = new ArrayList<>();
@@ -205,6 +211,13 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
         readChangguimo.setOnClickListener(setPattern);
         readRijianbeijing.setOnClickListener(setPattern);
         readYejianbeijing.setOnClickListener(setPattern);
+        readTextA.setOnClickListener(setPattern);
+        readTextB.setOnClickListener(setPattern);
+
+        DisplayMetrics display = mContext.getResources().getDisplayMetrics();
+        height = display.heightPixels;
+        width = display.widthPixels;
+
         Intent intent = getIntent();
 //        if(intent!=null){
 //            bookMixAToc = (BookMixAToc) getIntent().getSerializableExtra(READBOOKMIX);
@@ -247,6 +260,8 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
      * 设置书籍详细类容
      */
     public void setBooksData() {
+        read_book_x.setTextSize(zitidaxiao);
+        bookZitisizex.setText(zitidaxiao + "");
         if (bookBodylist.size() > 0)
             bookBodylist.removeAll(bookBodylist);
         bookBodylist.add(bookMixAToc.mixToc.chapters.get(mixAtoc).title);
@@ -256,12 +271,10 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             public void onNext(Object o) {
                 ChapterRead chapterRead = (ChapterRead) o;
                 book = chapterRead.chapter.body;
+                bookx = book;
+                //加载书籍文章
                 read_book_x.setText(book);
                 bookBodylist.add(book);
-                //加载书籍文章
-                DisplayMetrics display = mContext.getResources().getDisplayMetrics();
-                height = display.heightPixels;
-                width = display.widthPixels;
                 handler.sendEmptyMessage(0x223);
 //                getBookPage(book);
             }
@@ -281,8 +294,8 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
 
                         if(i<bookBodylist.size()){
                             String s;
-                            if(bookBodylist.get(i).length()>3){
-                                s = bookBodylist.get(i).substring(0,3);
+                            if(bookBodylist.get(i).length()>15){
+                                s = bookBodylist.get(i).substring(0,15);
                             }else{
                                 s = bookBodylist.get(i).substring(0,bookBodylist.get(i).length()-1);
                             }
@@ -297,10 +310,12 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                         i++;
 
                     }
-                    if (bookCurrent) {
-                        page = bookBodylist.size() - 1;
-                    } else {
-                        page = 0;
+                    if(!isRefresh){
+                        if (bookCurrent) {
+                            page = bookBodylist.size() - 1;
+                        } else {
+                            page = 0;
+                        }
                     }
                     setBookData();
                     break;
@@ -396,8 +411,11 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             bookName.setText(bookName_str);
             bookZj.setText(bookMixAToc.mixToc.chapters.get(mixAtoc).title);
             bookBody.setText(strings);
-            bookBody.setGravity(Gravity.CENTER_VERTICAL);
-//            toast(page+"");
+            if(page >= bookBodylist.size()-2){
+                bookBody.setGravity(Gravity.TOP);
+            }else{
+                bookBody.setGravity(Gravity.CENTER_VERTICAL);
+            }
             return contentView;
         }
 
@@ -405,8 +423,14 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
         public String getCurrent() {
             if (page == 0) {
                 btnUp.setVisibility(View.VISIBLE);
+                btnDown.setVisibility(View.INVISIBLE);
+            }else{
+                if(page >=bookBodylist.size()-1){
+                    btnDown.setVisibility(View.VISIBLE);
+                }
+                btnUp.setVisibility(View.INVISIBLE);
             }
-            btnDown.setVisibility(View.INVISIBLE);
+
             // 获取当前要显示的内容实例
             return bookBodylist.size() > 0 ? bookBodylist.get(page) : "内容获取失败......";
         }
@@ -591,6 +615,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
      */
     @Override
     public void onClick(View v) {
+        isRefresh = false;
         switch (v.getId()) {
             case R.id.btn_up:
                 if (mixAtoc > 0) {
@@ -622,7 +647,8 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
 
 
     public void getMoShi() {
-        bookZitisizex.setText(yd.getSize() + "");
+        isRefresh = false;
+        bookZitisizex.setText(zitidaxiao + "");
         Resources res = getResources();
         switch (yd.getBuju()) {
             case 1:
@@ -708,85 +734,143 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    long prelongTim = 0;//定义上一次单击的时间
     View.OnClickListener setPattern = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             Resources res = getResources();
             switch (v.getId()){
                 case R.id.read_zongse:
+                    isRefresh = false;
                     drawable = res.getDrawable(R.mipmap.bookbai);
                     fontcor = android.graphics.Color.BLACK;
                     buju = 3;
                     ziticr = 3;
                     break;
                 case R.id.read_niupix:
+                    isRefresh = false;
                     drawable = res.getDrawable(R.mipmap.niupizhi);
                     buju = 5;
                     ziticr = 5;
                     fontcor=Color.parseColor("#5c4325");
                     break;
                 case R.id.read_huoyan:
+                    isRefresh = false;
                     drawable = res.getDrawable(R.mipmap.huoyanzhi);
                     buju = 11;
                     ziticr = 11;
                     fontcor=Color.parseColor("#614e42");
                     break;
                 case R.id.read_huyanbeijing:
+                    isRefresh = false;
                     drawable = res.getDrawable(R.drawable.hubeijin);
                     fontcor = android.graphics.Color.BLACK;
                     buju = 1;
                     ziticr = 1;
                     break;
                 case R.id.read_lanse:
+                    isRefresh = false;
                     drawable = res.getDrawable(R.mipmap.lansezhi);
                     buju = 7;
                     ziticr = 7;
                     fontcor=Color.parseColor("#4b6285");
                     break;
                 case R.id.read_luse:
+                    isRefresh = false;
                     drawable = res.getDrawable(R.mipmap.lusezhi);
                     buju = 8;
                     ziticr = 8;
                     fontcor=Color.parseColor("#4b733c");
                     break;
                 case R.id.read_yinghua:
+                    isRefresh = false;
                     drawable = res.getDrawable(R.mipmap.yinghuazhi);
                     buju = 10;
                     ziticr = 10;
                     fontcor=Color.parseColor("#b7828d");
                     break;
                 case R.id.read_yueliang:
+                    isRefresh = false;
                     drawable = res.getDrawable(R.mipmap.yueliangzhi);
                     buju = 9;
                     ziticr = 9;
                     fontcor=Color.parseColor("#4e5a66");
                     break;
                 case R.id.read_changguimo:
+                    isRefresh = false;
                     drawable = res.getDrawable(R.drawable.changgui);
                     buju = 6;
                     ziticr = 6;
                     fontcor=android.graphics.Color.BLACK;
                     break;
                 case R.id.read_rijianbeijing:
+                    isRefresh = false;
                     drawable = res.getDrawable(R.mipmap.baibei);
                     fontcor =Color.parseColor("#81556c");
                     buju = 2;
                     ziticr = 2;
                     break;
                 case R.id.read_yejianbeijing:
+                    isRefresh = false;
                     drawable = res.getDrawable(R.drawable.yebeijin);
                     buju = 4;
                     ziticr = 4;
                     fontcor = Color.parseColor("#525453");
                     break;
+                case R.id.read_text_a:
+                    isRefresh = true;
+                    if(zitidaxiao>=13){
+                        zitidaxiao--;
+                    }else{
+                        return;
+                    }
+                    break;
+                case R.id.read_text_b:
+                    isRefresh = true;
+                    if(zitidaxiao<=31){
+                        zitidaxiao++;
+                    }else{
+                        return;
+                    }
+
+                    break;
             }
             // 执行字体布局保存方法
             Tool.setBuJu(mContext, zitidaxiao, fontsrc, buju, ziticr);
-            // 默认为左右平移模式
-            switchSlidingMode();
+            //判断是否需要重新排版数据
+            if(isRefresh){
+                isTiemx();
+                //重新排版
+//                setBooksData();
+                read_book_x.setTextSize(zitidaxiao);
+                bookZitisizex.setText(zitidaxiao + "");
+                if (bookBodylist.size() > 0)
+                    bookBodylist.removeAll(bookBodylist);
+                bookBodylist.add(bookMixAToc.mixToc.chapters.get(mixAtoc).title);
+                book = bookx;
+                read_book_x.setText(book);
+                bookBodylist.add(book);
+                handler.sendEmptyMessage(0x223);
+            }else{
+                // 默认为左右平移模式
+                switchSlidingMode();
+            }
+
         }
     };
-
+    //判断两次时间点击
+public void isTiemx(){
+    if(prelongTim==0){//第一次单击，初始化为本次单击的时间
+        prelongTim = (new Date()).getTime();
+    }else{
+        long curTime = (new Date()).getTime();//本地单击的时间
+        if(!((curTime-prelongTim)>2000)){
+            toast("你点击的太快了啊");
+            return;
+        }
+        prelongTim = 0;//当前单击事件变为上次时间
+    }
+}
 
     public void getBookPage(final String str){
         final ReadPageUtils readPageUtils = new ReadPageUtils();

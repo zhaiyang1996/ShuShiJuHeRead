@@ -92,6 +92,7 @@
                 android:textSize="15sp"
                 android:textColor="#fff"/>
             <Button
+                android:id="@+id/read_text_a"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="A-"
@@ -109,6 +110,7 @@
                 android:textSize="15sp"
                 android:textColor="#fff"/>
             <Button
+                android:id="@+id/read_text_b"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="A+"

@@ -71,8 +71,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
     }
+    Toast toast = null;
     public void toast(String str){
-        Toast.makeText(this,str,Toast.LENGTH_LONG).show();
+        if(toast==null){
+            toast = Toast.makeText(this, str, Toast.LENGTH_SHORT);
+        }else{
+            toast.setText(str);
+        }
+        toast.show();
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
