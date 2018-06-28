@@ -147,56 +147,67 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
                     <Button
+                        android:id="@+id/read_zongse"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_marginRight="20dp"
                         android:background="@drawable/zongsebeijing"/>
                     <Button
+                        android:id="@+id/read_niupix"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_marginRight="20dp"
                         android:background="@drawable/niupix"/>
                     <Button
+                        android:id="@+id/read_huoyan"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_marginRight="20dp"
                         android:background="@drawable/huoyan"/>
                     <Button
+                        android:id="@+id/read_huyanbeijing"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_marginRight="20dp"
                         android:background="@drawable/huyanbeijing"/>
                     <Button
+                        android:id="@+id/read_lanse"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_marginRight="20dp"
                         android:background="@drawable/lanse" />
                     <Button
+                        android:id="@+id/read_luse"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_marginRight="20dp"
                         android:background="@drawable/luse" />
                     <Button
+                        android:id="@+id/read_yinghua"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_marginRight="20dp"
                         android:background="@drawable/yinghua" />
                     <Button
+                        android:id="@+id/read_yueliang"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_marginRight="20dp"
                         android:background="@drawable/yueliang" />
                     <Button
+                        android:id="@+id/read_changguimo"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_marginRight="20dp"
                         android:background="@drawable/changguimo"/>
                     <Button
+                        android:id="@+id/read_rijianbeijing"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_marginRight="20dp"
                         android:background="@drawable/rijianbeijing"/>
                     <Button
+                        android:id="@+id/read_yejianbeijing"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_marginRight="20dp"
@@ -225,7 +236,8 @@
                 android:layout_width="27dp"
                 android:layout_height="27dp"
                 android:layout_marginLeft="10dp"
-                android:textColor="#ffffff" />
+                android:textColor="#ffffff"
+                android:background="@mipmap/title_backtrack"/>
         </LinearLayout>
         <Button
             android:layout_width="27dp"
@@ -436,7 +448,7 @@
         <com.shushijuhe.shushijuheread.view.ReadingTextView
             android:id="@+id/read_book_x"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:letterSpacing="0.1"
             android:lineSpacingMultiplier="1.5"
             android:padding="10dp"

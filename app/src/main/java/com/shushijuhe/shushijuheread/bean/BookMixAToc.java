@@ -7,7 +7,7 @@ import java.util.List;
  * Created by zhaiyang on 2018/6/4.
  */
 
-public class BookMixAToc  {
+public class BookMixAToc implements Serializable {
     /**
      * _id:577e528e2160421a02d7380d
      * name:优质书源
