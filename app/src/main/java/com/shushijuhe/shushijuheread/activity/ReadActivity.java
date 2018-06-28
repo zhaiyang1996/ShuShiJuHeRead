@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,6 +31,7 @@ import com.martian.libsliding.SlidingAdapter;
 import com.martian.libsliding.SlidingLayout;
 import com.martian.libsliding.slider.OverlappedSlider;
 import com.martian.libsliding.slider.PageSlider;
+import com.orhanobut.logger.Logger;
 import com.shushijuhe.shushijuheread.R;
 import com.shushijuhe.shushijuheread.activity.base.BaseActivity;
 import com.shushijuhe.shushijuheread.activity.base.TxtPageBean;
@@ -102,6 +104,8 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     RelativeLayout qwe;
     @BindView(R.id.read_book_x)
     ReadingTextView read_book_x;
+    @BindView(R.id.huadong_beijing_zhu)
+    RelativeLayout ZhuBeiJing;
 
 
     @BindView(R.id.read_zongse)
@@ -146,8 +150,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     private ReadPatternBean yd;
     private int ziticr = 0;
     private int buju = 0;
-    private int tetsize = 22; //字体大小
-    private int zitidaxiao = 20;
+    private int zitidaxiao = 10;//字体大小
     private Drawable drawable;
     private String fontsrc = "1";
     private int fontcor;
@@ -157,7 +160,9 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     public static String BOOKNAME = "BOOKNAME";//书籍名
     public static String BOOKMIXATOC = "BOOKMIXATOC";//阅读章节
     public static String BOOKPAGE = "BOOKPAGE";//阅读章节页码
+    public static String BOOKISONLINE = "BOOKISONLINE"; //是否为在线阅读
     public List<TxtPageBean> txtPageBeans; //章节分页list
+    public boolean isOnline = true;
     @Override
     public int getLayoutId() {
         return R.layout.activity_read;
@@ -172,6 +177,16 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void initView() {
+        // 读取用户保存设置
+        yd = Tool.getBuJu(this);
+        if (yd != null) {
+            ziticr = yd.getFontcr();
+            buju = yd.getBuju();
+//            zitidaxiao = yd.getSize();
+            getMoShi();
+        }
+        read_book_x.setTextSize(zitidaxiao);
+        ZhuBeiJing.setBackground(drawable);
         offsetArrayList = new ArrayList<>();
         bookBodylist = new ArrayList<>();
         btnUp.setOnClickListener(this);
@@ -196,16 +211,10 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
 //            mixAtoc = getIntent().getIntExtra(BOOKMIXATOC,0);
 //            bookName_str = getIntent().getStringExtra(BOOKNAME);
 //            page = getIntent().getIntExtra(BOOKPAGE,0);
+//            isOnline = intent.getBooleanExtra(BOOKISONLINE,true);
 //            setBooksData();
 //        }
-        // 读取用户保存设置
-        yd = Tool.getBuJu(this);
-        if (yd != null) {
-            ziticr = yd.getFontcr();
-            buju = yd.getBuju();
-            zitidaxiao = yd.getSize();
-            getMoShi();
-        }
+
 
         DataManager.getInstance().getBookMixAToc(new ProgressSubscriber<BookMixAToc>(new SubscriberOnNextListenerInstance() {
             @Override
@@ -267,6 +276,27 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             disWaitingDialog();
             switch (msg.what) {
                 case 0x123:
+                    int i =1;
+                    for(String p :bookBodylist){
+
+                        if(i<bookBodylist.size()){
+                            String s;
+                            if(bookBodylist.get(i).length()>3){
+                                s = bookBodylist.get(i).substring(0,3);
+                            }else{
+                                s = bookBodylist.get(i).substring(0,bookBodylist.get(i).length()-1);
+                            }
+
+                            int i1 = p.indexOf(s);
+                            if(i1!=-1){
+                                s = p.substring(0,i1);
+                                Log.d("Read", "\n所在位置："+i1+"\n裁剪后的字符："+s);
+                                bookBodylist.set(i-1,s);
+                            }
+                        }
+                        i++;
+
+                    }
                     if (bookCurrent) {
                         page = bookBodylist.size() - 1;
                     } else {
@@ -276,26 +306,19 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                     break;
                 case 0x223:
                     while (true) {
-                        String  str = "呵呵";
                         int offset = TextViewUtils.getOffsetForPosition(read_book_x, width - read_book_x.getPaddingRight(),
                                 height - getStatusBarHeight() - read_book_x.getPaddingBottom() - 25);
-                        System.out.println("原字符长度：" + book.length() + "截取后的长度：" + offset);
+//                        System.out.println("原字符长度：" + book.length() + "截取后的长度：" + offset);
                         if (offset != -1 && offset < book.length()) {
                             book = book.substring(offset + 1);
                             boolean o = false;
                             for (String p : bookBodylist) {
                                 if (!p.equals(book)) {
-                                    if((offset + 1)<book.length()){
-                                        str = book.substring(0,book.length()-1);
-                                    }else{
-                                        str = book.substring(0,book.length()-1);
-                                    }
-
                                     o = true;
                                 }
                             }
                             if (o) {
-                                bookBodylist.add(str);
+                                bookBodylist.add(book);
                             }
                             offsetArrayList.add(offset);
                             jianqu = true;
@@ -360,7 +383,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
+
     }
 
 
@@ -446,6 +469,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             huadongBeijingZhu = view.findViewById(R.id.huadong_beijing);
             huadongBeijingZhu.setBackground(drawable);
             bookBody.setTextColor(fontcor);
+            bookBody.setTextSize(zitidaxiao);
             //开启时间监控
             getTime();
             //开启电池监控
@@ -760,14 +784,13 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             Tool.setBuJu(mContext, zitidaxiao, fontsrc, buju, ziticr);
             // 默认为左右平移模式
             switchSlidingMode();
-//            myslid.notifyDataSetChanged();
         }
     };
 
 
     public void getBookPage(final String str){
         final ReadPageUtils readPageUtils = new ReadPageUtils();
-        readPageUtils.setUpTextParams(tetsize);
+        readPageUtils.setUpTextParams(zitidaxiao);
         try {
             txtPageBeans = readPageUtils.loadPages(bookName_str,str);
         } catch (Exception e) {
@@ -791,13 +814,15 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
      * @param bookName 书名
      * @param bookMixatoc 阅读章节
      * @param bookPage 章节页码
+     * @param isonline 是否为在线阅读
      */
-    public static void statrActivity(Activity context, BookMixAToc bookMixAToc, String bookName, int bookMixatoc, int bookPage){
+    public static void statrActivity(Activity context, BookMixAToc bookMixAToc, String bookName, int bookMixatoc, int bookPage,boolean isonline){
         Intent init = new Intent(context,ReadActivity.class);
         init.putExtra(READBOOKMIX,bookMixAToc);
         init.putExtra(BOOKNAME,bookName);
         init.putExtra(BOOKMIXATOC,bookMixatoc);
         init.putExtra(BOOKPAGE,bookPage);
+        init.putExtra(BOOKISONLINE,isonline);
         init.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //同名activity只允许一个存活
         context.startActivity(init);
     }

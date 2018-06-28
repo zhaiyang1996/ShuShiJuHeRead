@@ -76,6 +76,7 @@ android:layout_height="match_parent">
                     android:id="@+id/book_x"
                     android:layout_height="match_parent"
                     android:layout_width="match_parent"
+                    android:ellipsize="none"
                     android:singleLine="false"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
