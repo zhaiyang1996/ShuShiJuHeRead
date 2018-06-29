@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import butterknife.ButterKnife;
+import cn.jiguang.analytics.android.api.JAnalyticsInterface;
 
 /**
  * Created by zhaiyang on 2018/6/1.
@@ -74,8 +75,15 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void initStar(){};
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        JAnalyticsInterface.onPageStart(this,this.getClass().getCanonicalName());
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
+        JAnalyticsInterface.onPageEnd(this,this.getClass().getCanonicalName());
     }
     Toast toast = null;
     public void toast(String str){
