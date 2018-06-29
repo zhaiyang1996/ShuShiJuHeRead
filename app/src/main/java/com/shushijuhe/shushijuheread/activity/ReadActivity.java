@@ -276,16 +276,17 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                 @Override
                 public void onNext(Object o) {
                     ChapterRead chapterRead = (ChapterRead) o;
-                    if(chapterRead.chapter.body.isEmpty()&&chapterRead.chapter.body.length()<10){
-                        toast("获取书籍失败，打开重试...");
-                        return;
+                    if (chapterRead.isOk()){
+                        book = chapterRead.getChapter().getBody();
+                        bookx = book;
+                        //加载书籍文章
+                        read_book_x.setText(book);
+                        bookBodylist.add(book);
+                        handler.sendEmptyMessage(0x223);
+                    }else{
+                        book = "章节获取失败：\n重新打开页面进行刷新，如一直无法刷新原因可能如下：\n1.网络不稳定，检查你的网络。\n2.可能资源文件被加密。\n3.数据缺失\n4.加入官方群反馈：215636017";
                     }
-                    book = chapterRead.chapter.body;
-                    bookx = book;
-                    //加载书籍文章
-                    read_book_x.setText(book);
-                    bookBodylist.add(book);
-                    handler.sendEmptyMessage(0x223);
+
 //                getBookPage(book);
                 }
 

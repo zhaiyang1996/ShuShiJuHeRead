@@ -23,6 +23,7 @@ import com.shushijuhe.shushijuheread.utils.BookDialog;
 import com.shushijuhe.shushijuheread.utils.Tool;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
 /**
  * Created by Boy on 2018/6/8.
@@ -30,7 +31,7 @@ import java.text.DecimalFormat;
 
 public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHolder> {
 
-    private Categories_infoBean cbean;
+    private List<Categories_infoBean.BooksBean> cbean;
     private int type;
     private Book_infoBean bbean;
     private Context context;
@@ -42,7 +43,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
 
     public void setBean(Object bean) {
         if (type == 1) {
-            this.cbean = (Categories_infoBean) bean;
+            this.cbean = (List<Categories_infoBean.BooksBean>) bean;
         } else {
             this.bbean = (Book_infoBean) bean;
         }
@@ -69,12 +70,12 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
             holder.tv_tip.setVisibility(View.GONE);
         }
         if (type == 1) {//书籍详情
-            final String title = cbean.books.get(position).title;
-            final String author = cbean.books.get(position).author;
-            final String lastChapter = cbean.books.get(position).lastChapter;
-            float i_latelyFollower = (float) cbean.books.get(position).latelyFollower;
-            final String bookid = cbean.books.get(position)._id;
-            final String bookmsg = cbean.books.get(position).shortIntro;
+            final String title = cbean.get(position).title;
+            final String author = cbean.get(position).author;
+            final String lastChapter = cbean.get(position).lastChapter;
+            float i_latelyFollower = (float) cbean.get(position).latelyFollower;
+            final String bookid = cbean.get(position)._id;
+            final String bookmsg = cbean.get(position).shortIntro;
             String latelyFollower;
             DecimalFormat fnum = new DecimalFormat("##0.0");
             if (i_latelyFollower >= 10000) {
@@ -83,12 +84,12 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
             } else {
                 latelyFollower = (int) i_latelyFollower + "";
             }
-            final String shortIntro = cbean.books.get(position).shortIntro;
-            final String cover = Constants.IMG_BASE_URL + cbean.books.get(position).cover;
-            final String retentionRatio = cbean.books.get(position).retentionRatio + "%";
-            final String tags = cbean.books.get(position).majorCate;
+            final String shortIntro = cbean.get(position).shortIntro;
+            final String cover = Constants.IMG_BASE_URL + cbean.get(position).cover;
+            final String retentionRatio = cbean.get(position).retentionRatio + "%";
+            final String tags = cbean.get(position).majorCate;
             Glide.with(context)
-                    .load(Constants.IMG_BASE_URL + cbean.books.get(position).cover)
+                    .load(Constants.IMG_BASE_URL + cbean.get(position).cover)
                     .into(holder.iv_cover);
             //图片大小
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.iv_cover.getLayoutParams();
@@ -186,7 +187,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
     public int getItemCount() {
         int count;
         if (type == 1) {
-            count = cbean == null ? 0 : cbean.books.size();
+            count = cbean == null ? 0 : cbean.size();
         } else {
             count = bbean == null ? 0 : bbean.books.size();
         }

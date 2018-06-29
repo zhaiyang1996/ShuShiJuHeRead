@@ -42,7 +42,7 @@ import butterknife.OnClick;
 
 public class CategoryDetailsActivity extends BaseActivity {
 
-    private Categories_infoBean bean;
+    private List<Categories_infoBean.BooksBean> bean;
     private MinorAdapter minorAdapter;
     private DetailsAdapter detailsAdapter;
     private Map<String, List<String>> map;
@@ -92,12 +92,11 @@ public class CategoryDetailsActivity extends BaseActivity {
         ButterKnife.bind(this);
         minorAdapter = new MinorAdapter();
         detailsAdapter = new DetailsAdapter(this, 1);
-        bean = new Categories_infoBean();
-        bean.books = new ArrayList<>();
+        bean = new ArrayList<>();
         srlRefresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshLayout) {
-                setData(type, null, "正在刷新中...");
+                setData(type, null, "正在刷新中...",false);
                 refreshLayout.finishRefresh();
             }
         });
@@ -142,7 +141,7 @@ public class CategoryDetailsActivity extends BaseActivity {
         rv_book.setAdapter(detailsAdapter);
         rv_book.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         rv_book.addItemDecoration(new SpacesItemDecoration(this));
-        setData("hot", tvHot, "正在搜索中...");
+        setData("hot", tvHot, "正在搜索中...",false);
     }
 
     @Override
@@ -159,34 +158,40 @@ public class CategoryDetailsActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.details_tv_hot:
-                setData("hot", tvHot, "正在搜索中...");
+                setData("hot", tvHot, "正在搜索中...",false);
                 break;
             case R.id.details_tv_new:
-                setData("new", tvNew, "正在搜索中...");
+                setData("new", tvNew, "正在搜索中...",false);
                 break;
             case R.id.details_tv_reputation:
-                setData("reputation", tvReputation, "正在搜索中...");
+                setData("reputation", tvReputation, "正在搜索中...",false);
                 break;
             case R.id.details_tv_over:
-                setData("over", tvOver, "正在搜索中...");
+                setData("over", tvOver, "正在搜索中...",false);
                 break;
         }
     }
 
     private void addItem() {
         start += 20;
-        setData(type, null, null);
+        setData(type, null, null,true);
     }
 
-    private void setData(final String type, TextView tv, String texts) {
+    private void setData(final String type, TextView tv, String texts, final boolean isAdd) {
         this.type = type;
-
         DataManager.getInstance().getCategories_info(
                 new ProgressSubscriber<Categories_infoBean>(
                         new SubscriberOnNextListenerInstance() {
                             @Override
                             public void onNext(Object o) {
-                                bean.books.addAll(((Categories_infoBean) o).books);
+                                Categories_infoBean categories_infoBean = (Categories_infoBean) o;
+                                if(isAdd){
+                                    bean.addAll(categories_infoBean.books);
+                                }else{
+                                    bean.removeAll(bean);
+                                    bean.addAll(categories_infoBean.books);
+                                }
+
                                 detailsAdapter.setBean(bean);
                             }
                         }, this, texts), gender,
@@ -225,7 +230,7 @@ public class CategoryDetailsActivity extends BaseActivity {
                 public void onClick(View v) {
                     minor = list.get(position);
                     itemPosition = position;
-                    setData(type, null, "正在搜索中...");
+                    setData(type, null, "正在搜索中...",false);
                     notifyDataSetChanged();
                 }
             });
