@@ -49,9 +49,11 @@ public class BooksDetailsActivity extends BaseActivity implements View.OnClickLi
     ImageView cover;//封面
 
     public static String BOOKID = "BOOKID";
+    public static String BOOKMSG = "BOOKMSG";
     String bookId;
     private BookMixAToc bookMixAToc; //书籍目录
     BookDetailBean bookDetailBean; //书籍信息
+    String bookMsg;
 
     @Override
     public int getLayoutId() {
@@ -69,6 +71,7 @@ public class BooksDetailsActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void initView() {
         bookId = getIntent().getStringExtra(BOOKID);
+        bookMsg = getIntent().getStringExtra(BOOKMSG);
         //初始化数据
         showWaitingDialog("书籍数据加载中...");
         setData();
@@ -95,7 +98,8 @@ public class BooksDetailsActivity extends BaseActivity implements View.OnClickLi
                     wordCount = i+"万字";
                 }
                 words.setText(wordCount);
-                subscription.setText(bookDetailBean.totalFollower);
+                wordCount = bookDetailBean.totalFollower+"";
+                subscription.setText(wordCount);
                 if(bookDetailBean.isSerial){
                     wordCount = "连载";
                 }else{
@@ -103,9 +107,9 @@ public class BooksDetailsActivity extends BaseActivity implements View.OnClickLi
                 }
                 status.setText(wordCount);
                 writer.setText(bookDetailBean.author);
-                int i = bookDetailBean.longIntro.indexOf("追书神器");
+                int i = bookDetailBean.longIntro.indexOf(bookMsg);
                 if(i != -1){
-                    synopsis.setText(bookDetailBean.longIntro);
+                    synopsis.setText(bookMsg);
                 }else{
                     synopsis.setText("暂无简介");
                 }
@@ -135,9 +139,10 @@ public class BooksDetailsActivity extends BaseActivity implements View.OnClickLi
      * @param context
      * @param id 书籍ID
      */
-    public static void  starActivity(Context context, String id){
+    public static void  starActivity(Context context, String id,String msg){
         Intent intent = new Intent(context,BooksDetailsActivity.class);
         intent.putExtra(BOOKID,id);
+        intent.putExtra(BOOKMSG,msg);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //同名activity只允许一个存活
         context.startActivity(intent);
     }

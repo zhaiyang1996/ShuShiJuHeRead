@@ -48,4 +48,6 @@
     <string name="read_str_typeface_sp">已有字体</string>
     <string name="read_str_typeface_sp_x">在线字体</string>
     <string name="read_str_typeface_sp_msg">还没有字体哦，去下载吧~</string>
+
+
 </resources>

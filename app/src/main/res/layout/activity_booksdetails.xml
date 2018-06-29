@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -21,8 +22,10 @@
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/booksdetails_text_read"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include">
+        app:layout_constraintTop_toBottomOf="@+id/include"
+        app:layout_constraintVertical_bias="1.0">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,11 +38,10 @@
 
                 <ImageView
                     android:id="@+id/booksdetails_iv_cover"
-                    android:layout_width="80dp"
-                    android:layout_height="100dp"
+                    android:layout_width="96dp"
+                    android:layout_height="120dp"
                     android:layout_marginBottom="8dp"
-                    android:layout_marginLeft="64dp"
-                    android:layout_marginStart="64dp"
+                    android:layout_marginStart="32dp"
                     android:layout_marginTop="8dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -64,6 +66,7 @@
                     android:layout_marginLeft="32dp"
                     android:layout_marginStart="32dp"
                     android:text="是否连载"
+                    android:textSize="@dimen/booksdetails_introduce"
                     app:layout_constraintBottom_toBottomOf="@+id/booksdetails_iv_cover"
                     app:layout_constraintStart_toEndOf="@+id/booksdetails_iv_cover" />
 
@@ -75,7 +78,7 @@
                     android:layout_marginLeft="32dp"
                     android:layout_marginStart="32dp"
                     android:text="字数"
-                    android:textSize="12dp"
+                    android:textSize="@dimen/booksdetails_introduce"
                     app:layout_constraintBottom_toTopOf="@+id/booksdetails_text_status"
                     app:layout_constraintStart_toEndOf="@+id/booksdetails_iv_cover" />
 
@@ -87,7 +90,7 @@
                     android:layout_marginLeft="32dp"
                     android:layout_marginStart="32dp"
                     android:text="类型"
-                    android:textSize="12dp"
+                    android:textSize="@dimen/booksdetails_introduce"
                     app:layout_constraintBottom_toTopOf="@+id/booksdetails_text_words"
                     app:layout_constraintStart_toEndOf="@+id/booksdetails_iv_cover" />
 
@@ -98,7 +101,7 @@
                     android:layout_marginLeft="32dp"
                     android:layout_marginStart="32dp"
                     android:text="作者"
-                    android:textSize="12dp"
+                    android:textSize="@dimen/booksdetails_introduce"
                     app:layout_constraintBottom_toBottomOf="@+id/booksdetails_text_genre"
                     app:layout_constraintStart_toEndOf="@+id/booksdetails_text_genre"
                     app:layout_constraintTop_toTopOf="@+id/booksdetails_text_genre" />
@@ -110,7 +113,7 @@
                     android:layout_marginLeft="32dp"
                     android:layout_marginStart="32dp"
                     android:text="订阅"
-                    android:textSize="12dp"
+                    android:textSize="@dimen/booksdetails_introduce"
                     app:layout_constraintBottom_toBottomOf="@+id/booksdetails_text_words"
                     app:layout_constraintStart_toEndOf="@+id/booksdetails_text_words"
                     app:layout_constraintTop_toTopOf="@+id/booksdetails_text_words" />
@@ -124,24 +127,26 @@
                     android:id="@+id/textView9"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
                     android:text="内容介绍："
                     android:textColor="@color/title_black"
                     android:textSize="13dp"
+                    app:layout_constraintBottom_toTopOf="@+id/booksdetails_text_synopsis"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/booksdetails_text_synopsis"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
                     android:text="TextView"
-                    android:textSize="12dp"
-                    app:layout_constraintStart_toEndOf="@+id/textView9"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:textSize="@dimen/booksdetails_introduce"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
             </android.support.constraint.ConstraintLayout>
 
             <LinearLayout

@@ -74,6 +74,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
             final String lastChapter = cbean.books.get(position).lastChapter;
             float i_latelyFollower = (float) cbean.books.get(position).latelyFollower;
             final String bookid = cbean.books.get(position)._id;
+            final String bookmsg = cbean.books.get(position).shortIntro;
             String latelyFollower;
             DecimalFormat fnum = new DecimalFormat("##0.0");
             if (i_latelyFollower >= 10000) {
@@ -112,7 +113,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
             holder.iv_cover.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    BooksDetailsActivity.starActivity(context,bookid);
+                    BooksDetailsActivity.starActivity(context,bookid,bookmsg);
                 }
             });
 
