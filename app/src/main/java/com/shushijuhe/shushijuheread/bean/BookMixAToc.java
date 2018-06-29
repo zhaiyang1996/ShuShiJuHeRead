@@ -37,6 +37,7 @@ public class BookMixAToc implements Serializable {
             public int currency;
             public boolean unreadble;
             public boolean isVip;
+            public boolean isOnline = true; //是否为在线,默认为在线
 
             public Chapters() {
             }

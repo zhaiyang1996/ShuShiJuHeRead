@@ -266,19 +266,27 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             bookBodylist.removeAll(bookBodylist);
         bookBodylist.add(bookMixAToc.mixToc.chapters.get(mixAtoc).title);
         showWaitingDialog("数据加载中...");
-        DataManager.getInstance().getBookChapter(new ProgressSubscriber<ChapterRead>(new SubscriberOnNextListenerInstance() {
-            @Override
-            public void onNext(Object o) {
-                ChapterRead chapterRead = (ChapterRead) o;
-                book = chapterRead.chapter.body;
-                bookx = book;
-                //加载书籍文章
-                read_book_x.setText(book);
-                bookBodylist.add(book);
-                handler.sendEmptyMessage(0x223);
+        //判断是否为在线或本地以便于加载书籍数据
+        if(bookMixAToc.mixToc.chapters.get(mixAtoc).isOnline){
+            //没有离线则获取网络数据
+            DataManager.getInstance().getBookChapter(new ProgressSubscriber<ChapterRead>(new SubscriberOnNextListenerInstance() {
+                @Override
+                public void onNext(Object o) {
+                    ChapterRead chapterRead = (ChapterRead) o;
+                    book = chapterRead.chapter.body;
+                    bookx = book;
+                    //加载书籍文章
+                    read_book_x.setText(book);
+                    bookBodylist.add(book);
+                    handler.sendEmptyMessage(0x223);
 //                getBookPage(book);
-            }
-        }, this, null), bookMixAToc.mixToc.chapters.get(mixAtoc).link);
+                }
+            }, this, null), bookMixAToc.mixToc.chapters.get(mixAtoc).link);
+        }else{
+            //若离线则加载本地数据
+
+        }
+
     }
 
     @SuppressLint("HandlerLeak")
@@ -898,7 +906,7 @@ public void isTiemx(){
      * @param bookName 书名
      * @param bookMixatoc 阅读章节
      * @param bookPage 章节页码
-     * @param isonline 是否为在线阅读
+     * @param isonline 是否所有章节都已离线
      */
     public static void statrActivity(Activity context, BookMixAToc bookMixAToc, String bookName, int bookMixatoc, int bookPage,boolean isonline){
         Intent init = new Intent(context,ReadActivity.class);
