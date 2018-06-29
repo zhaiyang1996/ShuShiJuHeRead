@@ -3,6 +3,7 @@ package com.shushijuhe.shushijuheread.application;
 import android.app.Application;
 import android.util.Log;
 
+import com.shushijuhe.shushijuheread.bean.BookMixAToc;
 import com.shushijuhe.shushijuheread.constants.Constants;
 import com.shushijuhe.shushijuheread.greendao.DaoMaster;
 import com.shushijuhe.shushijuheread.greendao.DaoSession;
@@ -18,6 +19,7 @@ import cn.jpush.android.api.JPushInterface;
 
 public class app extends Application{
     private static DaoSession daoSessionBooksheif;
+    public static BookMixAToc bookMixAToc;
     @Override
     public void onCreate() {
         super.onCreate();

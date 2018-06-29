@@ -36,6 +36,7 @@ import com.shushijuhe.shushijuheread.R;
 import com.shushijuhe.shushijuheread.activity.base.BaseActivity;
 import com.shushijuhe.shushijuheread.activity.base.TxtPageBean;
 import com.shushijuhe.shushijuheread.animation.Read_ainmation;
+import com.shushijuhe.shushijuheread.application.app;
 import com.shushijuhe.shushijuheread.bean.BookMixAToc;
 import com.shushijuhe.shushijuheread.bean.ChapterRead;
 import com.shushijuhe.shushijuheread.bean.ReadPatternBean;
@@ -223,7 +224,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
 
         Intent intent = getIntent();
         if(intent!=null){
-            bookMixAToc = (BookMixAToc) getIntent().getSerializableExtra(READBOOKMIX);
+            bookMixAToc = app.bookMixAToc;
             mixAtoc = getIntent().getIntExtra(BOOKMIXATOC,0);
             bookName_str = getIntent().getStringExtra(BOOKNAME);
             page = getIntent().getIntExtra(BOOKPAGE,0);
@@ -926,9 +927,9 @@ public void isTiemx(){
      * @param bookPage 章节页码
      * @param isonline 是否所有章节都已离线
      */
-    public static void statrActivity(Activity context, BookMixAToc bookMixAToc, String bookName, int bookMixatoc, int bookPage,boolean isonline){
+    public static void statrActivity(BaseActivity context, BookMixAToc bookMixAToc, String bookName, int bookMixatoc, int bookPage,boolean isonline){
+        app.bookMixAToc = bookMixAToc;
         Intent init = new Intent(context,ReadActivity.class);
-        init.putExtra(READBOOKMIX,bookMixAToc);
         init.putExtra(BOOKNAME,bookName);
         init.putExtra(BOOKMIXATOC,bookMixatoc);
         init.putExtra(BOOKPAGE,bookPage);
