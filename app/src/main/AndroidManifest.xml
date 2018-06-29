@@ -49,15 +49,15 @@
 
         </activity>
         <activity android:name=".activity.BookCategoryActivity">
-
-        </activity>
-        <activity android:name=".activity.CategoryDetailsActivity" />
-        <activity android:name=".activity.ReadActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".activity.CategoryDetailsActivity" />
+        <activity android:name=".activity.ReadActivity">
+
         </activity>
         <activity android:name=".activity.BookrackActivity"/>
         <activity android:name=".activity.BooksDetailsActivity"/>

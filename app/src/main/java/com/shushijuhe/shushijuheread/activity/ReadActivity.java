@@ -219,27 +219,27 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
         width = display.widthPixels;
 
         Intent intent = getIntent();
-//        if(intent!=null){
-//            bookMixAToc = (BookMixAToc) getIntent().getSerializableExtra(READBOOKMIX);
-//            mixAtoc = getIntent().getIntExtra(BOOKMIXATOC,0);
-//            bookName_str = getIntent().getStringExtra(BOOKNAME);
-//            page = getIntent().getIntExtra(BOOKPAGE,0);
-//            isOnline = intent.getBooleanExtra(BOOKISONLINE,true);
-//            setBooksData();
-//        }
+        if(intent!=null){
+            bookMixAToc = (BookMixAToc) getIntent().getSerializableExtra(READBOOKMIX);
+            mixAtoc = getIntent().getIntExtra(BOOKMIXATOC,0);
+            bookName_str = getIntent().getStringExtra(BOOKNAME);
+            page = getIntent().getIntExtra(BOOKPAGE,0);
+            isOnline = intent.getBooleanExtra(BOOKISONLINE,true);
+            setBooksData();
+        }
 
 
-        DataManager.getInstance().getBookMixAToc(new ProgressSubscriber<BookMixAToc>(new SubscriberOnNextListenerInstance() {
-            @Override
-            public void onNext(Object o) {
-                bookMixAToc = (BookMixAToc) o;
-                if (bookMixAToc != null) {
-                    setBooksData();
-                } else {
-                    toast("目录获取异常");
-                }
-            }
-        }, this, null), "555abb2d91d0eb814e5db04f", "chapters");
+//        DataManager.getInstance().getBookMixAToc(new ProgressSubscriber<BookMixAToc>(new SubscriberOnNextListenerInstance() {
+//            @Override
+//            public void onNext(Object o) {
+//                bookMixAToc = (BookMixAToc) o;
+//                if (bookMixAToc != null) {
+//                    setBooksData();
+//                } else {
+//                    toast("目录获取异常");
+//                }
+//            }
+//        }, this, null), "555abb2d91d0eb814e5db04f", "chapters");
 
     }
 

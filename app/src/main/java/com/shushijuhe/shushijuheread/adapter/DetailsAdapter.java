@@ -1,5 +1,6 @@
 package com.shushijuhe.shushijuheread.adapter;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.shushijuhe.shushijuheread.R;
+import com.shushijuhe.shushijuheread.activity.BooksDetailsActivity;
 import com.shushijuhe.shushijuheread.bean.Book_infoBean;
 import com.shushijuhe.shushijuheread.bean.Categories_infoBean;
 import com.shushijuhe.shushijuheread.constants.Constants;
@@ -33,7 +35,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
     private Book_infoBean bbean;
     private Context context;
 
-    public DetailsAdapter(Context context, int type) {
+    public DetailsAdapter(Activity context, int type) {
         this.context = context;
         this.type = type;
     }
@@ -71,6 +73,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
             final String author = cbean.books.get(position).author;
             final String lastChapter = cbean.books.get(position).lastChapter;
             float i_latelyFollower = (float) cbean.books.get(position).latelyFollower;
+            final String bookid = cbean.books.get(position)._id;
             String latelyFollower;
             DecimalFormat fnum = new DecimalFormat("##0.0");
             if (i_latelyFollower >= 10000) {
@@ -105,11 +108,11 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
                     return false;
                 }
             });
-
+            //设置单击事件
             holder.iv_cover.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "我是" + title, Toast.LENGTH_SHORT).show();
+                    BooksDetailsActivity.starActivity(context,bookid);
                 }
             });
 

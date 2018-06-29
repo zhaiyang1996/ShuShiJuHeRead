@@ -116,6 +116,11 @@ public class PlayActivty extends BaseActivity {
 
     @Override
     public void initToolBar() {
+
+    }
+
+    @Override
+    public void initStar() {
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         Intent intent = getIntent();
         if (intent != null) {
@@ -139,10 +144,10 @@ public class PlayActivty extends BaseActivity {
         } catch (Exception e) {
         }
 
-		/*
-		 * getWindow().addFlags(
-		 * android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		 */
+        /*
+         * getWindow().addFlags(
+         * android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN);
+         */
     }
 
     @Override

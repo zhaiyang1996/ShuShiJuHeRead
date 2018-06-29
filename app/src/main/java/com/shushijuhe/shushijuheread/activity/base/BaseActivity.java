@@ -30,8 +30,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-        initToolBar();
         setContentView(getLayoutId());
+        initToolBar();
         onCJZT();
         mContext = this;
         ButterKnife.bind(this);
@@ -66,6 +66,11 @@ public abstract class BaseActivity extends AppCompatActivity {
      * 对各种控件进行设置、适配、填充数据
      */
     public abstract void initEvent();
+
+    /**
+     * 在加载布局前执行的方法
+     */
+    public void initStar(){};
 
     @Override
     protected void onDestroy() {
