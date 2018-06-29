@@ -62,14 +62,14 @@ public class BooksDetailsActivity extends BaseActivity implements View.OnClickLi
     public void initToolBar() {
         // 顶部设置
         TopMenuHeader topMenu = new TopMenuHeader(getWindow().getDecorView(), this);
-        topMenu.setTopMenuHeader(R.mipmap.title_backtrack, "",
-                "书籍详情", R.mipmap.title_seek, R.mipmap.title_menu);
+        topMenu.setTopMenuHeader(R.mipmap.title_backtrack, "书籍详情",
+                "", R.mipmap.title_seek, R.mipmap.title_menu);
     }
 
     @Override
     public void initView() {
         bookId = getIntent().getStringExtra(BOOKID);
-       //初始化数据
+        //初始化数据
         showWaitingDialog("书籍数据加载中...");
         setData();
     }

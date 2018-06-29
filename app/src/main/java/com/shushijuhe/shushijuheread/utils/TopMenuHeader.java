@@ -82,7 +82,7 @@ public class TopMenuHeader {
         } else {
             topTextcentre.setVisibility(View.GONE);
         }
-        if (topTextViewLeft.equals("")) {
+        if (!topTextViewLeft.equals("")) {
             topTextLeft.setText(topTextViewLeft);
         } else {
             topTextLeft.setVisibility(View.GONE);
