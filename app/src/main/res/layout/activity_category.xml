@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
+    <include layout="@layout/public_header"/>
     <fragment
         android:id="@+id/fffff"
         android:name="com.shushijuhe.shushijuheread.fragment.BookCategoryFragment"

@@ -65,7 +65,14 @@ public class BooksDetailsActivity extends BaseActivity implements View.OnClickLi
         // 顶部设置
         TopMenuHeader topMenu = new TopMenuHeader(getWindow().getDecorView(), this);
         topMenu.setTopMenuHeader(R.mipmap.title_backtrack, "书籍详情",
-                "", R.mipmap.title_seek, R.mipmap.title_menu);
+                "", -1, -1);
+        //标题栏点击事件，get相应控件
+        topMenu.getTopIvLeft().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     @Override

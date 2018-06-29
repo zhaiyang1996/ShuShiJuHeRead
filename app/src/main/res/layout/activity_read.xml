@@ -235,6 +235,7 @@
 
 
             <Button
+                android:id="@+id/read_back"
                 android:layout_width="27dp"
                 android:layout_height="27dp"
                 android:layout_marginLeft="10dp"

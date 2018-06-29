@@ -30,6 +30,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+        initStar();
         setContentView(getLayoutId());
         initToolBar();
         onCJZT();

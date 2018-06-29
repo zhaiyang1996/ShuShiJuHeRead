@@ -107,6 +107,8 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     ReadingTextView read_book_x;
     @BindView(R.id.huadong_beijing_zhu)
     RelativeLayout ZhuBeiJing;
+    @BindView(R.id.read_back)
+    Button btn_back;
 
 
     @BindView(R.id.read_zongse)
@@ -199,6 +201,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
         btnDown.setOnClickListener(this);
         button.setOnClickListener(this);
         bookQuxiaocaidanx.setOnClickListener(this);
+        btn_back.setOnClickListener(this);
         //设置阅读背景
         readZongse.setOnClickListener(setPattern);
         readNiupix.setOnClickListener(setPattern);
@@ -273,6 +276,10 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                 @Override
                 public void onNext(Object o) {
                     ChapterRead chapterRead = (ChapterRead) o;
+                    if(chapterRead.chapter.body.isEmpty()&&chapterRead.chapter.body.length()<10){
+                        toast("获取书籍失败，打开重试...");
+                        return;
+                    }
                     book = chapterRead.chapter.body;
                     bookx = book;
                     //加载书籍文章
@@ -280,6 +287,12 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                     bookBodylist.add(book);
                     handler.sendEmptyMessage(0x223);
 //                getBookPage(book);
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    super.onError(e);
+                    toast("获取书籍失败，打开重试...");
                 }
             }, this, null), bookMixAToc.mixToc.chapters.get(mixAtoc).link);
         }else{
@@ -650,6 +663,10 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             case R.id.book_quxiaocaidanx:
                 //取消菜单
                 Read_ainmation.disMenuAinm(this, bookCaidanweix, bookCaidanToux, bookQuxiaocaidanx);
+                break;
+            case R.id.read_back:
+                finish();
+                break;
         }
     }
 

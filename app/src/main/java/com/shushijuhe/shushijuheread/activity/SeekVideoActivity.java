@@ -56,25 +56,23 @@ public class SeekVideoActivity extends BaseActivity {
 
     @Override
     public void initToolBar() {
-
-    }
-
-    @Override
-    public void initView() {
-        // 顶部设置
         TopMenuHeader topMenu = new TopMenuHeader(getWindow().getDecorView(), this);
-        //先在布局添加<include layout="@layout/public_header" />
-        //设置参数ImageView不需要设置小于0，text不需要设置控字符串""
-        topMenu.setTopMenuHeader(R.mipmap.title_backtrack, "111",
-                "测试", R.mipmap.title_seek, R.mipmap.title_menu);
-
+        topMenu.setTopMenuHeader(R.mipmap.title_backtrack, "视频搜索",
+                "", -1, -1);
         //标题栏点击事件，get相应控件
         topMenu.getTopIvLeft().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toast("你点击了左图");
+                finish();
             }
         });
+    }
+
+    @Override
+    public void initView() {
+
+
+
 
         myAdapter = new MyAdapter();
         listView.setAdapter(myAdapter);
