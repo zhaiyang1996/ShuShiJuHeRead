@@ -5,10 +5,13 @@ import android.util.Log;
 
 import com.shushijuhe.shushijuheread.bean.BookDetailBean;
 import com.shushijuhe.shushijuheread.bean.BookMixAToc;
+import com.shushijuhe.shushijuheread.bean.BookMixATocLocalBean;
 import com.shushijuhe.shushijuheread.constants.Constants;
 import com.shushijuhe.shushijuheread.greendao.DaoMaster;
 import com.shushijuhe.shushijuheread.greendao.DaoSession;
 import com.tencent.smtt.sdk.QbSdk;
+
+import java.util.List;
 
 import cn.jiguang.analytics.android.api.JAnalyticsInterface;
 import cn.jpush.android.api.JPushInterface;
@@ -19,6 +22,7 @@ import cn.jpush.android.api.JPushInterface;
 
 public class app extends Application{
     public static BookMixAToc bookMixAToc;
+    public static List<BookMixATocLocalBean> bookMixATocLocalBean;
     public static BookDetailBean bookDetailBean;
     @Override
     public void onCreate() {

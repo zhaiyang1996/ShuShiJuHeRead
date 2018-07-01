@@ -23,7 +23,7 @@ public class BookshelfBeanDaoUtils {
     }
 
     /**
-     * 完成BookshelfBean记录的插入，如果表未创建，先创建MBookshelfBean表
+     * 完成BookshelfBean记录的插入，如果表未创建，BookshelfBean
      * @param bookshelfBean
      * @return
      */
@@ -137,5 +137,12 @@ public class BookshelfBeanDaoUtils {
     public List<BookshelfBean> queryBookshelfBeanByQueryBuilder(String id){
         QueryBuilder<BookshelfBean> queryBuilder = mManager.getDaoSession().queryBuilder(BookshelfBean.class);
         return queryBuilder.where(BookshelfBeanDao.Properties.BookId.eq(id)).list();
+    }
+
+    /**
+     * 关闭数据库
+     */
+    public void closeConnection(){
+        mManager.closeConnection();
     }
 }

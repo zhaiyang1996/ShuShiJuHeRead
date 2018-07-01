@@ -14,7 +14,10 @@ import com.shushijuhe.shushijuheread.R;
 import com.shushijuhe.shushijuheread.activity.base.BaseActivity;
 import com.shushijuhe.shushijuheread.application.app;
 import com.shushijuhe.shushijuheread.bean.BookMixAToc;
+import com.shushijuhe.shushijuheread.bean.BookMixATocLocalBean;
 import com.shushijuhe.shushijuheread.utils.TopMenuHeader;
+
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -29,6 +32,7 @@ public class BookMixATocActivity  extends BaseActivity{
     public static String MIX = "MIX";
     public static String BOOKNAME = "BOOKNAME";
     public BookMixAToc bookMixAToc;
+    public List<BookMixATocLocalBean> bookMixATocLocalBean;
     public int mix = 0;
     public String bookName;
     @Override
@@ -55,6 +59,7 @@ public class BookMixATocActivity  extends BaseActivity{
         mix = getIntent().getIntExtra(MIX,0);
         bookName = getIntent().getStringExtra(BOOKNAME);
         bookMixAToc = app.bookMixAToc;
+        bookMixATocLocalBean = app.bookMixATocLocalBean;
         if(bookMixAToc!=null&&bookMixAToc.mixToc.chapters.size()>0){
             listView.setAdapter(new MyAdapter());
             if(mix>0){
@@ -74,7 +79,7 @@ public class BookMixATocActivity  extends BaseActivity{
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //打开阅读界面，默认page为1
-                ReadActivity.statrActivity(BookMixATocActivity.this,bookMixAToc,bookName,i,0);
+                ReadActivity.statrActivity(BookMixATocActivity.this,bookMixAToc,bookMixATocLocalBean,bookName,i,0,true);
             }
         });
     }
@@ -86,8 +91,14 @@ public class BookMixATocActivity  extends BaseActivity{
      * @param mix 具体章节
      * @param bookName 书籍名称
      */
-    public static void statrActivity(Context context, BookMixAToc bookMixAToc,int mix,String bookName){
-        app.bookMixAToc = bookMixAToc;
+    public static void statrActivity(Context context, BookMixAToc bookMixAToc, List<BookMixATocLocalBean> bookMixATocLocalBean, int mix, String bookName){
+        if(bookMixAToc == null){
+            app.bookMixAToc = null;
+            app.bookMixATocLocalBean = bookMixATocLocalBean;
+        }else{
+            app.bookMixAToc = bookMixAToc;
+            app.bookMixATocLocalBean = null;
+        }
         Intent intent = new Intent(context,BookMixATocActivity.class);
         intent.putExtra(MIX,mix);
         intent.putExtra(BOOKNAME,bookName);

@@ -137,4 +137,10 @@ public class BookDataDaoUtils {
         QueryBuilder<BookData> queryBuilder = mManager.getDaoSession().queryBuilder(BookData.class);
         return queryBuilder.where(BookDataDao.Properties.BookId.eq(id)).list();
     }
+    /**
+     * 关闭数据库
+     */
+    public void closeConnection(){
+        mManager.closeConnection();
+    }
 }

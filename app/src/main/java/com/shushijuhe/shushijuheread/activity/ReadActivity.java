@@ -148,6 +148,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     private TestSlidingAdapter myslid;
     private OverlappedSlider myover;
     private BookMixAToc bookMixAToc;
+    private List<BookMixATocLocalBean> bookMixATocLocalBean;
     private String book; //书籍详细类容
     private String bookx; //书籍详细类容备份
     private List<String> bookBodylist;
@@ -175,9 +176,11 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     public static String BOOKMIXATOC = "BOOKMIXATOC";//阅读章节
     public static String BOOKPAGE = "BOOKPAGE";//阅读章节页码
     public static String BOOKISONLINE = "BOOKISONLINE"; //是否为在线阅读
+    public static String ISMIX = "ISMIX";
     public List<TxtPageBean> txtPageBeans; //章节分页list
     public boolean isOnline = true;
     boolean isRefresh = false; //是否需要刷新
+    boolean isMix = false;
     BookshelfBeanDaoUtils bookshelfBeanDaoUtils; //书架数据库操作类
     BookMixATocLocalBeanDaoUtils bookMixATocLocalBeanDaoUtils; //书籍章节数据库操作类
     BookReadHistoryDaoUtils bookReadHistoryDaoUtils; //书籍阅读记录数据库操作类
@@ -238,12 +241,30 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
         Intent intent = getIntent();
         if(intent!=null){
             bookMixAToc = app.bookMixAToc;
+            bookMixATocLocalBean = app.bookMixATocLocalBean;
             mixAtoc = getIntent().getIntExtra(BOOKMIXATOC,0);
             bookName_str = getIntent().getStringExtra(BOOKNAME);
             page = getIntent().getIntExtra(BOOKPAGE,0);
+            isMix = getIntent().getBooleanExtra(ISMIX,false);
+            //查询历史记录
+            String id;
+            if(bookMixAToc!=null){
+                id = bookMixAToc.mixToc._id;
+            }else{
+                id = bookMixATocLocalBean.get(0).bookid;
+            }
+            //加入书籍历史记录
+            if(!isMix){
+                List<BookReadHistory> bookshelfBeans = bookReadHistoryDaoUtils.queryBookReadHistoryQueryBuilder(id);
+                if(bookshelfBeans!=null&&bookshelfBeans.size()>0){
+                    mixAtoc = bookshelfBeans.get(0).getMix();
+                    page = bookshelfBeans.get(0).getPaga();
+                    isRefresh = true;
+                }
+            }
+
             setBooksData();
         }
-
 
 //        DataManager.getInstance().getBookMixAToc(new ProgressSubscriber<BookMixAToc>(new SubscriberOnNextListenerInstance() {
 //            @Override
@@ -280,10 +301,24 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
         bookZitisizex.setText(zitidaxiao + "");
         if (bookBodylist.size() > 0)
             bookBodylist.removeAll(bookBodylist);
-        bookBodylist.add(bookMixAToc.mixToc.chapters.get(mixAtoc).title);
+        if(bookMixAToc!=null){
+            bookBodylist.add(bookMixAToc.mixToc.chapters.get(mixAtoc).title);
+        }else{
+            bookBodylist.add(bookMixATocLocalBean.get(mixAtoc).title);
+        }
+
         showWaitingDialog("数据加载中...");
         //判断是否为在线或本地以便于加载书籍数据
-        if(bookMixAToc.mixToc.chapters.get(mixAtoc).isOnline){
+        boolean isOnline;
+        String link;
+        if(bookMixAToc!=null){
+            isOnline = bookMixAToc.mixToc.chapters.get(mixAtoc).isOnline;
+            link =  bookMixAToc.mixToc.chapters.get(mixAtoc).link;
+        }else{
+            isOnline = bookMixATocLocalBean.get(mixAtoc).isOnline;
+            link = bookMixATocLocalBean.get(mixAtoc).link;
+        }
+        if(isOnline){
             //没有离线则获取网络数据
             DataManager.getInstance().getBookChapter(new ProgressSubscriber<ChapterRead>(new SubscriberOnNextListenerInstance() {
                 @Override
@@ -308,7 +343,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                     super.onError(e);
                     toast("获取书籍失败，打开重试...");
                 }
-            }, this, null), bookMixAToc.mixToc.chapters.get(mixAtoc).link);
+            }, this, null),link);
         }else{
             //若离线则加载本地数据
 
@@ -326,7 +361,6 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                 case 0x123:
                     int i =1;
                     for(String p :bookBodylist){
-
                         if(i<bookBodylist.size()){
                             String s;
                             if(bookBodylist.get(i).length()>15){
@@ -444,7 +478,13 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                 contentView = getLayoutInflater().inflate(R.layout.sliding_content, null);
             init(contentView);
             bookName.setText(bookName_str);
-            bookZj.setText(bookMixAToc.mixToc.chapters.get(mixAtoc).title);
+            String s ;
+            if(bookMixAToc!=null){
+                s = bookMixAToc.mixToc.chapters.get(mixAtoc).title;
+            }else{
+                s =bookMixATocLocalBean.get(mixAtoc).title;
+            }
+            bookZj.setText(s);
             bookBody.setText(strings);
             if(page >= bookBodylist.size()-2){
                 bookBody.setGravity(Gravity.TOP);
@@ -662,7 +702,13 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                 }
                 break;
             case R.id.btn_down:
-                if (mixAtoc < bookMixAToc.mixToc.chapters.size() - 1) {
+                int size;
+                if(bookMixAToc!=null){
+                    size =  bookMixAToc.mixToc.chapters.size();
+                }else{
+                    size = bookMixATocLocalBean.size();
+                }
+                if (mixAtoc < size - 1) {
                     ++mixAtoc;
                     bookCurrent = false;
                     setBooksData();
@@ -682,7 +728,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                 bookShelf();
                 break;
             case R.id.readmix:
-                BookMixATocActivity.statrActivity(this,bookMixAToc,mixAtoc,bookName_str);
+                BookMixATocActivity.statrActivity(this,bookMixAToc,bookMixATocLocalBean,mixAtoc,bookName_str);
                 break;
 
         }
@@ -889,7 +935,13 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                 bookZitisizex.setText(zitidaxiao + "");
                 if (bookBodylist.size() > 0)
                     bookBodylist.removeAll(bookBodylist);
-                bookBodylist.add(bookMixAToc.mixToc.chapters.get(mixAtoc).title);
+                String s;
+                if(bookMixAToc!=null){
+                  s = bookMixAToc.mixToc.chapters.get(mixAtoc).title;
+                }else{
+                  s = bookMixATocLocalBean .get(mixAtoc).title;
+                }
+                bookBodylist.add(s);
                 book = bookx;
                 read_book_x.setText(book);
                 bookBodylist.add(book);
@@ -941,10 +993,15 @@ public void isTiemx(){
     }
     //退出应用执行是否加入书架方法
     public void bookShelf(){
-        List<BookshelfBean> bookshelfBeans = bookshelfBeanDaoUtils.queryBookshelfBeanByQueryBuilder(bookMixAToc.mixToc._id);
+    String id;
+    if(bookMixAToc!=null){
+        id = bookMixAToc.mixToc._id;
+    }else{
+        id = bookMixATocLocalBean.get(0).bookid;
+    }
+        List<BookshelfBean> bookshelfBeans = bookshelfBeanDaoUtils.queryBookshelfBeanByQueryBuilder(id);
         if(bookshelfBeans!=null&&bookshelfBeans.size()>0){
             setReadHistory();
-
         }else{
             //打开提示框是否将此书加入书架
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -981,23 +1038,34 @@ public void isTiemx(){
         }
     }
     public void setReadHistory(){
+        String id;
+        if(bookMixAToc!=null){
+            id = bookMixAToc.mixToc._id;
+        }else{
+            id = bookMixATocLocalBean.get(0).bookid;
+        }
         //加入书籍历史记录
-        List<BookReadHistory> bookshelfBeans = bookReadHistoryDaoUtils.queryBookReadHistoryQueryBuilder(bookMixAToc.mixToc._id);
+        List<BookReadHistory> bookshelfBeans = bookReadHistoryDaoUtils.queryBookReadHistoryQueryBuilder(id);
         if(bookshelfBeans!=null&&bookshelfBeans.size()>0){
             //存在则更新
             BookReadHistory bookReadHistory = new BookReadHistory();
-            bookReadHistory.setBookid(bookMixAToc.mixToc._id);
+            bookReadHistory.setId(bookshelfBeans.get(0).getId());
+            bookReadHistory.setBookid(id);
             bookReadHistory.setMix(mixAtoc);
             bookReadHistory.setPaga(page);
             bookReadHistoryDaoUtils.updateBookReadHistory(bookReadHistory);
         }else{
             //不存在则添加
             BookReadHistory bookReadHistory = new BookReadHistory();
-            bookReadHistory.setBookid(bookMixAToc.mixToc._id);
+            bookReadHistory.setBookid(id);
             bookReadHistory.setMix(mixAtoc);
             bookReadHistory.setPaga(page);
             bookReadHistoryDaoUtils.insertBookReadHistory(bookReadHistory);
         }
+        //关闭数据库
+        bookshelfBeanDaoUtils.closeConnection();
+        bookMixATocLocalBeanDaoUtils.closeConnection();
+        bookReadHistoryDaoUtils.closeConnection();
         finish();
     }
 
@@ -1005,16 +1073,26 @@ public void isTiemx(){
      * 跳转至阅读界面
      * @param context 上下文
      * @param bookMixAToc 阅读目录
+     * @param bookMixATocLocalBean 阅读目录（本地）
      * @param bookName 书名
      * @param bookMixatoc 阅读章节
      * @param bookPage 章节页码
+     * @param isMix 是否为目录跳转：用于判断是否加载历史记录
      */
-    public static void statrActivity(BaseActivity context, BookMixAToc bookMixAToc, String bookName, int bookMixatoc, int bookPage){
-        app.bookMixAToc = bookMixAToc;
+    public static void statrActivity(BaseActivity context, BookMixAToc bookMixAToc,List<BookMixATocLocalBean> bookMixATocLocalBean, String bookName, int bookMixatoc, int bookPage,boolean isMix){
+        if(bookMixAToc == null){
+            app.bookMixAToc = null;
+            app.bookMixATocLocalBean = bookMixATocLocalBean;
+        }else{
+            app.bookMixAToc = bookMixAToc;
+            app.bookMixATocLocalBean = null;
+        }
+
         Intent init = new Intent(context,ReadActivity.class);
         init.putExtra(BOOKNAME,bookName);
         init.putExtra(BOOKMIXATOC,bookMixatoc);
         init.putExtra(BOOKPAGE,bookPage);
+        init.putExtra(ISMIX,isMix);
         init.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //同名activity只允许一个存活
         context.startActivity(init);
     }

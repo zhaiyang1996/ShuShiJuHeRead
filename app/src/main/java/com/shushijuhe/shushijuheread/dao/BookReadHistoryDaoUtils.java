@@ -140,4 +140,10 @@ public class BookReadHistoryDaoUtils {
         QueryBuilder<BookReadHistory> queryBuilder = mManager.getDaoSession().queryBuilder(BookReadHistory.class);
         return queryBuilder.where(BookReadHistoryDao.Properties.Bookid.eq(id)).list();
     }
+    /**
+     * 关闭数据库
+     */
+    public void closeConnection(){
+        mManager.closeConnection();
+    }
 }

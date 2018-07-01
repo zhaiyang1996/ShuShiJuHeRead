@@ -140,4 +140,10 @@ public class BookMixATocLocalBeanDaoUtils {
         QueryBuilder<BookMixATocLocalBean> queryBuilder = mManager.getDaoSession().queryBuilder(BookMixATocLocalBean.class);
         return queryBuilder.where(BookMixATocLocalBeanDao.Properties.Id.eq(id)).list();
     }
+    /**
+     * 关闭数据库
+     */
+    public void closeConnection(){
+        mManager.closeConnection();
+    }
 }

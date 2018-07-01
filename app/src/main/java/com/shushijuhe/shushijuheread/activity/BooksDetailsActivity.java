@@ -163,7 +163,7 @@ public class BooksDetailsActivity extends BaseActivity implements View.OnClickLi
                 //开始阅读
                 if(bookMixAToc!=null){
                     if(bookMixAToc.mixToc!=null&&bookMixAToc.mixToc.chapters.size()>0){
-                        ReadActivity.statrActivity(this,bookMixAToc,bookDetailBean.title,0,0);
+                        ReadActivity.statrActivity(this,bookMixAToc,null,bookDetailBean.title,0,0,false);
                     }else{
                         toast("本书暂无资源，换本书看吧~");
                     }
@@ -176,7 +176,7 @@ public class BooksDetailsActivity extends BaseActivity implements View.OnClickLi
                 //查看目录
                 if(bookMixAToc!=null){
                     if(bookMixAToc.mixToc!=null&&bookMixAToc.mixToc.chapters.size()>0){
-                        BookMixATocActivity.statrActivity(this,bookMixAToc,0,bookDetailBean.title);
+                        BookMixATocActivity.statrActivity(this,bookMixAToc,null,0,bookDetailBean.title);
                     }else{
                         toast("本书暂无资源，换本书看吧~");
                     }
