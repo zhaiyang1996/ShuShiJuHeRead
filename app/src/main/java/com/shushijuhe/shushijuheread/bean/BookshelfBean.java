@@ -22,40 +22,21 @@ public class BookshelfBean {
     @Id(autoincrement = true)
     private Long id;  //id
     @NotNull
+    private String bookId; //书籍ID
     private String name;//书名
     private String cover;//封面图
-    private String date;//日期
-    private String time;//时间
-    private String chapter;//最新章节
-    public String getChapter() {
-        return this.chapter;
-    }
-    public void setChapter(String chapter) {
-        this.chapter = chapter;
-    }
-    public String getTime() {
-        return this.time;
-    }
-    public void setTime(String time) {
+    private String time;//最新打开时间
+    @Generated(hash = 184990247)
+    public BookshelfBean(Long id, @NotNull String bookId, String name, String cover,
+            String time) {
+        this.id = id;
+        this.bookId = bookId;
+        this.name = name;
+        this.cover = cover;
         this.time = time;
     }
-    public String getDate() {
-        return this.date;
-    }
-    public void setDate(String date) {
-        this.date = date;
-    }
-    public String getCover() {
-        return this.cover;
-    }
-    public void setCover(String cover) {
-        this.cover = cover;
-    }
-    public String getName() {
-        return this.name;
-    }
-    public void setName(String name) {
-        this.name = name;
+    @Generated(hash = 1774987038)
+    public BookshelfBean() {
     }
     public Long getId() {
         return this.id;
@@ -63,17 +44,28 @@ public class BookshelfBean {
     public void setId(Long id) {
         this.id = id;
     }
-    @Generated(hash = 1348266877)
-    public BookshelfBean(Long id, @NotNull String name, String cover, String date,
-            String time, String chapter) {
-        this.id = id;
-        this.name = name;
-        this.cover = cover;
-        this.date = date;
-        this.time = time;
-        this.chapter = chapter;
+    public String getBookId() {
+        return this.bookId;
     }
-    @Generated(hash = 1774987038)
-    public BookshelfBean() {
+    public void setBookId(String bookId) {
+        this.bookId = bookId;
+    }
+    public String getName() {
+        return this.name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getCover() {
+        return this.cover;
+    }
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+    public String getTime() {
+        return this.time;
+    }
+    public void setTime(String time) {
+        this.time = time;
     }
 }

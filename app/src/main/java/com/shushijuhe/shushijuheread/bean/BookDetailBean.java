@@ -15,6 +15,9 @@
  */
 package com.shushijuhe.shushijuheread.bean;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -24,7 +27,7 @@ import java.util.List;
  */
 public class BookDetailBean implements Serializable {
 
-
+    private static final long serialVersionUID = -6522087531757171333L;
     /**
      * _id : 525253d094336b3155000dd8
      * author : w风雪
@@ -71,7 +74,6 @@ public class BookDetailBean implements Serializable {
      * hasCp : true
      * _le : false
      */
-
     public String _id;
     public String author;
     public int banned;

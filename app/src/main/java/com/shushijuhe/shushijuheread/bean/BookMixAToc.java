@@ -1,26 +1,20 @@
 package com.shushijuhe.shushijuheread.bean;
 
-import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
-
-import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by zhaiyang on 2018/6/4.
  */
-@Entity
-public class BookMixAToc implements Serializable {
+public class BookMixAToc {
     /**
      * _id:577e528e2160421a02d7380d
      * name:优质书源
      * link:http://vip.zhuishushenqi.com/toc/577e528e2160421a02d7380d
      */
-    @Id
-    public long id;
+
     public mixToc mixToc;
 
-    public static class mixToc implements Serializable {
+    public static class mixToc  {
         public String _id;
         public String book;
         public String chaptersUpdated;
@@ -34,8 +28,7 @@ public class BookMixAToc implements Serializable {
          */
 
         public List<Chapters> chapters;
-
-        public static class Chapters implements Serializable {
+        public static class Chapters {
             public String title;
             public String link;
             public String id;
@@ -43,14 +36,6 @@ public class BookMixAToc implements Serializable {
             public boolean unreadble;
             public boolean isVip;
             public boolean isOnline = true; //是否为在线,默认为在线
-
-            public Chapters() {
-            }
-
-            public Chapters(String title, String link) {
-                this.title = title;
-                this.link = link;
-            }
         }
     }
 }

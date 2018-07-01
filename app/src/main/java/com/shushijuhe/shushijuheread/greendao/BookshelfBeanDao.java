@@ -25,11 +25,10 @@ public class BookshelfBeanDao extends AbstractDao<BookshelfBean, Long> {
      */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property Cover = new Property(2, String.class, "cover", false, "COVER");
-        public final static Property Date = new Property(3, String.class, "date", false, "DATE");
+        public final static Property BookId = new Property(1, String.class, "bookId", false, "BOOK_ID");
+        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
+        public final static Property Cover = new Property(3, String.class, "cover", false, "COVER");
         public final static Property Time = new Property(4, String.class, "time", false, "TIME");
-        public final static Property Chapter = new Property(5, String.class, "chapter", false, "CHAPTER");
     }
 
 
@@ -46,11 +45,10 @@ public class BookshelfBeanDao extends AbstractDao<BookshelfBean, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"BOOKSHELF_BEAN\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
-                "\"NAME\" TEXT NOT NULL ," + // 1: name
-                "\"COVER\" TEXT," + // 2: cover
-                "\"DATE\" TEXT," + // 3: date
-                "\"TIME\" TEXT," + // 4: time
-                "\"CHAPTER\" TEXT);"); // 5: chapter
+                "\"BOOK_ID\" TEXT NOT NULL ," + // 1: bookId
+                "\"NAME\" TEXT," + // 2: name
+                "\"COVER\" TEXT," + // 3: cover
+                "\"TIME\" TEXT);"); // 4: time
     }
 
     /** Drops the underlying database table. */
@@ -67,26 +65,21 @@ public class BookshelfBeanDao extends AbstractDao<BookshelfBean, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
-        stmt.bindString(2, entity.getName());
+        stmt.bindString(2, entity.getBookId());
+ 
+        String name = entity.getName();
+        if (name != null) {
+            stmt.bindString(3, name);
+        }
  
         String cover = entity.getCover();
         if (cover != null) {
-            stmt.bindString(3, cover);
-        }
- 
-        String date = entity.getDate();
-        if (date != null) {
-            stmt.bindString(4, date);
+            stmt.bindString(4, cover);
         }
  
         String time = entity.getTime();
         if (time != null) {
             stmt.bindString(5, time);
-        }
- 
-        String chapter = entity.getChapter();
-        if (chapter != null) {
-            stmt.bindString(6, chapter);
         }
     }
 
@@ -98,26 +91,21 @@ public class BookshelfBeanDao extends AbstractDao<BookshelfBean, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
-        stmt.bindString(2, entity.getName());
+        stmt.bindString(2, entity.getBookId());
+ 
+        String name = entity.getName();
+        if (name != null) {
+            stmt.bindString(3, name);
+        }
  
         String cover = entity.getCover();
         if (cover != null) {
-            stmt.bindString(3, cover);
-        }
- 
-        String date = entity.getDate();
-        if (date != null) {
-            stmt.bindString(4, date);
+            stmt.bindString(4, cover);
         }
  
         String time = entity.getTime();
         if (time != null) {
             stmt.bindString(5, time);
-        }
- 
-        String chapter = entity.getChapter();
-        if (chapter != null) {
-            stmt.bindString(6, chapter);
         }
     }
 
@@ -130,11 +118,10 @@ public class BookshelfBeanDao extends AbstractDao<BookshelfBean, Long> {
     public BookshelfBean readEntity(Cursor cursor, int offset) {
         BookshelfBean entity = new BookshelfBean( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.getString(offset + 1), // name
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // cover
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // date
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // time
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5) // chapter
+            cursor.getString(offset + 1), // bookId
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // cover
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // time
         );
         return entity;
     }
@@ -142,11 +129,10 @@ public class BookshelfBeanDao extends AbstractDao<BookshelfBean, Long> {
     @Override
     public void readEntity(Cursor cursor, BookshelfBean entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setName(cursor.getString(offset + 1));
-        entity.setCover(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setDate(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setBookId(cursor.getString(offset + 1));
+        entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setCover(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setTime(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setChapter(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
      }
     
     @Override

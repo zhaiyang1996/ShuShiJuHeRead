@@ -3,8 +3,10 @@ package com.shushijuhe.shushijuheread.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
@@ -17,6 +19,7 @@ import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -38,9 +41,16 @@ import com.shushijuhe.shushijuheread.activity.base.TxtPageBean;
 import com.shushijuhe.shushijuheread.animation.Read_ainmation;
 import com.shushijuhe.shushijuheread.application.app;
 import com.shushijuhe.shushijuheread.bean.BookMixAToc;
+import com.shushijuhe.shushijuheread.bean.BookMixATocLocalBean;
+import com.shushijuhe.shushijuheread.bean.BookReadHistory;
+import com.shushijuhe.shushijuheread.bean.BookshelfBean;
 import com.shushijuhe.shushijuheread.bean.ChapterRead;
 import com.shushijuhe.shushijuheread.bean.ReadPatternBean;
 import com.shushijuhe.shushijuheread.constants.Constants;
+import com.shushijuhe.shushijuheread.dao.BookMixATocLocalBeanDaoUtils;
+import com.shushijuhe.shushijuheread.dao.BookReadHistoryDaoUtils;
+import com.shushijuhe.shushijuheread.dao.BookshelfBeanDaoUtils;
+import com.shushijuhe.shushijuheread.greendao.BookshelfBeanDao;
 import com.shushijuhe.shushijuheread.http.DataManager;
 import com.shushijuhe.shushijuheread.http.ProgressSubscriber;
 import com.shushijuhe.shushijuheread.http.SubscriberOnNextListenerInstance;
@@ -49,13 +59,6 @@ import com.shushijuhe.shushijuheread.utils.Tool;
 import com.shushijuhe.shushijuheread.utils.paging.TextViewUtils;
 import com.shushijuhe.shushijuheread.view.BatteryView;
 import com.shushijuhe.shushijuheread.view.ReadingTextView;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileReader;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -175,6 +178,9 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     public List<TxtPageBean> txtPageBeans; //章节分页list
     public boolean isOnline = true;
     boolean isRefresh = false; //是否需要刷新
+    BookshelfBeanDaoUtils bookshelfBeanDaoUtils; //书架数据库操作类
+    BookMixATocLocalBeanDaoUtils bookMixATocLocalBeanDaoUtils; //书籍章节数据库操作类
+    BookReadHistoryDaoUtils bookReadHistoryDaoUtils; //书籍阅读记录数据库操作类
     @Override
     public int getLayoutId() {
         return R.layout.activity_read;
@@ -224,6 +230,10 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
         DisplayMetrics display = mContext.getResources().getDisplayMetrics();
         height = display.heightPixels;
         width = display.widthPixels;
+        //初始化数据库
+        bookshelfBeanDaoUtils = new BookshelfBeanDaoUtils(this);
+        bookMixATocLocalBeanDaoUtils = new BookMixATocLocalBeanDaoUtils(this);
+        bookReadHistoryDaoUtils = new BookReadHistoryDaoUtils(this);
 
         Intent intent = getIntent();
         if(intent!=null){
@@ -669,7 +679,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                 Read_ainmation.disMenuAinm(this, bookCaidanweix, bookCaidanToux, bookQuxiaocaidanx);
                 break;
             case R.id.read_back:
-                finish();
+                bookShelf();
                 break;
             case R.id.readmix:
                 BookMixATocActivity.statrActivity(this,bookMixAToc,mixAtoc,bookName_str);
@@ -922,6 +932,75 @@ public void isTiemx(){
             bookBodylist.add(str.toString());
         }
         handler.sendEmptyMessage(0x123);
+    }
+    //对返回键进行监听
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        bookShelf();
+        return super.onKeyDown(keyCode, event);
+    }
+    //退出应用执行是否加入书架方法
+    public void bookShelf(){
+        List<BookshelfBean> bookshelfBeans = bookshelfBeanDaoUtils.queryBookshelfBeanByQueryBuilder(bookMixAToc.mixToc._id);
+        if(bookshelfBeans!=null&&bookshelfBeans.size()>0){
+            setReadHistory();
+
+        }else{
+            //打开提示框是否将此书加入书架
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            builder.setTitle("提示")
+                    .setMessage("书架中还没有此书哦，是否加入书架？")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            BookshelfBean bookshelfBean = new BookshelfBean();
+                            bookshelfBean.setBookId(bookMixAToc.mixToc._id);
+                            bookshelfBean.setCover(Constants.IMG_BASE_URL+app.bookDetailBean.cover);
+                            bookshelfBean.setName(app.bookDetailBean.title);
+                            bookshelfBean.setTime(Tool.getTime());
+                            bookshelfBeanDaoUtils.insertBookshelfBean(bookshelfBean);
+                            List<BookMixATocLocalBean> bookMixATocLocalBeans = new ArrayList<>();
+                            for(BookMixAToc.mixToc.Chapters chapters:bookMixAToc.mixToc.chapters){
+                                BookMixATocLocalBean bookMixATocLocalBean = new BookMixATocLocalBean();
+                                bookMixATocLocalBean.setId(bookMixAToc.mixToc._id);
+                                bookMixATocLocalBean.setIsOnline(false);
+                                bookMixATocLocalBean.setLink(chapters.link);
+                                bookMixATocLocalBean.setTitle(chapters.title);
+                                bookMixATocLocalBeans.add(bookMixATocLocalBean);
+                            }
+                            bookMixATocLocalBeanDaoUtils.insertMultBookMixATocLocalBean(bookMixATocLocalBeans);
+                            setReadHistory();
+                        }
+                    })
+                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            setReadHistory();
+                        }
+                    });
+            builder.show();
+        }
+    }
+    public void setReadHistory(){
+        //加入书籍历史记录
+        List<BookReadHistory> bookshelfBeans = bookReadHistoryDaoUtils.queryBookReadHistoryQueryBuilder(bookMixAToc.mixToc._id);
+        if(bookshelfBeans!=null&&bookshelfBeans.size()>0){
+            //存在则更新
+            toast("存在");
+            BookReadHistory bookReadHistory = new BookReadHistory();
+            bookReadHistory.setUid(bookMixAToc.mixToc._id);
+            bookReadHistory.setMix(mixAtoc);
+            bookReadHistory.setPaga(page);
+            bookReadHistoryDaoUtils.updateBookReadHistory(bookReadHistory);
+        }else{
+            toast("不存在");
+            //不存在则添加
+            BookReadHistory bookReadHistory = new BookReadHistory();
+            bookReadHistory.setUid(bookMixAToc.mixToc._id);
+            bookReadHistory.setMix(mixAtoc);
+            bookReadHistory.setPaga(page);
+            bookReadHistoryDaoUtils.insertBookReadHistory(bookReadHistory);
+        }
+        finish();
     }
 
     /**

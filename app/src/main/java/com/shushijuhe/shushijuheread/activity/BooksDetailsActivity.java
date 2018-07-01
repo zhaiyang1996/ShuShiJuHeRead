@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.shushijuhe.shushijuheread.R;
 import com.shushijuhe.shushijuheread.activity.base.BaseActivity;
+import com.shushijuhe.shushijuheread.application.app;
 import com.shushijuhe.shushijuheread.bean.BookDetailBean;
 import com.shushijuhe.shushijuheread.bean.BookMixAToc;
 import com.shushijuhe.shushijuheread.constants.Constants;
@@ -124,6 +125,7 @@ public class BooksDetailsActivity extends BaseActivity implements View.OnClickLi
                 Glide.with(mContext)
                         .load(Constants.IMG_BASE_URL + bookDetailBean.cover)
                         .into(cover);
+                app.bookDetailBean = bookDetailBean;
             }
         },mContext,null),bookId);
         //获取目录数据

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.icu.text.SimpleDateFormat;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -28,6 +29,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -326,5 +328,16 @@ public class Tool {
         InputStreamReader isr = new InputStreamReader(new ByteArrayInputStream(by));
         BufferedReader reader = new BufferedReader(isr);
         return reader;
+    }
+
+    /**
+     * 获取当前时间
+     * @return
+     */
+    public static String getTime(){
+        SimpleDateFormat formatter = new SimpleDateFormat ("yyyy年MM月dd日HH:mm:ss ");
+        Date curDate = new Date(System.currentTimeMillis());//获取当前时间
+        String  str =  formatter.format(curDate);
+        return str;
     }
 }
