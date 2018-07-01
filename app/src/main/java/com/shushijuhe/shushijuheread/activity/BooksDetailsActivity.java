@@ -30,7 +30,7 @@ public class BooksDetailsActivity extends BaseActivity implements View.OnClickLi
     @BindView(R.id.booksdetails_text_read)
     TextView read;//开始阅读
     @BindView(R.id.booksdetails_text_chase)
-    TextView chase;//加入书架
+    TextView chase;//查看目录
     @BindView(R.id.booksdetails_text_title)
     TextView title;//书名
     @BindView(R.id.booksdetails_text_genre)
@@ -160,7 +160,25 @@ public class BooksDetailsActivity extends BaseActivity implements View.OnClickLi
             case R.id.booksdetails_text_read:
                 //开始阅读
                 if(bookMixAToc!=null){
-                    ReadActivity.statrActivity(this,bookMixAToc,bookDetailBean.title,0,0,true);
+                    if(bookMixAToc.mixToc!=null&&bookMixAToc.mixToc.chapters.size()>0){
+                        ReadActivity.statrActivity(this,bookMixAToc,bookDetailBean.title,0,0);
+                    }else{
+                        toast("本书暂无资源，换本书看吧~");
+                    }
+
+                }else{
+                    toast("数据还在加载呢！");
+                }
+                break;
+            case R.id.booksdetails_text_chase:
+                //查看目录
+                if(bookMixAToc!=null){
+                    if(bookMixAToc.mixToc!=null&&bookMixAToc.mixToc.chapters.size()>0){
+                        BookMixATocActivity.statrActivity(this,bookMixAToc,0,bookDetailBean.title);
+                    }else{
+                        toast("本书暂无资源，换本书看吧~");
+                    }
+
                 }else{
                     toast("数据还在加载呢！");
                 }

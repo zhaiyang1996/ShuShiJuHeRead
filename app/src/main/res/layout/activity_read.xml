@@ -243,11 +243,13 @@
                 android:background="@mipmap/title_backtrack"/>
         </LinearLayout>
         <Button
+            android:id="@+id/readmix"
             android:layout_width="27dp"
             android:layout_height="27dp"
             android:layout_marginLeft="10dp"
             android:gravity="right"
             android:paddingRight="10dp"
+            android:background="@mipmap/catalog"
             android:layout_marginRight="10dp"
             android:textColor="#ffffff" />
 

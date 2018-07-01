@@ -110,6 +110,8 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     RelativeLayout ZhuBeiJing;
     @BindView(R.id.read_back)
     Button btn_back;
+    @BindView(R.id.readmix)
+    Button btn_mix;
 
 
     @BindView(R.id.read_zongse)
@@ -203,6 +205,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
         button.setOnClickListener(this);
         bookQuxiaocaidanx.setOnClickListener(this);
         btn_back.setOnClickListener(this);
+        btn_mix.setOnClickListener(this);
         //设置阅读背景
         readZongse.setOnClickListener(setPattern);
         readNiupix.setOnClickListener(setPattern);
@@ -228,7 +231,6 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             mixAtoc = getIntent().getIntExtra(BOOKMIXATOC,0);
             bookName_str = getIntent().getStringExtra(BOOKNAME);
             page = getIntent().getIntExtra(BOOKPAGE,0);
-            isOnline = intent.getBooleanExtra(BOOKISONLINE,true);
             setBooksData();
         }
 
@@ -278,7 +280,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                 public void onNext(Object o) {
                     ChapterRead chapterRead = (ChapterRead) o;
                     if (chapterRead.isOk()){
-                        book = chapterRead.getChapter().getBody();
+                        book = "\u3000\u3000"+chapterRead.getChapter().getBody().replace("\n","\n\u3000\u3000");
                         bookx = book;
                         //加载书籍文章
                         read_book_x.setText(book);
@@ -669,6 +671,10 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             case R.id.read_back:
                 finish();
                 break;
+            case R.id.readmix:
+                BookMixATocActivity.statrActivity(this,bookMixAToc,mixAtoc,bookName_str);
+                break;
+
         }
     }
 
@@ -925,15 +931,13 @@ public void isTiemx(){
      * @param bookName 书名
      * @param bookMixatoc 阅读章节
      * @param bookPage 章节页码
-     * @param isonline 是否所有章节都已离线
      */
-    public static void statrActivity(BaseActivity context, BookMixAToc bookMixAToc, String bookName, int bookMixatoc, int bookPage,boolean isonline){
+    public static void statrActivity(BaseActivity context, BookMixAToc bookMixAToc, String bookName, int bookMixatoc, int bookPage){
         app.bookMixAToc = bookMixAToc;
         Intent init = new Intent(context,ReadActivity.class);
         init.putExtra(BOOKNAME,bookName);
         init.putExtra(BOOKMIXATOC,bookMixatoc);
         init.putExtra(BOOKPAGE,bookPage);
-        init.putExtra(BOOKISONLINE,isonline);
         init.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //同名activity只允许一个存活
         context.startActivity(init);
     }

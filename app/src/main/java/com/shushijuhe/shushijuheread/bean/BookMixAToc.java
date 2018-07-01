@@ -1,18 +1,23 @@
 package com.shushijuhe.shushijuheread.bean;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+
 import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by zhaiyang on 2018/6/4.
  */
-
+@Entity
 public class BookMixAToc implements Serializable {
     /**
      * _id:577e528e2160421a02d7380d
      * name:优质书源
      * link:http://vip.zhuishushenqi.com/toc/577e528e2160421a02d7380d
      */
+    @Id
+    public long id;
     public mixToc mixToc;
 
     public static class mixToc implements Serializable {
