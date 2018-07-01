@@ -961,7 +961,7 @@ public void isTiemx(){
                             List<BookMixATocLocalBean> bookMixATocLocalBeans = new ArrayList<>();
                             for(BookMixAToc.mixToc.Chapters chapters:bookMixAToc.mixToc.chapters){
                                 BookMixATocLocalBean bookMixATocLocalBean = new BookMixATocLocalBean();
-                                bookMixATocLocalBean.setId(bookMixAToc.mixToc._id);
+                                bookMixATocLocalBean.setBookid(bookMixAToc.mixToc._id);
                                 bookMixATocLocalBean.setIsOnline(false);
                                 bookMixATocLocalBean.setLink(chapters.link);
                                 bookMixATocLocalBean.setTitle(chapters.title);
@@ -985,17 +985,15 @@ public void isTiemx(){
         List<BookReadHistory> bookshelfBeans = bookReadHistoryDaoUtils.queryBookReadHistoryQueryBuilder(bookMixAToc.mixToc._id);
         if(bookshelfBeans!=null&&bookshelfBeans.size()>0){
             //存在则更新
-            toast("存在");
             BookReadHistory bookReadHistory = new BookReadHistory();
-            bookReadHistory.setUid(bookMixAToc.mixToc._id);
+            bookReadHistory.setBookid(bookMixAToc.mixToc._id);
             bookReadHistory.setMix(mixAtoc);
             bookReadHistory.setPaga(page);
             bookReadHistoryDaoUtils.updateBookReadHistory(bookReadHistory);
         }else{
-            toast("不存在");
             //不存在则添加
             BookReadHistory bookReadHistory = new BookReadHistory();
-            bookReadHistory.setUid(bookMixAToc.mixToc._id);
+            bookReadHistory.setBookid(bookMixAToc.mixToc._id);
             bookReadHistory.setMix(mixAtoc);
             bookReadHistory.setPaga(page);
             bookReadHistoryDaoUtils.insertBookReadHistory(bookReadHistory);

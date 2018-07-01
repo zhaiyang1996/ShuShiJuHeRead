@@ -138,6 +138,6 @@ public class BookReadHistoryDaoUtils {
      */
     public List<BookReadHistory> queryBookReadHistoryQueryBuilder(String id){
         QueryBuilder<BookReadHistory> queryBuilder = mManager.getDaoSession().queryBuilder(BookReadHistory.class);
-        return queryBuilder.where(BookReadHistoryDao.Properties.Uid.eq(id)).list();
+        return queryBuilder.where(BookReadHistoryDao.Properties.Bookid.eq(id)).list();
     }
 }

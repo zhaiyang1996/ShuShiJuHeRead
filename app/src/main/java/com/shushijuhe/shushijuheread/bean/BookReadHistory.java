@@ -3,6 +3,7 @@ package com.shushijuhe.shushijuheread.bean;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.NotNull;
 
 /**
  * 书籍历史记录表
@@ -10,31 +11,32 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class BookReadHistory {
     @Id(autoincrement = true)
-    private long id;
-    private String uid;
+    private Long id;
+    @NotNull
+    private String bookid;
     private int mix;
     private int paga;
-    @Generated(hash = 1850189690)
-    public BookReadHistory(long id, String uid, int mix, int paga) {
+    @Generated(hash = 2048069191)
+    public BookReadHistory(Long id, @NotNull String bookid, int mix, int paga) {
         this.id = id;
-        this.uid = uid;
+        this.bookid = bookid;
         this.mix = mix;
         this.paga = paga;
     }
     @Generated(hash = 820687143)
     public BookReadHistory() {
     }
-    public long getId() {
+    public Long getId() {
         return this.id;
     }
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
-    public String getUid() {
-        return this.uid;
+    public String getBookid() {
+        return this.bookid;
     }
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setBookid(String bookid) {
+        this.bookid = bookid;
     }
     public int getMix() {
         return this.mix;
@@ -48,5 +50,4 @@ public class BookReadHistory {
     public void setPaga(int paga) {
         this.paga = paga;
     }
-
 }

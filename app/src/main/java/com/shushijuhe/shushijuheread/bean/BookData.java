@@ -3,6 +3,7 @@ package com.shushijuhe.shushijuheread.bean;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.NotNull;
 
 /**
  * 书籍数据表
@@ -10,31 +11,32 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class BookData {
     @Id(autoincrement = true)
-    private long id;
-    private String uid;
+    private Long id;
+    @NotNull
+    private String bookId;
     private String title;
     private String body;
-    @Generated(hash = 726107698)
-    public BookData(long id, String uid, String title, String body) {
+    @Generated(hash = 1657522534)
+    public BookData(Long id, @NotNull String bookId, String title, String body) {
         this.id = id;
-        this.uid = uid;
+        this.bookId = bookId;
         this.title = title;
         this.body = body;
     }
     @Generated(hash = 687480960)
     public BookData() {
     }
-    public long getId() {
+    public Long getId() {
         return this.id;
     }
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
-    public String getUid() {
-        return this.uid;
+    public String getBookId() {
+        return this.bookId;
     }
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setBookId(String bookId) {
+        this.bookId = bookId;
     }
     public String getTitle() {
         return this.title;

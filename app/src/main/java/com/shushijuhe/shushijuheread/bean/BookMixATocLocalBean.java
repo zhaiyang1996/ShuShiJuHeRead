@@ -7,28 +7,28 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class BookMixATocLocalBean {
     @Id(autoincrement = true)
-    private long uid;
+    private Long id;
     public String title;
     public String link;
-    public String id;
+    public String bookid;
     public boolean isOnline = true; //是否为在线,默认为在线
-    @Generated(hash = 1748069219)
-    public BookMixATocLocalBean(long uid, String title, String link, String id,
+    @Generated(hash = 187692798)
+    public BookMixATocLocalBean(Long id, String title, String link, String bookid,
             boolean isOnline) {
-        this.uid = uid;
+        this.id = id;
         this.title = title;
         this.link = link;
-        this.id = id;
+        this.bookid = bookid;
         this.isOnline = isOnline;
     }
     @Generated(hash = 211240346)
     public BookMixATocLocalBean() {
     }
-    public long getUid() {
-        return this.uid;
+    public Long getId() {
+        return this.id;
     }
-    public void setUid(long uid) {
-        this.uid = uid;
+    public void setId(Long id) {
+        this.id = id;
     }
     public String getTitle() {
         return this.title;
@@ -42,11 +42,11 @@ public class BookMixATocLocalBean {
     public void setLink(String link) {
         this.link = link;
     }
-    public String getId() {
-        return this.id;
+    public String getBookid() {
+        return this.bookid;
     }
-    public void setId(String id) {
-        this.id = id;
+    public void setBookid(String bookid) {
+        this.bookid = bookid;
     }
     public boolean getIsOnline() {
         return this.isOnline;

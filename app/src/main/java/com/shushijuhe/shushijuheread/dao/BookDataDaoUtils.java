@@ -135,6 +135,6 @@ public class BookDataDaoUtils {
      */
     public List<BookData> queryBookDataDaoByQueryBuilder(String id){
         QueryBuilder<BookData> queryBuilder = mManager.getDaoSession().queryBuilder(BookData.class);
-        return queryBuilder.where(BookDataDao.Properties.Uid.eq(id)).list();
+        return queryBuilder.where(BookDataDao.Properties.BookId.eq(id)).list();
     }
 }
