@@ -3,9 +3,6 @@ package com.shushijuhe.shushijuheread.view;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.shushijuhe.shushijuheread.utils.ReadPageUtils;
-import com.shushijuhe.shushijuheread.utils.Tool;
-
 public class ReadingTextView extends android.support.v7.widget.AppCompatTextView {
     public Context context;
     public ReadingTextView(Context context) {
@@ -24,10 +21,5 @@ public class ReadingTextView extends android.support.v7.widget.AppCompatTextView
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        ReadPageUtils readPageUtils = new ReadPageUtils();
-        if(context!=null){
-            readPageUtils.setToolWh(context,w,h);
-        }
-
     }
 }
