@@ -48,14 +48,16 @@ public class SeekBookActivity extends BaseActivity {
     ListView listView;
     @BindView(R.id.seekbook_btn)
     Button button_2;
+    @BindView(R.id.seekbook_rv_result)
+    RecyclerView rvResult;
+
+
+
+    private DetailsAdapter detailsAdapter;
+    List record;
     private List<String> strings;
     private ArrayAdapter seekAdapter;
     private ListAdapter adapter;
-    @BindView(R.id.seekbook_rv_result)
-    RecyclerView rvResult;
-    private DetailsAdapter detailsAdapter;
-    List record;
-
     @Override
     public int getLayoutId() {
         return R.layout.activity_seekbook;

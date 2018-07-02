@@ -18,7 +18,9 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
@@ -37,6 +39,7 @@ import com.shushijuhe.shushijuheread.greendao.BookshelfBeanDao;
 import com.shushijuhe.shushijuheread.http.DataManager;
 import com.shushijuhe.shushijuheread.http.ProgressSubscriber;
 import com.shushijuhe.shushijuheread.http.SubscriberOnNextListenerInstance;
+import com.shushijuhe.shushijuheread.utils.Tool;
 import com.shushijuhe.shushijuheread.utils.TopMenuHeader;
 
 import java.util.List;
@@ -60,6 +63,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     BookMixATocLocalBeanDaoUtils bookMixATocLocalBeanDaoUtils;
     List<BookshelfBean> bookshelfBeanList;
     List<BookMixATocLocalBean> bookMixATocLocalBeans;
+    int[] ints;
 
     @Override
     public int getLayoutId() {
@@ -82,6 +86,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void initView() {
+        ints = Tool.getWHDP(mContext);
         bookshelfBeanDaoUtils = new BookshelfBeanDaoUtils(this);
         bookMixATocLocalBeanDaoUtils = new BookMixATocLocalBeanDaoUtils(this);
 
