@@ -17,10 +17,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.shushijuhe.shushijuheread.activity.BookCategoryActivity;
 import com.shushijuhe.shushijuheread.activity.ReadActivity;
 import com.shushijuhe.shushijuheread.activity.SeekVideoActivity;
@@ -79,10 +81,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void initView() {
         bookshelfBeanDaoUtils = new BookshelfBeanDaoUtils(this);
         bookMixATocLocalBeanDaoUtils = new BookMixATocLocalBeanDaoUtils(this);
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                bookMixATocLocalBeans = bookMixATocLocalBeanDaoUtils.queryBookMixATocLocalBeanByQueryBuilder(bookshelfBeanList.get(i).getBookId());
                 if(bookMixATocLocalBeans!=null&&bookMixATocLocalBeans.size()>0){
                     ReadActivity.statrActivity(MainActivity.this,null,bookMixATocLocalBeans,bookshelfBeanList.get(i).getName(),0,0,false);
                 }else{
@@ -99,8 +101,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             return;
         bookshelfBeanList =  bookshelfBeanDaoUtils.queryAllBookshelfBean();
         if(bookshelfBeanList!=null&&bookshelfBeanList.size()>0){
+            bookMixATocLocalBeans = bookMixATocLocalBeanDaoUtils.queryBookMixATocLocalBeanByQueryBuilder(bookshelfBeanList.get(0).getBookId());
             listView.setAdapter(new MyAdapter());
         }
+        bookMixATocLocalBeanDaoUtils.closeConnection();
+        bookshelfBeanDaoUtils.closeConnection();
     }
 
     @Override
@@ -142,9 +147,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            TextView textView = new TextView(MainActivity.this);
+            view = View.inflate(mContext,R.layout.item_seekvideo,null);
+            ImageView imageView = view.findViewById(R.id.item_seekvideo_img);
+            TextView textView = view.findViewById(R.id.item_seekvideo_name);
+            TextView textView1 = view.findViewById(R.id.item_seekvideo_cont);
+            Glide.with(mContext)
+                    .load(bookshelfBeanList.get(i).getCover())
+                    .into(imageView);
             textView.setText(bookshelfBeanList.get(i).getName());
-            return textView;
+            textView1.setText("最新章节："+bookMixATocLocalBeans.get(bookMixATocLocalBeans.size()-1).getTitle());
+            return view;
         }
     }
 }
