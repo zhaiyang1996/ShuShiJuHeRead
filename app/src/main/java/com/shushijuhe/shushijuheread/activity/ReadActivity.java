@@ -1087,7 +1087,7 @@ public void isTiemx(){
                             for(BookMixAToc.mixToc.Chapters chapters:bookMixAToc.mixToc.chapters){
                                 BookMixATocLocalBean bookMixATocLocalBean = new BookMixATocLocalBean();
                                 bookMixATocLocalBean.setBookid(bookMixAToc.mixToc._id);
-                                bookMixATocLocalBean.setIsOnline(false);
+                                bookMixATocLocalBean.setIsOnline(true);
                                 bookMixATocLocalBean.setLink(chapters.link);
                                 bookMixATocLocalBean.setTitle(chapters.title);
                                 bookMixATocLocalBeans.add(bookMixATocLocalBean);
