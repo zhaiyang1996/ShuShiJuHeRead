@@ -1,6 +1,9 @@
 package com.shushijuhe.shushijuheread.activity;
 
 import android.content.Intent;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,15 +16,20 @@ import android.widget.TextView;
 
 import com.shushijuhe.shushijuheread.R;
 import com.shushijuhe.shushijuheread.activity.base.BaseActivity;
+import com.shushijuhe.shushijuheread.adapter.DetailsAdapter;
 import com.shushijuhe.shushijuheread.bean.AutoComplete;
+import com.shushijuhe.shushijuheread.bean.Book_infoBean;
 import com.shushijuhe.shushijuheread.http.DataManager;
 import com.shushijuhe.shushijuheread.http.ProgressSubscriber;
 import com.shushijuhe.shushijuheread.http.SubscriberOnNextListenerInstance;
+import com.shushijuhe.shushijuheread.utils.SpacesItemDecoration;
 import com.shushijuhe.shushijuheread.utils.Tool;
+import com.shushijuhe.shushijuheread.utils.TopMenuHeader;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 
@@ -43,6 +51,10 @@ public class SeekBookActivity extends BaseActivity {
     private List<String> strings;
     private ArrayAdapter seekAdapter;
     private ListAdapter adapter;
+    @BindView(R.id.seekbook_rv_result)
+    RecyclerView rvResult;
+    private DetailsAdapter detailsAdapter;
+    List record;
 
     @Override
     public int getLayoutId() {
@@ -51,12 +63,22 @@ public class SeekBookActivity extends BaseActivity {
 
     @Override
     public void initToolBar() {
-
+        // 顶部设置
+        TopMenuHeader topMenu = new TopMenuHeader(getWindow().getDecorView(), this);
+        topMenu.setTopMenuHeader(R.mipmap.title_backtrack, "搜索",
+                "", -1, -1);
+        //标题栏点击事件，get相应控件
+        topMenu.getTopIvLeft().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     @Override
     public void initView() {
-        List record = Tool.getJiLu();
+        record = Tool.getJiLu();
         adapter = new SimpleAdapter(this, record,
                 R.layout.item_seek_record, new String[]{"jilu"},
                 new int[]{R.id.item_seek_record});
@@ -69,6 +91,22 @@ public class SeekBookActivity extends BaseActivity {
         seekAdapter = new ArrayAdapter<>(SeekBookActivity.this, android.R.layout.simple_dropdown_item_1line, strings);
         listView_seek.setAdapter(seekAdapter);
         listView_seek.setOnItemClickListener(itemClick);
+
+        detailsAdapter = new DetailsAdapter(this, 0);
+        rvResult.setAdapter(detailsAdapter);
+        rvResult.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        rvResult.addItemDecoration(new SpacesItemDecoration(this));
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (rvResult.getVisibility()==View.INVISIBLE){
+            rvResult.setVisibility(View.GONE);
+        }else{
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
+
     }
 
     /**
@@ -80,7 +118,7 @@ public class SeekBookActivity extends BaseActivity {
         public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                                 long arg3) {
             // TODO Auto-generated method stub
-            TextView sousuojilu = arg1.findViewById(R.id.item_seek_record);
+            TextView sousuojilu = (TextView) arg1.findViewById(R.id.item_seek_record);
             String name = sousuojilu.getText().toString();
             starSeekActvivty(name);
         }
@@ -125,6 +163,7 @@ public class SeekBookActivity extends BaseActivity {
         @Override
         public boolean onQueryTextChange(String newText) {
             final String a = newText;
+            listView_seek.setVisibility(View.VISIBLE);
             if (a != null && !"".equals(a)) {
                 button.setText("搜索");
                 button.setOnClickListener(new View.OnClickListener() {
@@ -157,7 +196,10 @@ public class SeekBookActivity extends BaseActivity {
                         SeekBookActivity.this.finish();
                     }
                 });
-
+            }
+            if (rvResult.getVisibility() == View.VISIBLE) {
+                rvResult.setVisibility(View.GONE);
+                listView_seek.setVisibility(View.VISIBLE);
             }
             return false;
         }
@@ -167,53 +209,33 @@ public class SeekBookActivity extends BaseActivity {
 
         @Override
         public void onClick(View v) {
-            // 为推荐导航设置点击事件
-            Intent it = new Intent(SeekBookActivity.this, SeekBookActivity.class);
             switch (v.getId()) {
                 case R.id.seekbook_btn1:
-                    it.putExtra("name", "绝世唐门");
-                    startActivity(it);
-                    SeekBookActivity.this.finish();
+                    starSeekActvivty("绝世唐门");
                     break;
                 case R.id.seekbook_btn2:
-                    it.putExtra("name", "大主宰");
-                    startActivity(it);
-                    SeekBookActivity.this.finish();
+                    starSeekActvivty("大主宰");
                     break;
                 case R.id.seekbook_btn3:
-                    it.putExtra("name", "傲世九重天");
-                    startActivity(it);
-                    SeekBookActivity.this.finish();
+                    starSeekActvivty("傲世九重天");
                     break;
                 case R.id.seekbook_btn4:
-                    it.putExtra("name", "龙王传说");
-                    startActivity(it);
-                    SeekBookActivity.this.finish();
+                    starSeekActvivty("龙王传说");
                     break;
                 case R.id.seekbook_btn5:
-                    it.putExtra("name", "凡人修仙传");
-                    startActivity(it);
-                    SeekBookActivity.this.finish();
+                    starSeekActvivty("凡人修仙传");
                     break;
                 case R.id.seekbook_btn6:
-                    it.putExtra("name", "斗破苍穹");
-                    startActivity(it);
-                    SeekBookActivity.this.finish();
+                    starSeekActvivty("斗破苍穹");
                     break;
                 case R.id.seekbook_btn7:
-                    it.putExtra("name", "人族训练场");
-                    startActivity(it);
-                    SeekBookActivity.this.finish();
+                    starSeekActvivty("人族训练场");
                     break;
                 case R.id.seekbook_btn8:
-                    it.putExtra("name", "全职法师");
-                    startActivity(it);
-                    SeekBookActivity.this.finish();
+                    starSeekActvivty("全职法师");
                     break;
                 case R.id.seekbook_btn9:
-                    it.putExtra("name", "遮天");
-                    startActivity(it);
-                    SeekBookActivity.this.finish();
+                    starSeekActvivty("遮天");
                     break;
                 default:
                     break;
@@ -223,21 +245,26 @@ public class SeekBookActivity extends BaseActivity {
 
     public void starSeekActvivty(String a) {
         Tool.setJiLu(SeekBookActivity.this, a);
-//        SeekBookResultActivity.start(this, a);
+        listView_seek.setVisibility(View.GONE);
+        rvResult.setVisibility(View.VISIBLE);
+        record = Tool.getJiLu();
+        adapter = new SimpleAdapter(this, record,
+                R.layout.item_seek_record, new String[]{"jilu"},
+                new int[]{R.id.item_seek_record});
+        if (record != null) {
+            Collections.reverse(record);
+            listView.setAdapter(adapter);
+        }
+        setData(a);
 //        SeekBookActivity.this.finish();
     }
-//    AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
-//
-//        @Override
-//        public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-//                                long arg3) {
-//            // TODO Auto-generated method stub
-//            TextView sousuojilu = (TextView) arg1.findViewById(R.id.sousuojilu);
-//            String name = sousuojilu.getText().toString();
-//            Intent it = new Intent(SeekBookActivity.this,SouSuoX.class);
-//            it.putExtra("name", name);
-//            startActivity(it);
-//            SeekBookActivity.this.finish();
-//        }
-//    };
+
+    private void setData(String seek) {
+        DataManager.getInstance().getBook_info(new ProgressSubscriber<Book_infoBean>(new SubscriberOnNextListenerInstance() {
+            @Override
+            public void onNext(Object o) {
+                detailsAdapter.setBean(o);
+            }
+        }, this, "正在搜索中..."), seek);
+    }
 }

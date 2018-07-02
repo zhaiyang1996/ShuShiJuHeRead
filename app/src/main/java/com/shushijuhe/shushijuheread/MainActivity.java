@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.shushijuhe.shushijuheread.activity.BookCategoryActivity;
 import com.shushijuhe.shushijuheread.activity.ReadActivity;
+import com.shushijuhe.shushijuheread.activity.SeekBookActivity;
 import com.shushijuhe.shushijuheread.activity.SeekVideoActivity;
 import com.shushijuhe.shushijuheread.activity.base.BaseActivity;
 import com.shushijuhe.shushijuheread.bean.BookMixATocLocalBean;
@@ -50,6 +51,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     Button button1;
     @BindView(R.id.main_btn_2)
     Button button2;
+    @BindView(R.id.main_btn_3)
+    Button button3;
     @BindView(R.id.main_list)
     ListView listView;
 
@@ -112,6 +115,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void initEvent() {
         button1.setOnClickListener(this);
         button2.setOnClickListener(this);
+        button3.setOnClickListener(this);
     }
 
     @Override
@@ -123,6 +127,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.main_btn_2:
                 intent = new Intent(this,SeekVideoActivity.class);
+                break;
+            case R.id.main_btn_3:
+                intent = new Intent(this,SeekBookActivity.class);
                 break;
         }
         startActivity(intent);

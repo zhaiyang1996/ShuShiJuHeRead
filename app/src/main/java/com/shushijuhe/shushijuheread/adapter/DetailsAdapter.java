@@ -169,7 +169,9 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHo
             holder.iv_cover.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "我是" + title, Toast.LENGTH_SHORT).show();
+                    BooksDetailsActivity.starActivity(context,
+                            bbean.books.get(position)._id,
+                            bbean.books.get(position).shortIntro);
                 }
             });
 
