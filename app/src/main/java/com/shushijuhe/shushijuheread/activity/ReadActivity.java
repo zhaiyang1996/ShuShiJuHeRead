@@ -583,6 +583,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             int i = 0x00000000;
             if(btnDown.getVisibility()==i){
                 if (mixAtoc < size - 1) {
+                    isRefresh = false;
                     ++mixAtoc;
                     bookCurrent = false;
                     setBooksData();
@@ -613,6 +614,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             int i = 0x00000000;
             if(btnUp.getVisibility()==i){
                 if (mixAtoc > 0) {
+                    isRefresh = false;
                     --mixAtoc;
                     bookCurrent = true;
                     setBooksData();
@@ -778,28 +780,28 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
         isRefresh = false;
         switch (v.getId()) {
             case R.id.btn_up:
-                if (mixAtoc > 0) {
-                    --mixAtoc;
-                    bookCurrent = true;
-                    setBooksData();
-                } else {
-                    toast("已经是第一章啦~");
-                }
+//                if (mixAtoc > 0) {
+//                    --mixAtoc;
+//                    bookCurrent = true;
+//                    setBooksData();
+//                } else {
+//                    toast("已经是第一章啦~");
+//                }
                 break;
             case R.id.btn_down:
-                int size;
-                if(bookMixAToc!=null){
-                    size =  bookMixAToc.mixToc.chapters.size();
-                }else{
-                    size = bookMixATocLocalBean.size();
-                }
-                if (mixAtoc < size - 1) {
-                    ++mixAtoc;
-                    bookCurrent = false;
-                    setBooksData();
-                } else {
-                    toast("已经是最后一章啦~");
-                }
+//                int size;
+//                if(bookMixAToc!=null){
+//                    size =  bookMixAToc.mixToc.chapters.size();
+//                }else{
+//                    size = bookMixATocLocalBean.size();
+//                }
+//                if (mixAtoc < size - 1) {
+//                    ++mixAtoc;
+//                    bookCurrent = false;
+//                    setBooksData();
+//                } else {
+//                    toast("已经是最后一章啦~");
+//                }
                 break;
             case R.id.read_button:
                 //调用平移动画，打开菜单
