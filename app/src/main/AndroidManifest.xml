@@ -41,14 +41,14 @@
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+        <activity android:name=".activity.BookrackActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".activity.BookrackActivity">
-
         </activity>
         <activity
             android:name=".activity.PlayActivty"
@@ -62,6 +62,7 @@
         <activity android:name=".activity.ReadActivity"/>
         <activity android:name=".activity.BooksDetailsActivity"/>
         <activity android:name=".activity.BookMixATocActivity"/>
+        <service android:name=".service.DownloadService"/>
         <service android:name="cn.jpush.android.service.PushService"
             android:process=":multiprocess"
             tools:node="replace" >
