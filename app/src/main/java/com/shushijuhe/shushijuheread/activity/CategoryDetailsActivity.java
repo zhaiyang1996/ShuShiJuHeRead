@@ -75,8 +75,8 @@ public class CategoryDetailsActivity extends BaseActivity {
     @Override
     public void initToolBar() {
         TopMenuHeader topMenu = new TopMenuHeader(getWindow().getDecorView(), this);
-        topMenu.setTopMenuHeader(R.mipmap.title_backtrack, "分类详情",
-                "", -1, -1);
+        topMenu.setTopMenuHeader(true, "分类详情",
+                "", false, false);
         //标题栏点击事件，get相应控件
         topMenu.getTopIvLeft().setOnClickListener(new View.OnClickListener() {
             @Override

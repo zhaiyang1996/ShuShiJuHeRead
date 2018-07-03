@@ -40,7 +40,7 @@ public class TopMenuHeader {
         topViewFill = v.findViewById(R.id.top_view_fill);
     }
 
-//填充沉浸式状态高度
+    //填充沉浸式状态高度
     private void fillBar(Context context) {
         //获取状态栏高
         int statusBarHeight1 = -1;
@@ -60,20 +60,20 @@ public class TopMenuHeader {
 
 
     //设置公共标题栏参数
-    public void setTopMenuHeader(int topImageViewLeft, String topTextViewLeft, String topTextViewCentre,
-                                 int topImageViewRight2, int topImageViewRight) {
-        if (topImageViewLeft > 0) {
-            topIvLeft.setImageResource(topImageViewLeft);
+    public void setTopMenuHeader(boolean topImageViewLeft, String topTextViewLeft, String topTextViewCentre,
+                                 boolean topImageViewRight2, boolean topImageViewRight) {
+        if (topImageViewLeft) {
+            topIvLeft.setImageResource(R.mipmap.title_backtrack);
         } else {
             topIvLeft.setVisibility(View.GONE);
         }
-        if (topImageViewRight > 0) {
-            topIvRight.setImageResource(topImageViewRight);
+        if (topImageViewRight) {
+            topIvRight.setImageResource(R.mipmap.title_menu);
         } else {
             topIvRight.setVisibility(View.GONE);
         }
-        if (topImageViewRight2 > 0) {
-            topIvRight2.setImageResource(topImageViewRight2);
+        if (topImageViewRight2) {
+            topIvRight2.setImageResource(R.mipmap.title_seek);
         } else {
             topIvRight2.setVisibility(View.GONE);
         }

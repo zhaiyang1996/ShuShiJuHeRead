@@ -40,7 +40,7 @@
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
             android:text="最新：第1223章 老朋友"
-            android:textSize="13dp"
+            android:textSize="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -49,9 +49,9 @@
             android:id="@+id/item_bookrack_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="4dp"
             android:text="2018/06/19"
-            android:textSize="12dp"
+            android:textSize="11dp"
             app:layout_constraintBottom_toBottomOf="@+id/imageView4"
             app:layout_constraintStart_toEndOf="@+id/imageView4"
             app:layout_constraintTop_toTopOf="@+id/imageView4" />
@@ -70,11 +70,11 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginEnd="32dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/item_bookrack_chapter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/item_bookrack_chapter"
-            app:srcCompat="@mipmap/ic_cancel"
-            android:visibility="gone"/>
+            app:srcCompat="@mipmap/bookrack_cancel" />
 
     </android.support.constraint.ConstraintLayout>
 </LinearLayout>

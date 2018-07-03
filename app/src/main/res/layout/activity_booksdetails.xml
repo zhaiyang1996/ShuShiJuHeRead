@@ -161,7 +161,8 @@
         android:layout_height="50dp"
         android:gravity="center"
         android:text="查看目录"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/colorBackground"
+        android:background="@color/colorGray2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintWidth_percent="0.5" />
@@ -170,10 +171,10 @@
         android:id="@+id/booksdetails_text_read"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorBackground"
         android:gravity="center"
         android:text="开始阅读"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.5" />

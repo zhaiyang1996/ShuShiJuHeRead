@@ -57,8 +57,8 @@ public class SeekVideoActivity extends BaseActivity {
     @Override
     public void initToolBar() {
         TopMenuHeader topMenu = new TopMenuHeader(getWindow().getDecorView(), this);
-        topMenu.setTopMenuHeader(R.mipmap.title_backtrack, "视频搜索",
-                "", -1, -1);
+        topMenu.setTopMenuHeader(true, "视频搜索",
+                "", false, false);
         //标题栏点击事件，get相应控件
         topMenu.getTopIvLeft().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,8 +70,6 @@ public class SeekVideoActivity extends BaseActivity {
 
     @Override
     public void initView() {
-
-
 
 
         myAdapter = new MyAdapter();

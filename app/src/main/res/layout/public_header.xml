@@ -30,7 +30,7 @@
             android:layout_height="25dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp" />
+            android:layout_marginLeft="16dp" />
 
         <TextView
             android:id="@+id/top_tv_left"

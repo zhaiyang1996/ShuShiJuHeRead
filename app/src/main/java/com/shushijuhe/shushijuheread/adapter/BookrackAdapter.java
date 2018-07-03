@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.shushijuhe.shushijuheread.R;
+import com.shushijuhe.shushijuheread.bean.BookMixATocLocalBean;
 import com.shushijuhe.shushijuheread.bean.BookshelfBean;
+import com.shushijuhe.shushijuheread.dao.BookMixATocLocalBeanDaoUtils;
 
 import java.util.List;
 
@@ -25,11 +27,14 @@ import butterknife.ButterKnife;
 public class BookrackAdapter extends RecyclerView.Adapter<BookrackAdapter.MyViewHolder> {
 
     private Context context;
-    private List<BookshelfBean> list;
+    private List<BookshelfBean> bookshelfList;
+    private List<BookMixATocLocalBean> bookMixATocLocalList;
     private OnItemClickListener onItemClickListener;
+    private BookMixATocLocalBeanDaoUtils bookMixATocLocalBeanDaoUtils;
+
 
     public interface OnItemClickListener {
-        void onItemClick(BookshelfBean bookshelfBea, ImageView imageView);
+        void onItemClick(BookshelfBean bookshelfBea, ImageView imageView, List<BookMixATocLocalBean> bookMixATocLocalList);
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -38,10 +43,11 @@ public class BookrackAdapter extends RecyclerView.Adapter<BookrackAdapter.MyView
 
     public BookrackAdapter(Context context) {
         this.context = context;
+        bookMixATocLocalBeanDaoUtils = new BookMixATocLocalBeanDaoUtils(context);
     }
 
     public void setData(List<BookshelfBean> list) {
-        this.list = list;
+        this.bookshelfList = list;
     }
 
     @NonNull
@@ -53,31 +59,42 @@ public class BookrackAdapter extends RecyclerView.Adapter<BookrackAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
-        holder.name.setText(String.valueOf(list.get(position).getName()));
-        holder.chapter.setText("最新章节：");
-        holder.time.setText(String.valueOf(list.get(position).getTime()));
+        holder.name.setText(String.valueOf(bookshelfList.get(position).getName()));
+        holder.chapter.setText(String.valueOf("最新：" + getChapter(bookshelfList.get(position).getBookId())));
+        holder.time.setText(String.valueOf(bookshelfList.get(position).getTime()));
         Glide.with(context)
-                .load(list.get(position).getCover())
+                .load(bookshelfList.get(position).getCover())
                 .into(holder.cover);
         holder.mlayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onItemClickListener.onItemClick(list.get(position), null);
+                onItemClickListener.onItemClick(bookshelfList.get(position), null,bookMixATocLocalList);
             }
         });
         holder.mlayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                onItemClickListener.onItemClick(list.get(position), holder.selected);
+                onItemClickListener.onItemClick(bookshelfList.get(position), holder.selected,null);
                 return true;
             }
         });
 
     }
 
+    /**
+     * 获取最新章节
+     *
+     * @param bookId
+     */
+    private String getChapter(String bookId) {
+        bookMixATocLocalList = bookMixATocLocalBeanDaoUtils.queryBookMixATocLocalBeanByQueryBuilder(bookId);//根据书籍id查询最新章节
+        bookMixATocLocalBeanDaoUtils.closeConnection();//关闭数据库
+        return bookMixATocLocalList.get(bookMixATocLocalList.size() - 1).getTitle();
+    }
+
     @Override
     public int getItemCount() {
-        return list.size();
+        return bookshelfList.size();
     }
 
 
