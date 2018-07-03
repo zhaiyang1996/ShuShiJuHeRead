@@ -4,16 +4,19 @@ package com.shushijuhe.shushijuheread.activity;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
@@ -39,6 +42,7 @@ import com.shushijuhe.shushijuheread.activity.base.BaseActivity;
 import com.shushijuhe.shushijuheread.activity.base.TxtPageBean;
 import com.shushijuhe.shushijuheread.animation.Read_ainmation;
 import com.shushijuhe.shushijuheread.application.app;
+import com.shushijuhe.shushijuheread.bean.BookData;
 import com.shushijuhe.shushijuheread.bean.BookMixAToc;
 import com.shushijuhe.shushijuheread.bean.BookMixATocLocalBean;
 import com.shushijuhe.shushijuheread.bean.BookReadHistory;
@@ -46,12 +50,14 @@ import com.shushijuhe.shushijuheread.bean.BookshelfBean;
 import com.shushijuhe.shushijuheread.bean.ChapterRead;
 import com.shushijuhe.shushijuheread.bean.ReadPatternBean;
 import com.shushijuhe.shushijuheread.constants.Constants;
+import com.shushijuhe.shushijuheread.dao.BookDataDaoUtils;
 import com.shushijuhe.shushijuheread.dao.BookMixATocLocalBeanDaoUtils;
 import com.shushijuhe.shushijuheread.dao.BookReadHistoryDaoUtils;
 import com.shushijuhe.shushijuheread.dao.BookshelfBeanDaoUtils;
 import com.shushijuhe.shushijuheread.http.DataManager;
 import com.shushijuhe.shushijuheread.http.ProgressSubscriber;
 import com.shushijuhe.shushijuheread.http.SubscriberOnNextListenerInstance;
+import com.shushijuhe.shushijuheread.service.DownloadService;
 import com.shushijuhe.shushijuheread.utils.Tool;
 import com.shushijuhe.shushijuheread.utils.paging.TextViewUtils;
 import com.shushijuhe.shushijuheread.view.BatteryView;
@@ -80,7 +86,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     @BindView(R.id.book_caidanweix)
     LinearLayout bookCaidanweix;
     @BindView(R.id.book_caidan_toux)
-    LinearLayout bookCaidanToux;
+    RelativeLayout bookCaidanToux;
     @BindView(R.id.book_quxiaocaidanx)
     Button bookQuxiaocaidanx;
     @BindView(R.id.txthuoqux)
@@ -111,6 +117,8 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     Button btn_back;
     @BindView(R.id.readmix)
     Button btn_mix;
+    @BindView(R.id.read_download)
+    Button download;
 
 
     @BindView(R.id.read_zongse)
@@ -177,9 +185,29 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     public boolean isOnline = true;
     boolean isRefresh = false; //是否需要刷新
     boolean isMix = false;
+    boolean isError = false; //获取书籍是否异常
     BookshelfBeanDaoUtils bookshelfBeanDaoUtils; //书架数据库操作类
     BookMixATocLocalBeanDaoUtils bookMixATocLocalBeanDaoUtils; //书籍章节数据库操作类
     BookReadHistoryDaoUtils bookReadHistoryDaoUtils; //书籍阅读记录数据库操作类
+    BookDataDaoUtils bookDataDaoUtils; //书籍内容数据库操作类
+    List<BookData> bookData;
+
+    DownloadService.MyBind myBind;
+    String bookid;
+
+    //定义一个ServiceConnection对象
+    private ServiceConnection connn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            //当Activity与Service连接成功时回调该方法
+            myBind = (DownloadService.MyBind) service;
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            //当Activity与Service断开连接时回调该方法
+        }
+    };
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_read;
@@ -211,6 +239,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
         bookQuxiaocaidanx.setOnClickListener(this);
         btn_back.setOnClickListener(this);
         btn_mix.setOnClickListener(this);
+        download.setOnClickListener(this);
         //设置阅读背景
         readZongse.setOnClickListener(setPattern);
         readNiupix.setOnClickListener(setPattern);
@@ -233,6 +262,9 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
         bookshelfBeanDaoUtils = new BookshelfBeanDaoUtils(this);
         bookMixATocLocalBeanDaoUtils = new BookMixATocLocalBeanDaoUtils(this);
         bookReadHistoryDaoUtils = new BookReadHistoryDaoUtils(this);
+        bookDataDaoUtils = new BookDataDaoUtils(this);
+        //绑定服务
+        bindService(new Intent(this,DownloadService.class),connn, BIND_AUTO_CREATE);
 
         Intent intent = getIntent();
         if(intent!=null){
@@ -243,15 +275,15 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             page = getIntent().getIntExtra(BOOKPAGE,0);
             isMix = getIntent().getBooleanExtra(ISMIX,false);
             //查询历史记录
-            String id;
+
             if(bookMixAToc!=null){
-                id = bookMixAToc.mixToc._id;
+                bookid = bookMixAToc.mixToc._id;
             }else{
-                id = bookMixATocLocalBean.get(0).bookid;
+                bookid = bookMixATocLocalBean.get(0).bookid;
             }
             //加入书籍历史记录
             if(!isMix){
-                List<BookReadHistory> bookshelfBeans = bookReadHistoryDaoUtils.queryBookReadHistoryQueryBuilder(id);
+                List<BookReadHistory> bookshelfBeans = bookReadHistoryDaoUtils.queryBookReadHistoryQueryBuilder(bookid);
                 if(bookshelfBeans!=null&&bookshelfBeans.size()>0){
                     mixAtoc = bookshelfBeans.get(0).getMix();
                     page = bookshelfBeans.get(0).getPaga();
@@ -293,6 +325,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
      * 设置书籍详细类容
      */
     public void setBooksData() {
+        isError = false;
         read_book_x.setTextSize(zitidaxiao);
         bookZitisizex.setText(zitidaxiao + "");
         if (bookBodylist.size() > 0)
@@ -302,12 +335,15 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
         //判断是否为在线或本地以便于加载书籍数据
         boolean isOnline;
         String link;
+        String titble;
         if(bookMixAToc!=null){
             isOnline = bookMixAToc.mixToc.chapters.get(mixAtoc).isOnline;
             link =  bookMixAToc.mixToc.chapters.get(mixAtoc).link;
+            titble = bookMixAToc.mixToc.chapters.get(mixAtoc).title;
         }else{
             isOnline = bookMixATocLocalBean.get(mixAtoc).isOnline;
             link = bookMixATocLocalBean.get(mixAtoc).link;
+            titble = bookMixATocLocalBean.get(mixAtoc).title;
         }
         if(isOnline){
             //没有离线则获取网络数据
@@ -328,47 +364,50 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                         bookBodylist.add(book);
                         handler.sendEmptyMessage(0x223);
                     }else{
-                        book = "重新打开页面进行刷新，如一直无法刷新原因可能如下：\n1.网络不稳定，检查你的网络。\n2.可能资源文件被加密。\n3.数据缺失\n4.加入官方群反馈：215636017";
-                        bookx = book;
-                        //加载书籍文章
-                        String title = "";
-                        if(bookMixAToc!=null){
-                            title = "章节《"+bookMixAToc.mixToc.chapters.get(mixAtoc).title+"》获取失败：\n";
-                        }else{
-                            title = "章节《"+bookMixATocLocalBean.get(mixAtoc).title+"》获取失败：\n";
-                        }
-                        title = title+book;
-                        read_book_x.setText(title);
-                        bookx = title;
-                        bookBodylist.add(title);
-                        handler.sendEmptyMessage(0x223);
+                        isBookData();
                     }
                 }
 
                 @Override
                 public void onError(Throwable e) {
                     super.onError(e);
-                    book = "重新打开页面进行刷新，如一直无法刷新原因可能如下：\n1.网络不稳定，检查你的网络。\n2.可能资源文件被加密。\n3.数据缺失\n4.加入官方群反馈：215636017";
-                    bookx = book;
-                    //加载书籍文章
-                    String title = "";
-                    if(bookMixAToc!=null){
-                        title = "章节《"+bookMixAToc.mixToc.chapters.get(mixAtoc).title+"》获取失败：\n";
-                    }else{
-                        title = "章节《"+bookMixATocLocalBean.get(mixAtoc).title+"》获取失败：\n";
-                    }
-                    title = title+book;
-                    read_book_x.setText(title);
-                    bookx = title;
-                    bookBodylist.add(title);
-                    handler.sendEmptyMessage(0x223);
+                    isBookData();
                 }
             }, this, null),link);
         }else{
             //若离线则加载本地数据
-
+            bookData = bookDataDaoUtils.queryBookDataDaoByQueryBuilder(bookid,titble);
+            if(bookData!=null&&bookData.size()>0&&bookData.size()<2){
+                bookBodylist.add(bookData.get(0).getTitle());
+                book = bookData.get(0).getBody();
+                bookx = book;
+                //加载书籍文章
+                read_book_x.setText(book);
+                bookBodylist.add(book);
+                handler.sendEmptyMessage(0x223);
+            }else{
+                isBookData();
+            }
         }
 
+    }
+    public void isBookData(){
+        isError = true;
+        page = 0;
+        book = "重新打开页面进行刷新，如一直无法刷新原因可能如下：\n1.网络不稳定，检查你的网络。\n2.可能资源文件被加密。\n3.数据缺失\n4.加入官方群反馈：215636017";
+        bookx = book;
+        //加载书籍文章
+        String title = "";
+        if(bookMixAToc!=null){
+            title = "章节《"+bookMixAToc.mixToc.chapters.get(mixAtoc).title+"》获取失败：\n";
+        }else{
+            title = "章节《"+bookMixATocLocalBean.get(mixAtoc).title+"》获取失败：\n";
+        }
+        title = title+book;
+        read_book_x.setText(title);
+        bookx = title;
+        bookBodylist.add(title);
+        handler.sendEmptyMessage(0x223);
     }
 
     @SuppressLint("HandlerLeak")
@@ -560,7 +599,11 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
         public boolean hasNext() {
             // 判断当前是否还有下一个内容实例
             if(mixAtoc==size-1){
-                return page < bookBodylist.size()-1;
+                if(bookBodylist.size()>1){
+                    return page < bookBodylist.size()-1;
+                }else{
+                    return page < bookBodylist.size();
+                }
             }else{
                 return page < bookBodylist.size();
             }
@@ -817,10 +860,44 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             case R.id.readmix:
                 BookMixATocActivity.statrActivity(this,bookMixAToc,bookMixATocLocalBean,mixAtoc,bookName_str);
                 break;
-
+            case R.id.read_download:
+                //执行下载方法
+                read_Download();
+                break;
         }
     }
+    public void read_Download(){
+        if(Tool.isWifiActive(mContext)){
+            if(myBind.downloadIs(bookid)){
+                myBind.downloadService(bookid,bookName_str);
+            }else{
+                //书架中若是没有书籍，应先添加书籍到书架
+                toast("书架中没有此书，已自动为你加入书架");
+                setShelf();
+                myBind.downloadService(bookid,bookName_str);
+            }
+        }else{
+            //打开提示框是否将此书加入书架
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            builder.setTitle("提示")
+                    .setMessage("当前不是WIFI网络！是否使用流量下载？")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            if(myBind.downloadIs(bookid)){
+                                myBind.downloadService(bookid,bookName_str);
+                            }else{
+                                //书架中若是没有书籍，应先添加书籍到书架
+                                toast("书架中没有此书，已自动为你加入书架");
+                                setShelf();
+                                myBind.downloadService(bookid,bookName_str);
+                            }
+                        }
+                    })
+                    .setNegativeButton("取消",null);
+            builder.show();
+        }
 
+    }
 
     public void getMoShi() {
         isRefresh = false;
@@ -1077,22 +1154,7 @@ public void isTiemx(){
                     .setMessage("书架中还没有此书哦，是否加入书架？")
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            BookshelfBean bookshelfBean = new BookshelfBean();
-                            bookshelfBean.setBookId(bookMixAToc.mixToc._id);
-                            bookshelfBean.setCover(Constants.IMG_BASE_URL+app.bookDetailBean.cover);
-                            bookshelfBean.setName(app.bookDetailBean.title);
-                            bookshelfBean.setTime(Tool.getTime());
-                            bookshelfBeanDaoUtils.insertBookshelfBean(bookshelfBean);
-                            List<BookMixATocLocalBean> bookMixATocLocalBeans = new ArrayList<>();
-                            for(BookMixAToc.mixToc.Chapters chapters:bookMixAToc.mixToc.chapters){
-                                BookMixATocLocalBean bookMixATocLocalBean = new BookMixATocLocalBean();
-                                bookMixATocLocalBean.setBookid(bookMixAToc.mixToc._id);
-                                bookMixATocLocalBean.setIsOnline(true);
-                                bookMixATocLocalBean.setLink(chapters.link);
-                                bookMixATocLocalBean.setTitle(chapters.title);
-                                bookMixATocLocalBeans.add(bookMixATocLocalBean);
-                            }
-                            bookMixATocLocalBeanDaoUtils.insertMultBookMixATocLocalBean(bookMixATocLocalBeans);
+                            setShelf();
                             setReadHistory();
                         }
                     })
@@ -1105,7 +1167,31 @@ public void isTiemx(){
             builder.show();
         }
     }
+
+    /**
+     * 设置书籍到书架
+     */
+    public void setShelf(){
+        BookshelfBean bookshelfBean = new BookshelfBean();
+        bookshelfBean.setBookId(bookMixAToc.mixToc._id);
+        bookshelfBean.setCover(Constants.IMG_BASE_URL+app.bookDetailBean.cover);
+        bookshelfBean.setName(app.bookDetailBean.title);
+        bookshelfBean.setTime(Tool.getTime());
+        bookshelfBeanDaoUtils.insertBookshelfBean(bookshelfBean);
+        List<BookMixATocLocalBean> bookMixATocLocalBeans = new ArrayList<>();
+        for(BookMixAToc.mixToc.Chapters chapters:bookMixAToc.mixToc.chapters){
+            BookMixATocLocalBean bookMixATocLocalBean = new BookMixATocLocalBean();
+            bookMixATocLocalBean.setBookid(bookMixAToc.mixToc._id);
+            bookMixATocLocalBean.setIsOnline(true);
+            bookMixATocLocalBean.setLink(chapters.link);
+            bookMixATocLocalBean.setTitle(chapters.title);
+            bookMixATocLocalBeans.add(bookMixATocLocalBean);
+        }
+        bookMixATocLocalBeanDaoUtils.insertMultBookMixATocLocalBean(bookMixATocLocalBeans);
+    }
     public void setReadHistory(){
+    if(isError)
+        finish();
         String id;
         if(bookMixAToc!=null){
             id = bookMixAToc.mixToc._id;
@@ -1134,7 +1220,14 @@ public void isTiemx(){
         bookshelfBeanDaoUtils.closeConnection();
         bookMixATocLocalBeanDaoUtils.closeConnection();
         bookReadHistoryDaoUtils.closeConnection();
+        bookDataDaoUtils.closeConnection();
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(connn);
     }
 
     /**
