@@ -73,8 +73,7 @@
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/item_bookrack_chapter"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/item_bookrack_chapter"
-            app:srcCompat="@mipmap/bookrack_cancel" />
+            app:layout_constraintTop_toTopOf="@+id/item_bookrack_chapter" />
 
     </android.support.constraint.ConstraintLayout>
 </LinearLayout>

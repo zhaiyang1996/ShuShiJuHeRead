@@ -16,6 +16,7 @@ import com.shushijuhe.shushijuheread.bean.BookMixATocLocalBean;
 import com.shushijuhe.shushijuheread.bean.BookshelfBean;
 import com.shushijuhe.shushijuheread.dao.BookMixATocLocalBeanDaoUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -28,7 +29,7 @@ public class BookrackAdapter extends RecyclerView.Adapter<BookrackAdapter.MyView
 
     private Context context;
     private List<BookshelfBean> bookshelfList;
-    private List<BookMixATocLocalBean> bookMixATocLocalList;
+    private List<List<BookMixATocLocalBean>> bookMixATocLocalList;
     private OnItemClickListener onItemClickListener;
     private BookMixATocLocalBeanDaoUtils bookMixATocLocalBeanDaoUtils;
 
@@ -44,6 +45,7 @@ public class BookrackAdapter extends RecyclerView.Adapter<BookrackAdapter.MyView
     public BookrackAdapter(Context context) {
         this.context = context;
         bookMixATocLocalBeanDaoUtils = new BookMixATocLocalBeanDaoUtils(context);
+        bookMixATocLocalList = new ArrayList<>();
     }
 
     public void setData(List<BookshelfBean> list) {
@@ -60,7 +62,7 @@ public class BookrackAdapter extends RecyclerView.Adapter<BookrackAdapter.MyView
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
         holder.name.setText(String.valueOf(bookshelfList.get(position).getName()));
-        holder.chapter.setText(String.valueOf("最新：" + getChapter(bookshelfList.get(position).getBookId())));
+        holder.chapter.setText(String.valueOf("最新：" + getChapter(bookshelfList.get(position).getBookId(),position)));
         holder.time.setText(String.valueOf(bookshelfList.get(position).getTime()));
         Glide.with(context)
                 .load(bookshelfList.get(position).getCover())
@@ -68,7 +70,7 @@ public class BookrackAdapter extends RecyclerView.Adapter<BookrackAdapter.MyView
         holder.mlayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onItemClickListener.onItemClick(bookshelfList.get(position), null,bookMixATocLocalList);
+                onItemClickListener.onItemClick(bookshelfList.get(position), null,bookMixATocLocalList.get(position));
             }
         });
         holder.mlayout.setOnLongClickListener(new View.OnLongClickListener() {
@@ -86,10 +88,11 @@ public class BookrackAdapter extends RecyclerView.Adapter<BookrackAdapter.MyView
      *
      * @param bookId
      */
-    private String getChapter(String bookId) {
-        bookMixATocLocalList = bookMixATocLocalBeanDaoUtils.queryBookMixATocLocalBeanByQueryBuilder(bookId);//根据书籍id查询最新章节
+    private String getChapter(String bookId,int i) {
+        List<BookMixATocLocalBean> bookMixATocLocalBeans = bookMixATocLocalBeanDaoUtils.queryBookMixATocLocalBeanByQueryBuilder(bookId);//根据书籍id查询最新章节
+        bookMixATocLocalList.add(bookMixATocLocalBeans);
         bookMixATocLocalBeanDaoUtils.closeConnection();//关闭数据库
-        return bookMixATocLocalList.get(bookMixATocLocalList.size() - 1).getTitle();
+        return bookMixATocLocalList.get(i).get(bookMixATocLocalList.get(i).size()-1).getTitle();
     }
 
     @Override

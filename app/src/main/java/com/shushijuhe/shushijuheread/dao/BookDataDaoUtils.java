@@ -29,7 +29,7 @@ public class BookDataDaoUtils {
     public boolean insertBookData(BookData bookData){
         boolean flag = false;
         flag = mManager.getDaoSession().getBookDataDao().insert(bookData) == -1 ? false : true;
-        Log.i(TAG, "insert Meizi :" + flag + "-->" + bookData.toString());
+        Log.i(TAG, "书籍下载成功 :" + flag + "-->" + bookData.getTitle());
         return flag;
     }
 

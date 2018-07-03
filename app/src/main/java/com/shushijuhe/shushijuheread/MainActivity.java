@@ -58,8 +58,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void initToolBar() {
         TopMenuHeader topMenu = new TopMenuHeader(getWindow().getDecorView(), this);
-        topMenu.setTopMenuHeader(R.mipmap.title_backtrack, "",
-                "书视聚合", -1, -1);
+        topMenu.setTopMenuHeader(true, "",
+                "书视聚合", false, false);
         //标题栏点击事件，get相应控件
         topMenu.getTopIvLeft().setOnClickListener(new View.OnClickListener() {
             @Override

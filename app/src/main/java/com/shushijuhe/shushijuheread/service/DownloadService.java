@@ -28,6 +28,7 @@ import com.shushijuhe.shushijuheread.http.ProgressSubscriber;
 import com.shushijuhe.shushijuheread.http.SubscriberOnNextListenerInstance;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -41,6 +42,7 @@ public class DownloadService extends Service {
     private List<BookMixATocLocalBean> bookMixATocLocalBeans;
     BookMixATocLocalBeanDaoUtils bookMixATocLocalBeanDaoUtils; //书籍章节数据库操作类
     BookDataDaoUtils bookDataDaoUtils; //书籍内容数据库操作类
+    List<BookData> bookDatas;
     String book; //书籍内容
     String bookName;
     int downloadNum = 0; //当前下载进度
@@ -59,6 +61,7 @@ public class DownloadService extends Service {
         //初始化数据库
         bookMixATocLocalBeanDaoUtils = new BookMixATocLocalBeanDaoUtils(this);
         bookDataDaoUtils = new BookDataDaoUtils(this);
+        bookDatas = new ArrayList<>();
     }
 
     /**
@@ -69,11 +72,11 @@ public class DownloadService extends Service {
         this.bookName = bookName;
         bookMixATocLocalBeans = bookMixATocLocalBeanDaoUtils.queryBookMixATocLocalBeanByQueryBuilder(bookid);
         if(bookMixATocLocalBeans!=null&&bookMixATocLocalBeans.size()>0){
-            notificationInit();
             //执行任务
             for(BookMixATocLocalBean bookMixATocLocalBean:bookMixATocLocalBeans){
                 executeTask(bookMixATocLocalBean);
             }
+            mSingleExecutor.shutdown();
         }else{
             //目录为空，目前貌似没有写的必要
         }
@@ -99,13 +102,6 @@ public class DownloadService extends Service {
          Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                ++downloadNum;
-                if(downloadNum>=bookMixATocLocalBeans.size()-1){
-                    //通知状态栏下载完成
-
-                }else{
-                    handler.sendEmptyMessage(0x123);
-                }
                 //判断此章节是否为在线，如果为在线就进行下载，否则跳过
                 if(bookMixATocLocalBean.isOnline){
                     DataManager.getInstance().getBookChapter(new ProgressSubscriber<ChapterRead>(new SubscriberOnNextListenerInstance() {
@@ -116,15 +112,19 @@ public class DownloadService extends Service {
                                 book = "\u3000\u3000"+chapterRead.getChapter().getBody().replace("\n","\n\u3000\u3000");
                                 //将书籍文件写入数据库当中
                                 BookData bookData = new BookData(null,bookMixATocLocalBean.bookid,bookMixATocLocalBean.title,book);
+                                bookDatas.add(bookData);
                                 //将目录状态进行更新
-                                if(bookDataDaoUtils.insertBookData(bookData)){
-                                    bookMixATocLocalBean.setIsOnline(false);
-                                    bookMixATocLocalBeanDaoUtils.updateBookMixATocLocalBean(bookMixATocLocalBean);
-                                }
+                                 bookMixATocLocalBean.setIsOnline(false);
+                                 bookMixATocLocalBeanDaoUtils.updateBookMixATocLocalBean(bookMixATocLocalBean);
                             }
                         }
                     }, DownloadService.this, null),bookMixATocLocalBean.link);
-
+                    ++downloadNum;
+                    if(downloadNum>=bookMixATocLocalBeans.size()-1){
+                        //通知状态栏下载完成
+                        handler.sendEmptyMessage(0x223);
+                    }else{
+                    }
                 }
             }
         };
@@ -154,6 +154,9 @@ public class DownloadService extends Service {
                     mNotification.contentView.setTextViewText(R.id.content_view_text,"《"+bookName+"》开始下载");
                     mNotification.contentView.setTextViewText(R.id.content_view_text1,df.format(i));
                     mNotificationManager.notify(0, mNotification);
+                    break;
+                case 0x223:
+                    bookDataDaoUtils.insertMultBookshelfBean(bookDatas);
                     break;
             }
         }

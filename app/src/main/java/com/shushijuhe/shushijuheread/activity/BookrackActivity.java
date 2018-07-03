@@ -46,7 +46,7 @@ public class BookrackActivity extends BaseActivity {
         TopMenuHeader topMenu = new TopMenuHeader(getWindow().getDecorView(), this);
         topMenu.setTopMenuHeader(false, "",
                 "书架", true, true);
-        topMenu.getTopIvLeft().setImageResource(R.mipmap.title_user);
+//        topMenu.getTopIvLeft().setImageResource(R.mipmap.title_user);
         topMenu.getTopIvLeft().setVisibility(View.VISIBLE);
         topMenu.getTopIvRight().setOnClickListener(new View.OnClickListener() {
             @Override
