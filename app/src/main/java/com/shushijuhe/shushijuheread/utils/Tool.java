@@ -29,10 +29,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * Created by zhaiyang on 2018/6/5.
@@ -335,9 +337,30 @@ public class Tool {
      * @return
      */
     public static String getTime(){
-        SimpleDateFormat formatter = new SimpleDateFormat ("yyyy年MM月dd日HH:mm:ss ");
-        Date curDate = new Date(System.currentTimeMillis());//获取当前时间
-        String  str =  formatter.format(curDate);
-        return str;
+        Calendar cal;
+        String year;
+        String month;
+        String day;
+        String hour;
+        String minute;
+        String second;
+        cal = Calendar.getInstance();
+        cal.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+        String my_time_1;
+        String my_time_2;
+
+        year = String.valueOf(cal.get(Calendar.YEAR));
+        month = String.valueOf(cal.get(Calendar.MONTH))+1;
+        day = String.valueOf(cal.get(Calendar.DATE));
+        if (cal.get(Calendar.AM_PM) == 0)
+            hour = String.valueOf(cal.get(Calendar.HOUR));
+        else
+            hour = String.valueOf(cal.get(Calendar.HOUR)+12);
+        minute = String.valueOf(cal.get(Calendar.MINUTE));
+        second = String.valueOf(cal.get(Calendar.SECOND));
+
+        my_time_1 = year + "年" + month + "月" + day+"日";
+        my_time_2 = hour + "-" + minute + "-" + second;
+        return my_time_1+my_time_2;
     }
 }

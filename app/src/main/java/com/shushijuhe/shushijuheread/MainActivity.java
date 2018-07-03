@@ -60,6 +60,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     BookMixATocLocalBeanDaoUtils bookMixATocLocalBeanDaoUtils;
     List<BookshelfBean> bookshelfBeanList;
     List<BookMixATocLocalBean> bookMixATocLocalBeans;
+    List<List<BookMixATocLocalBean>> lists;
 
     @Override
     public int getLayoutId() {
@@ -84,7 +85,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void initView() {
         bookshelfBeanDaoUtils = new BookshelfBeanDaoUtils(this);
         bookMixATocLocalBeanDaoUtils = new BookMixATocLocalBeanDaoUtils(this);
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -104,7 +104,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             return;
         bookshelfBeanList =  bookshelfBeanDaoUtils.queryAllBookshelfBean();
         if(bookshelfBeanList!=null&&bookshelfBeanList.size()>0){
-            bookMixATocLocalBeans = bookMixATocLocalBeanDaoUtils.queryBookMixATocLocalBeanByQueryBuilder(bookshelfBeanList.get(0).getBookId());
+            for(BookshelfBean bookshelfBean:bookshelfBeanList){
+                bookMixATocLocalBeans = bookMixATocLocalBeanDaoUtils.queryBookMixATocLocalBeanByQueryBuilder(bookshelfBean.getBookId());
+                lists.add(bookMixATocLocalBeans);
+            }
             listView.setAdapter(new MyAdapter());
         }
         bookMixATocLocalBeanDaoUtils.closeConnection();
@@ -162,7 +165,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     .load(bookshelfBeanList.get(i).getCover())
                     .into(imageView);
             textView.setText(bookshelfBeanList.get(i).getName());
-            textView1.setText("最新章节："+bookMixATocLocalBeans.get(bookMixATocLocalBeans.size()-1).getTitle());
+            textView1.setText("最新章节："+lists.get(i).get(bookMixATocLocalBeans.size()-1).getTitle());
             return view;
         }
     }
