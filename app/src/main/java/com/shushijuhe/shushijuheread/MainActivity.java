@@ -39,6 +39,7 @@ import com.shushijuhe.shushijuheread.http.ProgressSubscriber;
 import com.shushijuhe.shushijuheread.http.SubscriberOnNextListenerInstance;
 import com.shushijuhe.shushijuheread.utils.TopMenuHeader;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -85,11 +86,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void initView() {
         bookshelfBeanDaoUtils = new BookshelfBeanDaoUtils(this);
         bookMixATocLocalBeanDaoUtils = new BookMixATocLocalBeanDaoUtils(this);
+        lists = new ArrayList<>();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if(bookMixATocLocalBeans!=null&&bookMixATocLocalBeans.size()>0){
-                    ReadActivity.statrActivity(MainActivity.this,null,bookMixATocLocalBeans,bookshelfBeanList.get(i).getName(),0,0,false);
+                    ReadActivity.statrActivity(MainActivity.this,null,lists.get(i),bookshelfBeanList.get(i).getName(),0,0,false);
                 }else{
                     toast("本地数据异常，删除书籍重新添加吧~");
                 }
@@ -165,7 +167,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     .load(bookshelfBeanList.get(i).getCover())
                     .into(imageView);
             textView.setText(bookshelfBeanList.get(i).getName());
-            textView1.setText("最新章节："+lists.get(i).get(bookMixATocLocalBeans.size()-1).getTitle());
+            textView1.setText("最新章节："+lists.get(i).get(lists.get(i).size()-1).getTitle());
             return view;
         }
     }

@@ -21,18 +21,18 @@ public class DaoMaster extends AbstractDaoMaster {
 
     /** Creates underlying database table using DAOs. */
     public static void createAllTables(Database db, boolean ifNotExists) {
+        BookshelfBeanDao.createTable(db, ifNotExists);
         BookDataDao.createTable(db, ifNotExists);
         BookMixATocLocalBeanDao.createTable(db, ifNotExists);
         BookReadHistoryDao.createTable(db, ifNotExists);
-        BookshelfBeanDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(Database db, boolean ifExists) {
+        BookshelfBeanDao.dropTable(db, ifExists);
         BookDataDao.dropTable(db, ifExists);
         BookMixATocLocalBeanDao.dropTable(db, ifExists);
         BookReadHistoryDao.dropTable(db, ifExists);
-        BookshelfBeanDao.dropTable(db, ifExists);
     }
 
     /**
@@ -51,10 +51,10 @@ public class DaoMaster extends AbstractDaoMaster {
 
     public DaoMaster(Database db) {
         super(db, SCHEMA_VERSION);
+        registerDaoClass(BookshelfBeanDao.class);
         registerDaoClass(BookDataDao.class);
         registerDaoClass(BookMixATocLocalBeanDao.class);
         registerDaoClass(BookReadHistoryDao.class);
-        registerDaoClass(BookshelfBeanDao.class);
     }
 
     public DaoSession newSession() {
