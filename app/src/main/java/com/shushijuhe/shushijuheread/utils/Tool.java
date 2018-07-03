@@ -79,7 +79,7 @@ public class Tool {
         String[] jilu = null;
         List<Map<String, String>> arr = new ArrayList<Map<String, String>>();
         // 读取聊天记录文件
-        String name = "/data/data/com.zhai.sunshineread/files/seekbook.txt";
+        String name = "/data/data/com.shushijuhe.shushijuheread/files/seekbook.txt";
         String res = "";
         FileInputStream fin = null;
         BufferedReader reader = null;
@@ -112,7 +112,7 @@ public class Tool {
         return arr;
     }
     public static void qingkong(){
-        File file = new File("/data/data/com.zhai.sunshineread/files/seekbook.txt");
+        File file = new File("/data/data/com.shushijuhe.shushijuheread/files/seekbook.txt");
         file.delete();
     }
 

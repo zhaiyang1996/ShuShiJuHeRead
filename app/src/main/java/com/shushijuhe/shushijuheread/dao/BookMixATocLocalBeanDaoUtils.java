@@ -138,7 +138,7 @@ public class BookMixATocLocalBeanDaoUtils {
      */
     public List<BookMixATocLocalBean> queryBookMixATocLocalBeanByQueryBuilder(String id){
         QueryBuilder<BookMixATocLocalBean> queryBuilder = mManager.getDaoSession().queryBuilder(BookMixATocLocalBean.class);
-        return queryBuilder.where(BookMixATocLocalBeanDao.Properties.Id.eq(id)).list();
+        return queryBuilder.where(BookMixATocLocalBeanDao.Properties.Bookid.eq(id)).list();
     }
     /**
      * 关闭数据库

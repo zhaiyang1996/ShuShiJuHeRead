@@ -23,9 +23,8 @@
             android:gravity="center"
             android:textColor="#fff"
             android:textSize="16sp"
-            android:background="#2fff0000"
             android:visibility="invisible"
-            android:text="@string/read_str_up" />
+            android:background="@color/transparent" />
         <Button
             android:id="@+id/btn_down"
             android:layout_width="match_parent"
@@ -33,9 +32,8 @@
             android:gravity="center"
             android:textColor="#fff"
             android:textSize="16sp"
-            android:background="#2fff0000"
             android:visibility="invisible"
-            android:text="@string/read_str_down" />
+            android:background="@color/transparent" />
     </RelativeLayout>
     <Button
         android:layout_width="100dp"

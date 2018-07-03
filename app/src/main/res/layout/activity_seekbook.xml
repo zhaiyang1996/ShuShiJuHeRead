@@ -3,205 +3,237 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fff"
-    android:orientation="vertical" >
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/top"
+        layout="@layout/public_header"></include>
+
     <LinearLayout
         android:id="@+id/seekbook_layout_1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/top"
         android:orientation="horizontal">
+
         <LinearLayout
             android:id="@+id/search_box"
             android:layout_width="0dp"
-            android:layout_weight="8"
             android:layout_height="30dp"
-            android:background="@drawable/biankuang_sousuo"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
+            android:layout_marginBottom="5dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp">
+            android:layout_weight="8"
+            android:background="@drawable/biankuang_sousuo"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
             <SearchView
                 android:id="@+id/seekbook_search"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:queryHint="书名/作者/关键字"
-                android:textColorHint="#707070"
                 android:background="#f4f2f2"
-                android:singleLine="true"  
+                android:queryHint="书名/作者/关键字"
+                android:singleLine="true"
+                android:textColorHint="#707070"
                 android:textSize="15sp" />
         </LinearLayout>
 
-        <Button 
+        <Button
             android:id="@+id/seekbook_seek_btn"
             android:layout_width="0dp"
-            android:layout_weight="2"
             android:layout_height="40dp"
+            android:layout_weight="2"
+            android:background="#fff"
             android:text="返回"
-            android:textSize="15sp"
             android:textColor="#17942f"
-            android:background="#fff" />
+            android:textSize="15sp" />
     </LinearLayout>
 
-     <View
-         android:id="@+id/seekbook_view_1"
-         android:layout_below="@id/seekbook_layout_1"
-                    android:layout_width="fill_parent"
-                    android:layout_height="0.8dp"
-                    android:background="#a5a4a4" />
-     <TextView
-         android:id="@+id/seekbook_textview_1"
-         android:layout_below="@id/seekbook_view_1"
-         android:layout_width="fill_parent"
-         android:layout_height="40dp"
-         android:text="大家都在搜"
-         android:gravity="center_vertical"
-         android:textSize="17sp"
-         android:layout_marginLeft="10dp"/>
-     
-     <LinearLayout
-         android:id="@+id/seekbook_layout_2"
-         android:layout_below="@id/seekbook_textview_1"
-         android:layout_width="fill_parent"
-         android:layout_height="wrap_content"
-         android:orientation="vertical"
-         android:layout_marginLeft="10dp">
-         <LinearLayout 
-             android:layout_width="fill_parent"
-             android:layout_height="wrap_content"
-             android:orientation="horizontal"
-             android:layout_marginBottom="10dp">
-             <TextView
-                 android:id="@+id/seekbook_btn1"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:padding="5dp"
-                 android:text="绝世唐门"
-                 android:textColor="#fff"
-                 android:background="@drawable/btn_hong"
-                 android:layout_marginRight="10dp"/>
-             <TextView
-                 android:id="@+id/seekbook_btn2"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:padding="5dp"
-                 android:text="大主宰"
-                 android:textColor="#fff"
-                 android:background="@drawable/btn_lan"
-                 android:layout_marginRight="10dp"/>
-             <TextView
-                 android:id="@+id/seekbook_btn3"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:padding="5dp"
-                 android:textColor="#fff"
-                 android:background="@drawable/btn_lv"
-                 android:text="傲视九重天"/>
-         </LinearLayout>
-         
-         <LinearLayout 
-             android:layout_width="fill_parent"
-             android:layout_height="wrap_content"
-             android:orientation="horizontal"
-             android:layout_marginBottom="10dp">
-             <TextView
-                 android:id="@+id/seekbook_btn4"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:padding="5dp"
-                 android:text="龙王传说"
-                 android:textColor="#fff"
-                 android:background="@drawable/btn_huang"
-                 android:layout_marginRight="10dp"/>
-             <TextView
-                 android:id="@+id/seekbook_btn5"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:padding="5dp"
-                 android:text="凡人修仙传"
-                 android:textColor="#fff"
-                 android:background="@drawable/btn_lv"
-                 android:layout_marginRight="10dp"/>
-             <TextView
-                 android:id="@+id/seekbook_btn6"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:padding="5dp"
-                 android:textColor="#fff"
-                 android:background="@drawable/btn_hong"
-                 android:text="斗破苍穹"/>
-         </LinearLayout>
-         
-         <LinearLayout 
-             android:layout_width="fill_parent"
-             android:layout_height="wrap_content"
-             android:orientation="horizontal"
-             android:layout_marginBottom="10dp">
-             <TextView
-                 android:id="@+id/seekbook_btn7"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:padding="5dp"
-                 android:text="人族训练场"
-                 android:textColor="#fff"
-                 android:background="@drawable/btn_fen"
-                 android:layout_marginRight="10dp"/>
-             <TextView
-                 android:id="@+id/seekbook_btn8"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:padding="5dp"
-                 android:text="全职法师"
-                 android:textColor="#fff"
-                 android:background="@drawable/btn_dahong"
-                 android:layout_marginRight="10dp"/>
-             <TextView
-                 android:id="@+id/seekbook_btn9"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:padding="5dp"
-                 android:textColor="#fff"
-                 android:background="@drawable/btn_lan"
-                 android:text="遮天"/>
-         </LinearLayout>
-     </LinearLayout>
-     <LinearLayout
-         android:id="@+id/seekbook_layout_3"
-         android:layout_below="@id/seekbook_layout_2"
-         android:layout_width="fill_parent"
-         android:layout_height="wrap_content"
-         android:orientation="horizontal">
-         <TextView
-             android:layout_width="0dp"
-             android:layout_weight="8"
-             android:layout_height="fill_parent"
-             android:paddingLeft="10dp"
-             android:gravity="center_vertical"
-             android:text="搜索历史"
-             android:textSize="17sp"/>
-         <Button
-             android:id="@+id/seekbook_btn"
-             android:layout_width="0dp"
-             android:layout_weight="2"
-             android:layout_height="25dp"
-             android:text="清空"
-             android:textSize="17sp"
-             android:textColor="#17942f"
-             android:background="#fff"/>
-     </LinearLayout>
-     <ListView
-         android:layout_below="@id/seekbook_layout_3"
-         android:id="@+id/seekbook_listview"
-         android:layout_width="fill_parent"
-
-         android:layout_height="fill_parent"
-         android:layout_marginLeft="10dp">
-         
-     </ListView>
-    <ListView
+    <View
+        android:id="@+id/seekbook_view_1"
+        android:layout_width="fill_parent"
+        android:layout_height="0.8dp"
         android:layout_below="@id/seekbook_layout_1"
+        android:background="#a5a4a4" />
+
+    <TextView
+        android:id="@+id/seekbook_textview_1"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/seekbook_view_1"
+        android:layout_marginLeft="10dp"
+        android:gravity="center_vertical"
+        android:text="大家都在搜"
+        android:textSize="17sp" />
+
+    <LinearLayout
+        android:id="@+id/seekbook_layout_2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/seekbook_textview_1"
+        android:layout_marginLeft="10dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/seekbook_btn1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/btn_hong"
+                android:padding="5dp"
+                android:text="绝世唐门"
+                android:textColor="#fff" />
+
+            <TextView
+                android:id="@+id/seekbook_btn2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/btn_lan"
+                android:padding="5dp"
+                android:text="大主宰"
+                android:textColor="#fff" />
+
+            <TextView
+                android:id="@+id/seekbook_btn3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_lv"
+                android:padding="5dp"
+                android:text="傲视九重天"
+                android:textColor="#fff" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/seekbook_btn4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/btn_huang"
+                android:padding="5dp"
+                android:text="龙王传说"
+                android:textColor="#fff" />
+
+            <TextView
+                android:id="@+id/seekbook_btn5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/btn_lv"
+                android:padding="5dp"
+                android:text="凡人修仙传"
+                android:textColor="#fff" />
+
+            <TextView
+                android:id="@+id/seekbook_btn6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_hong"
+                android:padding="5dp"
+                android:text="斗破苍穹"
+                android:textColor="#fff" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/seekbook_btn7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/btn_fen"
+                android:padding="5dp"
+                android:text="人族训练场"
+                android:textColor="#fff" />
+
+            <TextView
+                android:id="@+id/seekbook_btn8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/btn_dahong"
+                android:padding="5dp"
+                android:text="全职法师"
+                android:textColor="#fff" />
+
+            <TextView
+                android:id="@+id/seekbook_btn9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_lan"
+                android:padding="5dp"
+                android:text="遮天"
+                android:textColor="#fff" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/seekbook_layout_3"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/seekbook_layout_2"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="8"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:text="搜索历史"
+            android:textSize="17sp" />
+
+        <Button
+            android:id="@+id/seekbook_btn"
+            android:layout_width="0dp"
+            android:layout_height="25dp"
+            android:layout_weight="2"
+            android:background="#fff"
+            android:text="清空"
+            android:textColor="#17942f"
+            android:textSize="17sp" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/seekbook_listview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+
+        android:layout_below="@id/seekbook_layout_3"
+        android:layout_marginLeft="10dp">
+
+    </ListView>
+
+    <ListView
         android:id="@+id/seekbook_list_seek"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#fff"/>
+        android:layout_below="@id/seekbook_layout_1"
+        android:background="#fff" />
+
+    <android.support.v7.widget.RecyclerView
+        android:background="@color/colorWhite"
+        android:id="@+id/seekbook_rv_result"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/seekbook_list_seek" />
 </RelativeLayout>

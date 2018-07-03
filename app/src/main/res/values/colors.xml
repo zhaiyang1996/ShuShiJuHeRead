@@ -12,4 +12,6 @@
     <!--标题颜色-->
     <color name="title_black">#000000</color>
     <color name="red">#f50000</color>
+    <color name="red_translucent">#2fff0000</color>
+    <color name="transparent">#00000000</color>
 </resources>

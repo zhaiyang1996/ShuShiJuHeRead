@@ -71,6 +71,10 @@
         <activity android:name=".activity.BookrackActivity"/>
         <activity android:name=".activity.BooksDetailsActivity"/>
         <activity android:name=".activity.BookMixATocActivity"/>
+        <activity android:name=".activity.BookRankActivity" >
+
+        </activity>
+
         <service android:name="cn.jpush.android.service.PushService"
             android:process=":multiprocess"
             tools:node="replace" >

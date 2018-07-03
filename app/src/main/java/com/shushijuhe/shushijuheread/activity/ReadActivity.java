@@ -2,7 +2,6 @@ package com.shushijuhe.shushijuheread.activity;
 
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -34,7 +34,6 @@ import com.martian.libsliding.SlidingAdapter;
 import com.martian.libsliding.SlidingLayout;
 import com.martian.libsliding.slider.OverlappedSlider;
 import com.martian.libsliding.slider.PageSlider;
-import com.orhanobut.logger.Logger;
 import com.shushijuhe.shushijuheread.R;
 import com.shushijuhe.shushijuheread.activity.base.BaseActivity;
 import com.shushijuhe.shushijuheread.activity.base.TxtPageBean;
@@ -50,11 +49,9 @@ import com.shushijuhe.shushijuheread.constants.Constants;
 import com.shushijuhe.shushijuheread.dao.BookMixATocLocalBeanDaoUtils;
 import com.shushijuhe.shushijuheread.dao.BookReadHistoryDaoUtils;
 import com.shushijuhe.shushijuheread.dao.BookshelfBeanDaoUtils;
-import com.shushijuhe.shushijuheread.greendao.BookshelfBeanDao;
 import com.shushijuhe.shushijuheread.http.DataManager;
 import com.shushijuhe.shushijuheread.http.ProgressSubscriber;
 import com.shushijuhe.shushijuheread.http.SubscriberOnNextListenerInstance;
-import com.shushijuhe.shushijuheread.utils.ReadPageUtils;
 import com.shushijuhe.shushijuheread.utils.Tool;
 import com.shushijuhe.shushijuheread.utils.paging.TextViewUtils;
 import com.shushijuhe.shushijuheread.view.BatteryView;
@@ -67,7 +64,6 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 
 public class ReadActivity extends BaseActivity implements View.OnClickListener {
@@ -301,11 +297,6 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
         bookZitisizex.setText(zitidaxiao + "");
         if (bookBodylist.size() > 0)
             bookBodylist.removeAll(bookBodylist);
-        if(bookMixAToc!=null){
-            bookBodylist.add(bookMixAToc.mixToc.chapters.get(mixAtoc).title);
-        }else{
-            bookBodylist.add(bookMixATocLocalBean.get(mixAtoc).title);
-        }
 
         showWaitingDialog("数据加载中...");
         //判断是否为在线或本地以便于加载书籍数据
@@ -325,6 +316,11 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                 public void onNext(Object o) {
                     ChapterRead chapterRead = (ChapterRead) o;
                     if (chapterRead.isOk()){
+                        if(bookMixAToc!=null){
+                            bookBodylist.add(bookMixAToc.mixToc.chapters.get(mixAtoc).title);
+                        }else{
+                            bookBodylist.add(bookMixATocLocalBean.get(mixAtoc).title);
+                        }
                         book = "\u3000\u3000"+chapterRead.getChapter().getBody().replace("\n","\n\u3000\u3000");
                         bookx = book;
                         //加载书籍文章
@@ -332,16 +328,40 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                         bookBodylist.add(book);
                         handler.sendEmptyMessage(0x223);
                     }else{
-                        book = "章节获取失败：\n重新打开页面进行刷新，如一直无法刷新原因可能如下：\n1.网络不稳定，检查你的网络。\n2.可能资源文件被加密。\n3.数据缺失\n4.加入官方群反馈：215636017";
+                        book = "重新打开页面进行刷新，如一直无法刷新原因可能如下：\n1.网络不稳定，检查你的网络。\n2.可能资源文件被加密。\n3.数据缺失\n4.加入官方群反馈：215636017";
+                        bookx = book;
+                        //加载书籍文章
+                        String title = "";
+                        if(bookMixAToc!=null){
+                            title = "章节《"+bookMixAToc.mixToc.chapters.get(mixAtoc).title+"》获取失败：\n";
+                        }else{
+                            title = "章节《"+bookMixATocLocalBean.get(mixAtoc).title+"》获取失败：\n";
+                        }
+                        title = title+book;
+                        read_book_x.setText(title);
+                        bookx = title;
+                        bookBodylist.add(title);
+                        handler.sendEmptyMessage(0x223);
                     }
-
-//                getBookPage(book);
                 }
 
                 @Override
                 public void onError(Throwable e) {
                     super.onError(e);
-                    toast("获取书籍失败，打开重试...");
+                    book = "重新打开页面进行刷新，如一直无法刷新原因可能如下：\n1.网络不稳定，检查你的网络。\n2.可能资源文件被加密。\n3.数据缺失\n4.加入官方群反馈：215636017";
+                    bookx = book;
+                    //加载书籍文章
+                    String title = "";
+                    if(bookMixAToc!=null){
+                        title = "章节《"+bookMixAToc.mixToc.chapters.get(mixAtoc).title+"》获取失败：\n";
+                    }else{
+                        title = "章节《"+bookMixATocLocalBean.get(mixAtoc).title+"》获取失败：\n";
+                    }
+                    title = title+book;
+                    read_book_x.setText(title);
+                    bookx = title;
+                    bookBodylist.add(title);
+                    handler.sendEmptyMessage(0x223);
                 }
             }, this, null),link);
         }else{
@@ -470,7 +490,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
 
     }
 
-
+    int size;
     class TestSlidingAdapter extends SlidingAdapter<String> {
         @Override
         public View getView(View contentView, String strings) {
@@ -499,9 +519,23 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             if (page == 0) {
                 btnUp.setVisibility(View.VISIBLE);
                 btnDown.setVisibility(View.INVISIBLE);
+                if(mixAtoc <= 0){
+                    btnUp.setText("第一章，禁止向前翻页");
+                    btnUp.setBackgroundColor(ContextCompat.getColor(mContext, R.color.red_translucent));
+                }else{
+                    btnUp.setText("");
+                    btnUp.setBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent));
+                }
             }else{
                 if(page >=bookBodylist.size()-1){
                     btnDown.setVisibility(View.VISIBLE);
+                    if(mixAtoc >= size-1){
+                        btnDown.setText("最后一章，禁止向后翻页");
+                        btnDown.setBackgroundColor(ContextCompat.getColor(mContext, R.color.red_translucent));
+                    }else{
+                        btnDown.setText("");
+                        btnDown.setBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent));
+                    }
                 }
                 btnUp.setVisibility(View.INVISIBLE);
             }
@@ -513,33 +547,61 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
         @Override
         public String getNext() {
             // 获取下一个要显示的内容实例
-            return bookBodylist.size() > 0 ? bookBodylist.get(page + 1) : "内容获取失败......";
+            return bookBodylist.size() > 0 &&(page + 1)<=bookBodylist.size()-1? bookBodylist.get(page + 1) : "数据正在加载中......";
         }
 
         @Override
         public String getPrevious() {
             // 获取前一个要显示的内容实例
-            return bookBodylist.size() > 0 ? bookBodylist.get(page - 1) : "";
+            return bookBodylist.size() > 0&&(page - 1)>=0? bookBodylist.get(page - 1) : "数据正在加载中......";
         }
 
         @Override
         public boolean hasNext() {
             // 判断当前是否还有下一个内容实例
-            return page < bookBodylist.size() - 1;
+            if(mixAtoc==size-1){
+                return page < bookBodylist.size()-1;
+            }else{
+                return page < bookBodylist.size();
+            }
         }
 
         @Override
         public boolean hasPrevious() {
             // 判断当前是否还有前一个内容实例
-            return page > 0;
+            if(mixAtoc == 0){
+                return page > 0;
+            }else{
+                return page > -1;
+            }
         }
 
         @Override
         protected void computeNext() {
+            System.out.println("NEXT："+page);
             // 实现如何从当前的实例移动到下一个实例
+            int i = 0x00000000;
+            if(btnDown.getVisibility()==i){
+                if (mixAtoc < size - 1) {
+                    isRefresh = false;
+                    ++mixAtoc;
+                    bookCurrent = false;
+                    setBooksData();
+                } else {
+                    toast("已经是最后一章啦~");
+                }
+                return;
+            }
             btnUp.setVisibility(View.INVISIBLE);
             if (page == bookBodylist.size() - 2) {
                 btnDown.setVisibility(View.VISIBLE);
+                if(mixAtoc >= size-1){
+                    btnDown.setText("最后一章，禁止向后翻页");
+                    btnDown.setBackgroundColor(ContextCompat.getColor(mContext, R.color.red_translucent));
+                }else{
+                    btnDown.setText("");
+                    btnDown.setBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent));
+                }
             } else {
                 btnDown.setVisibility(View.INVISIBLE);
             }
@@ -548,9 +610,29 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
 
         @Override
         protected void computePrevious() {
+            System.out.println("Previous："+page);
+            int i = 0x00000000;
+            if(btnUp.getVisibility()==i){
+                if (mixAtoc > 0) {
+                    isRefresh = false;
+                    --mixAtoc;
+                    bookCurrent = true;
+                    setBooksData();
+                } else {
+                    toast("已经是第一章啦~");
+                }
+                return;
+            }
             // 实现如何从当前的实例移动到前一个实例
             if (page + 1 == 0) {
                 btnUp.setVisibility(View.VISIBLE);
+                if(mixAtoc <= 0){
+                    btnUp.setText("第一章，禁止向前翻页");
+                    btnUp.setBackgroundColor(ContextCompat.getColor(mContext, R.color.red_translucent));
+                }else{
+                    btnUp.setText("");
+                    btnUp.setBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent));
+                }
             } else {
                 btnUp.setVisibility(View.INVISIBLE);
             }
@@ -576,6 +658,11 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             if (!"1".equals(fontsrc)) {
                 typeface = Typeface.createFromFile(fontsrc);
                 bookBody.setTypeface(typeface);
+            }
+            if(bookMixAToc!=null){
+                size =  bookMixAToc.mixToc.chapters.size();
+            }else{
+                size = bookMixATocLocalBean.size();
             }
         }
     }
@@ -693,28 +780,28 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
         isRefresh = false;
         switch (v.getId()) {
             case R.id.btn_up:
-                if (mixAtoc > 0) {
-                    --mixAtoc;
-                    bookCurrent = true;
-                    setBooksData();
-                } else {
-                    toast("已经是第一章啦~");
-                }
+//                if (mixAtoc > 0) {
+//                    --mixAtoc;
+//                    bookCurrent = true;
+//                    setBooksData();
+//                } else {
+//                    toast("已经是第一章啦~");
+//                }
                 break;
             case R.id.btn_down:
-                int size;
-                if(bookMixAToc!=null){
-                    size =  bookMixAToc.mixToc.chapters.size();
-                }else{
-                    size = bookMixATocLocalBean.size();
-                }
-                if (mixAtoc < size - 1) {
-                    ++mixAtoc;
-                    bookCurrent = false;
-                    setBooksData();
-                } else {
-                    toast("已经是最后一章啦~");
-                }
+//                int size;
+//                if(bookMixAToc!=null){
+//                    size =  bookMixAToc.mixToc.chapters.size();
+//                }else{
+//                    size = bookMixATocLocalBean.size();
+//                }
+//                if (mixAtoc < size - 1) {
+//                    ++mixAtoc;
+//                    bookCurrent = false;
+//                    setBooksData();
+//                } else {
+//                    toast("已经是最后一章啦~");
+//                }
                 break;
             case R.id.read_button:
                 //调用平移动画，打开菜单
@@ -966,25 +1053,6 @@ public void isTiemx(){
         prelongTim = 0;//当前单击事件变为上次时间
     }
 }
-
-    public void getBookPage(final String str){
-        final ReadPageUtils readPageUtils = new ReadPageUtils();
-        readPageUtils.setUpTextParams(zitidaxiao);
-        try {
-            txtPageBeans = readPageUtils.loadPages(bookName_str,str);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        StringBuffer stringBuffer;
-        for(TxtPageBean txtPageBean:txtPageBeans){
-            stringBuffer = new StringBuffer();
-            for(int i = 0;i<=txtPageBean.titleLines;i++){
-                stringBuffer.append(txtPageBean.lines.get(i));
-            }
-            bookBodylist.add(str.toString());
-        }
-        handler.sendEmptyMessage(0x123);
-    }
     //对返回键进行监听
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -1019,7 +1087,7 @@ public void isTiemx(){
                             for(BookMixAToc.mixToc.Chapters chapters:bookMixAToc.mixToc.chapters){
                                 BookMixATocLocalBean bookMixATocLocalBean = new BookMixATocLocalBean();
                                 bookMixATocLocalBean.setBookid(bookMixAToc.mixToc._id);
-                                bookMixATocLocalBean.setIsOnline(false);
+                                bookMixATocLocalBean.setIsOnline(true);
                                 bookMixATocLocalBean.setLink(chapters.link);
                                 bookMixATocLocalBean.setTitle(chapters.title);
                                 bookMixATocLocalBeans.add(bookMixATocLocalBean);
@@ -1087,7 +1155,6 @@ public void isTiemx(){
             app.bookMixAToc = bookMixAToc;
             app.bookMixATocLocalBean = null;
         }
-
         Intent init = new Intent(context,ReadActivity.class);
         init.putExtra(BOOKNAME,bookName);
         init.putExtra(BOOKMIXATOC,bookMixatoc);

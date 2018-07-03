@@ -58,7 +58,7 @@ public class BookCategoryFragment extends Fragment implements View.OnClickListen
                 adapter_female.setList((CategoriesBean) o, 0);
                 adapter_male.setList((CategoriesBean) o, 1);
             }
-        }, getActivity(), "获取分类信息中。。。"));
+        }, getActivity(), "获取分类信息中......"));
     }
 
     @Override

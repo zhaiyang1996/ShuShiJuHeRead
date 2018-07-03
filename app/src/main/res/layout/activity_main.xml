@@ -11,8 +11,19 @@
         android:layout_height="wrap_content"
         android:text="书籍阅读功能测试"/>
     <Button
+        android:id="@+id/main_btn_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="书籍搜索功能测试"/>
+    <Button
         android:id="@+id/main_btn_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="视频播放功能测试"/>
+    <ListView
+        android:id="@+id/main_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </ListView>
 </LinearLayout>

@@ -68,7 +68,12 @@ public class BookMixATocActivity  extends BaseActivity{
                 listView.setSelection(mix);
             }
         }else{
-            toast("目录加载异常,重新打开加载!");
+            listView.setAdapter(new MyAdapter());
+            if(mix>0){
+                listView.setSelection(mix-1);
+            }else{
+                listView.setSelection(mix);
+            }
         }
 
     }
@@ -110,7 +115,11 @@ public class BookMixATocActivity  extends BaseActivity{
 
         @Override
         public int getCount() {
-            return bookMixAToc.mixToc.chapters.size();
+            if(bookMixAToc!=null){
+                return bookMixAToc.mixToc.chapters.size();
+            }else{
+                return bookMixATocLocalBean.size();
+            }
         }
 
         @Override
@@ -128,20 +137,37 @@ public class BookMixATocActivity  extends BaseActivity{
             view = View.inflate(BookMixATocActivity.this,R.layout.item_mixtoc,null);
             TextView view1 = view.findViewById(R.id.item_mixtoc_name);
             TextView view2 = view.findViewById(R.id.item_mixtoc_isonline);
-            view1.setText(bookMixAToc.mixToc.chapters.get(i).title);
-            String str = "";
-            // 获取颜色资源文件
-            int mycolor;
-            if(bookMixAToc.mixToc.chapters.get(i).isOnline){
-                str = "未下载";
-                mycolor= getResources().getColor(R.color.red);
-                view2.setTextColor(mycolor);
+            if(bookMixAToc!=null){
+                view1.setText(bookMixAToc.mixToc.chapters.get(i).title);
+                String str = "";
+                // 获取颜色资源文件
+                int mycolor;
+                if(bookMixAToc.mixToc.chapters.get(i).isOnline){
+                    str = "未下载";
+                    mycolor= getResources().getColor(R.color.red);
+                    view2.setTextColor(mycolor);
+                }else{
+                    str = "已下载";
+                    mycolor= getResources().getColor(R.color.colorBackground);
+                    view2.setTextColor(mycolor);
+                }
+                view2.setText(str);
             }else{
-                str = "已下载";
-                mycolor= getResources().getColor(R.color.colorBackground);
-                view2.setTextColor(mycolor);
+                view1.setText(bookMixATocLocalBean.get(i).title);
+                String str = "";
+                // 获取颜色资源文件
+                int mycolor;
+                if(bookMixATocLocalBean.get(i).isOnline){
+                    str = "未下载";
+                    mycolor= getResources().getColor(R.color.red);
+                    view2.setTextColor(mycolor);
+                }else{
+                    str = "已下载";
+                    mycolor= getResources().getColor(R.color.colorBackground);
+                    view2.setTextColor(mycolor);
+                }
+                view2.setText(str);
             }
-            view2.setText(str);
             return view;
         }
     }
