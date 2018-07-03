@@ -2,11 +2,9 @@ package com.shushijuhe.shushijuheread.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.icu.text.DecimalFormat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.shushijuhe.shushijuheread.R;
@@ -17,12 +15,10 @@ import com.shushijuhe.shushijuheread.bean.BookMixAToc;
 import com.shushijuhe.shushijuheread.constants.Constants;
 import com.shushijuhe.shushijuheread.http.DataManager;
 import com.shushijuhe.shushijuheread.http.ProgressSubscriber;
-import com.shushijuhe.shushijuheread.http.RetrofitService;
 import com.shushijuhe.shushijuheread.http.SubscriberOnNextListenerInstance;
 import com.shushijuhe.shushijuheread.utils.TopMenuHeader;
 
 import butterknife.BindView;
-import rx.Observable;
 
 /**
  * 书籍 详情
@@ -65,8 +61,8 @@ public class BooksDetailsActivity extends BaseActivity implements View.OnClickLi
     public void initToolBar() {
         // 顶部设置
         TopMenuHeader topMenu = new TopMenuHeader(getWindow().getDecorView(), this);
-        topMenu.setTopMenuHeader(R.mipmap.title_backtrack, "书籍详情",
-                "", -1, -1);
+        topMenu.setTopMenuHeader(true, "书籍详情",
+                "", false, false);
         //标题栏点击事件，get相应控件
         topMenu.getTopIvLeft().setOnClickListener(new View.OnClickListener() {
             @Override

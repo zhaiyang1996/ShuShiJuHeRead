@@ -2,7 +2,6 @@ package com.shushijuhe.shushijuheread.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -43,8 +42,8 @@ public class BookMixATocActivity  extends BaseActivity{
     @Override
     public void initToolBar() {
         TopMenuHeader topMenu = new TopMenuHeader(getWindow().getDecorView(), this);
-        topMenu.setTopMenuHeader(R.mipmap.title_backtrack, "目录",
-                "", -1, -1);
+        topMenu.setTopMenuHeader(true, "目录",
+                "", false, false);
         //标题栏点击事件，get相应控件
         topMenu.getTopIvLeft().setOnClickListener(new View.OnClickListener() {
             @Override

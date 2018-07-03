@@ -116,13 +116,12 @@
                 android:textSize="15sp"
                 android:textColor="#fff"/>
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/read_str_typeface_x"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
                 android:layout_marginLeft="5dp"
+                android:visibility="gone"
                 android:gravity="center_vertical"
-                android:textSize="15sp"
-                android:textColor="#fff"/>
+                android:background="@mipmap/download"/>
         </LinearLayout>
 
         <LinearLayout
@@ -216,7 +215,7 @@
             </HorizontalScrollView>
         </LinearLayout>
     </LinearLayout>
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/book_caidan_toux"
         android:layout_alignParentTop="true"
         android:layout_width="fill_parent"
@@ -225,12 +224,6 @@
         android:visibility="invisible"
         android:gravity="center_vertical"
         android:orientation="horizontal">
-        <LinearLayout
-            android:layout_height="35dp"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical">
-
 
             <Button
                 android:id="@+id/read_back"
@@ -239,7 +232,6 @@
                 android:layout_marginLeft="10dp"
                 android:textColor="#ffffff"
                 android:background="@mipmap/title_backtrack"/>
-        </LinearLayout>
         <Button
             android:id="@+id/readmix"
             android:layout_width="27dp"
@@ -248,10 +240,22 @@
             android:gravity="right"
             android:paddingRight="10dp"
             android:background="@mipmap/catalog"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:textColor="#ffffff" />
+        <Button
+            android:id="@+id/read_download"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="right"
+            android:paddingRight="10dp"
+            android:background="@mipmap/download"
+            android:layout_toLeftOf="@id/readmix"
             android:layout_marginRight="10dp"
             android:textColor="#ffffff" />
 
-    </LinearLayout>
+    </RelativeLayout>
     <Button
         android:id="@+id/book_quxiaocaidanx"
         android:layout_width="fill_parent"

@@ -1,6 +1,5 @@
 package com.shushijuhe.shushijuheread.activity;
 
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.KeyEvent;
@@ -29,7 +28,6 @@ import com.shushijuhe.shushijuheread.utils.TopMenuHeader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 
@@ -67,8 +65,8 @@ public class SeekBookActivity extends BaseActivity {
     public void initToolBar() {
         // 顶部设置
         TopMenuHeader topMenu = new TopMenuHeader(getWindow().getDecorView(), this);
-        topMenu.setTopMenuHeader(R.mipmap.title_backtrack, "搜索",
-                "", -1, -1);
+        topMenu.setTopMenuHeader(true, "搜索",
+                "", false, false);
         //标题栏点击事件，get相应控件
         topMenu.getTopIvLeft().setOnClickListener(new View.OnClickListener() {
             @Override

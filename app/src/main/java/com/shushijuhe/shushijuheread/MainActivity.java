@@ -1,26 +1,13 @@
 package com.shushijuhe.shushijuheread;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
@@ -30,18 +17,16 @@ import com.shushijuhe.shushijuheread.activity.ReadActivity;
 import com.shushijuhe.shushijuheread.activity.SeekBookActivity;
 import com.shushijuhe.shushijuheread.activity.SeekVideoActivity;
 import com.shushijuhe.shushijuheread.activity.base.BaseActivity;
+import com.shushijuhe.shushijuheread.application.app;
 import com.shushijuhe.shushijuheread.bean.BookMixATocLocalBean;
 import com.shushijuhe.shushijuheread.bean.BookshelfBean;
-import com.shushijuhe.shushijuheread.bean.CategoriesBean;
 import com.shushijuhe.shushijuheread.dao.BookMixATocLocalBeanDaoUtils;
 import com.shushijuhe.shushijuheread.dao.BookshelfBeanDaoUtils;
-import com.shushijuhe.shushijuheread.greendao.BookshelfBeanDao;
-import com.shushijuhe.shushijuheread.http.DataManager;
-import com.shushijuhe.shushijuheread.http.ProgressSubscriber;
-import com.shushijuhe.shushijuheread.http.SubscriberOnNextListenerInstance;
-import com.shushijuhe.shushijuheread.utils.Tool;
+
+import com.shushijuhe.shushijuheread.service.DownloadService;
 import com.shushijuhe.shushijuheread.utils.TopMenuHeader;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -63,7 +48,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     BookMixATocLocalBeanDaoUtils bookMixATocLocalBeanDaoUtils;
     List<BookshelfBean> bookshelfBeanList;
     List<BookMixATocLocalBean> bookMixATocLocalBeans;
-    int[] ints;
+    List<List<BookMixATocLocalBean>> lists;
 
     @Override
     public int getLayoutId() {
@@ -86,15 +71,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void initView() {
-        ints = Tool.getWHDP(mContext);
+        //启动下载服务
+        startService(new Intent(this,DownloadService.class));
         bookshelfBeanDaoUtils = new BookshelfBeanDaoUtils(this);
         bookMixATocLocalBeanDaoUtils = new BookMixATocLocalBeanDaoUtils(this);
-
+        lists = new ArrayList<>();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if(bookMixATocLocalBeans!=null&&bookMixATocLocalBeans.size()>0){
-                    ReadActivity.statrActivity(MainActivity.this,null,bookMixATocLocalBeans,bookshelfBeanList.get(i).getName(),0,0,false);
+                    ReadActivity.statrActivity(MainActivity.this,null,lists.get(i),bookshelfBeanList.get(i).getName(),0,0,false);
                 }else{
                     toast("本地数据异常，删除书籍重新添加吧~");
                 }
@@ -105,11 +91,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
+        if(lists!=null){
+            lists.removeAll(lists);
+        }
         if(bookshelfBeanDaoUtils==null)
             return;
         bookshelfBeanList =  bookshelfBeanDaoUtils.queryAllBookshelfBean();
         if(bookshelfBeanList!=null&&bookshelfBeanList.size()>0){
-            bookMixATocLocalBeans = bookMixATocLocalBeanDaoUtils.queryBookMixATocLocalBeanByQueryBuilder(bookshelfBeanList.get(0).getBookId());
+            for(BookshelfBean bookshelfBean:bookshelfBeanList){
+                bookMixATocLocalBeans = bookMixATocLocalBeanDaoUtils.queryBookMixATocLocalBeanByQueryBuilder(bookshelfBean.getBookId());
+                lists.add(bookMixATocLocalBeans);
+            }
             listView.setAdapter(new MyAdapter());
         }
         bookMixATocLocalBeanDaoUtils.closeConnection();
@@ -167,8 +159,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     .load(bookshelfBeanList.get(i).getCover())
                     .into(imageView);
             textView.setText(bookshelfBeanList.get(i).getName());
-            textView1.setText("最新章节："+bookMixATocLocalBeans.get(bookMixATocLocalBeans.size()-1).getTitle());
+            textView1.setText("最新章节："+lists.get(i).get(lists.get(i).size()-1).getTitle());
             return view;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
     }
 }

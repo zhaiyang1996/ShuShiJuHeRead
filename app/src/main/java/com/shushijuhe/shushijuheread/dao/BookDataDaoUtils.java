@@ -133,9 +133,9 @@ public class BookDataDaoUtils {
      * 使用queryBuilder进行查询
      * @return
      */
-    public List<BookData> queryBookDataDaoByQueryBuilder(String id){
+    public List<BookData> queryBookDataDaoByQueryBuilder(String id,String titble){
         QueryBuilder<BookData> queryBuilder = mManager.getDaoSession().queryBuilder(BookData.class);
-        return queryBuilder.where(BookDataDao.Properties.BookId.eq(id)).list();
+        return queryBuilder.where(BookDataDao.Properties.BookId.eq(id),BookDataDao.Properties.Title.eq(titble)).list();
     }
     /**
      * 关闭数据库
