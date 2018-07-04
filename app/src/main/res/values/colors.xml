@@ -7,6 +7,7 @@
     <color name="colorWhite">#fff</color>
     <color name="colorFen">#ff874a</color>
     <color name="colorGray">#707070</color>
+    <color name="colorGray2">#ececec</color>
     <!--大分类的颜色-->
     <color name="itemBg">#44ccc9c9</color>
     <!--标题颜色-->

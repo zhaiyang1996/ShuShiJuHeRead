@@ -162,7 +162,7 @@
         android:gravity="center"
         android:text="查看目录"
         android:textColor="@color/colorBackground"
-        android:background="@color/colorGray"
+        android:background="@color/colorGray2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintWidth_percent="0.5" />
