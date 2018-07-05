@@ -26,6 +26,7 @@ import com.shushijuhe.shushijuheread.dao.BookMixATocLocalBeanDaoUtils;
 import com.shushijuhe.shushijuheread.http.DataManager;
 import com.shushijuhe.shushijuheread.http.ProgressSubscriber;
 import com.shushijuhe.shushijuheread.http.SubscriberOnNextListenerInstance;
+import com.shushijuhe.shushijuheread.utils.IOUtils;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -42,7 +43,6 @@ public class DownloadService extends Service {
     private List<BookMixATocLocalBean> bookMixATocLocalBeans;
     BookMixATocLocalBeanDaoUtils bookMixATocLocalBeanDaoUtils; //书籍章节数据库操作类
     BookDataDaoUtils bookDataDaoUtils; //书籍内容数据库操作类
-    List<BookData> bookDatas;
     String book; //书籍内容
     String bookName;
     int downloadNum = 0; //当前下载进度
@@ -61,7 +61,6 @@ public class DownloadService extends Service {
         //初始化数据库
         bookMixATocLocalBeanDaoUtils = new BookMixATocLocalBeanDaoUtils(this);
         bookDataDaoUtils = new BookDataDaoUtils(this);
-        bookDatas = new ArrayList<>();
     }
 
     /**
@@ -110,12 +109,15 @@ public class DownloadService extends Service {
                             ChapterRead chapterRead = (ChapterRead) o;
                             if (chapterRead.isOk()){
                                 book = "\u3000\u3000"+chapterRead.getChapter().getBody().replace("\n","\n\u3000\u3000");
+                                String path = "./sdcard/ShuShiJuhe/BOOKTXT/"+bookMixATocLocalBean.bookid+"/"+bookMixATocLocalBean.title+".txt";
                                 //将书籍文件写入数据库当中
-                                BookData bookData = new BookData(null,bookMixATocLocalBean.bookid,bookMixATocLocalBean.title,book);
-                                bookDatas.add(bookData);
                                 //将目录状态进行更新
                                  bookMixATocLocalBean.setIsOnline(false);
                                  bookMixATocLocalBeanDaoUtils.updateBookMixATocLocalBean(bookMixATocLocalBean);
+//                                BookData bookData = new BookData(null,bookMixATocLocalBean.bookid,bookMixATocLocalBean.title,path);
+                                 //将文件写入内存和数据库保存文件路径
+//                                bookDataDaoUtils.insertBookData(bookData);
+//                                IOUtils.setText_SD(DownloadService.this,bookMixATocLocalBean.bookid,bookMixATocLocalBean.title,book);
                             }
                         }
                     }, DownloadService.this, null),bookMixATocLocalBean.link);
@@ -156,7 +158,6 @@ public class DownloadService extends Service {
                     mNotificationManager.notify(0, mNotification);
                     break;
                 case 0x223:
-                    bookDataDaoUtils.insertMultBookshelfBean(bookDatas);
                     break;
             }
         }

@@ -24,6 +24,7 @@ import com.shushijuhe.shushijuheread.dao.BookMixATocLocalBeanDaoUtils;
 import com.shushijuhe.shushijuheread.dao.BookshelfBeanDaoUtils;
 
 import com.shushijuhe.shushijuheread.service.DownloadService;
+import com.shushijuhe.shushijuheread.utils.Tool;
 import com.shushijuhe.shushijuheread.utils.TopMenuHeader;
 
 import java.util.ArrayList;
@@ -71,6 +72,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void initView() {
+        Tool.isGrantExternalRW(this);
         //启动下载服务
         startService(new Intent(this,DownloadService.class));
         bookshelfBeanDaoUtils = new BookshelfBeanDaoUtils(this);

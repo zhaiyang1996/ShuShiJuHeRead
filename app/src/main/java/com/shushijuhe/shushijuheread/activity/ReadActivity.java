@@ -58,6 +58,7 @@ import com.shushijuhe.shushijuheread.http.DataManager;
 import com.shushijuhe.shushijuheread.http.ProgressSubscriber;
 import com.shushijuhe.shushijuheread.http.SubscriberOnNextListenerInstance;
 import com.shushijuhe.shushijuheread.service.DownloadService;
+import com.shushijuhe.shushijuheread.utils.IOUtils;
 import com.shushijuhe.shushijuheread.utils.Tool;
 import com.shushijuhe.shushijuheread.utils.paging.TextViewUtils;
 import com.shushijuhe.shushijuheread.view.BatteryView;
@@ -379,7 +380,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             bookData = bookDataDaoUtils.queryBookDataDaoByQueryBuilder(bookid,titble);
             if(bookData!=null&&bookData.size()>0&&bookData.size()<2){
                 bookBodylist.add(bookData.get(0).getTitle());
-                book = bookData.get(0).getBody();
+                book = IOUtils.getText(bookData.get(0).getBody());
                 bookx = book;
                 //加载书籍文章
                 read_book_x.setText(book);
