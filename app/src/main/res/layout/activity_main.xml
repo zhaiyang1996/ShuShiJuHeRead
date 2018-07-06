@@ -1,29 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
-    <include layout="@layout/public_header"/>
-    <Button
-        android:id="@+id/main_btn_1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="书籍阅读功能测试"/>
-    <Button
-        android:id="@+id/main_btn_3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="书籍搜索功能测试"/>
-    <Button
-        android:id="@+id/main_btn_2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="视频播放功能测试"/>
-    <ListView
-        android:id="@+id/main_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-    </ListView>
+    <include layout="@layout/public_header" />
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/main_tl_title"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        app:tabBackground="@color/colorBackground"
+        app:tabIndicatorColor="@color/colorAccent"
+        app:tabSelectedTextColor="@color/colorAccent"
+        app:tabTextColor="@color/colorWhite" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/main_vp_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>
