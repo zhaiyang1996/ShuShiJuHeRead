@@ -17,7 +17,7 @@ import com.shushijuhe.shushijuheread.R;
 public class TopMenuHeader {
     private ImageView topIvLeft, topIvRight, topIvRight2;
     private TextView topTextcentre, topTextLeft;
-    public View topViewFill;
+    private View topViewFill;
 
     public TopMenuHeader(View v, Context context) {
         initView(v);
@@ -65,27 +65,27 @@ public class TopMenuHeader {
         if (topImageViewLeft) {
             topIvLeft.setImageResource(R.mipmap.title_backtrack);
         } else {
-            topIvLeft.setVisibility(View.GONE);
+            topIvLeft.setVisibility(View.INVISIBLE);
         }
         if (topImageViewRight) {
             topIvRight.setImageResource(R.mipmap.title_menu);
         } else {
-            topIvRight.setVisibility(View.GONE);
+            topIvRight.setVisibility(View.INVISIBLE);
         }
         if (topImageViewRight2) {
             topIvRight2.setImageResource(R.mipmap.title_seek);
         } else {
-            topIvRight2.setVisibility(View.GONE);
+            topIvRight2.setVisibility(View.INVISIBLE);
         }
         if (!topTextViewCentre.equals("")) {
             topTextcentre.setText(topTextViewCentre);
         } else {
-            topTextcentre.setVisibility(View.GONE);
+            topTextcentre.setVisibility(View.INVISIBLE);
         }
         if (!topTextViewLeft.equals("")) {
             topTextLeft.setText(topTextViewLeft);
         } else {
-            topTextLeft.setVisibility(View.GONE);
+            topTextLeft.setVisibility(View.INVISIBLE);
         }
     }
 

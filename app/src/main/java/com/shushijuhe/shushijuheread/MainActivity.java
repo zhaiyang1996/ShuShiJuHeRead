@@ -43,7 +43,7 @@ public class MainActivity extends BaseActivity {
     public void initToolBar() {
         topMenu = new TopMenuHeader(getWindow().getDecorView(), this);
         topMenu.setTopMenuHeader(true, "",
-                "书视聚合", false, true);
+                "书视聚合", false, false);
         //标题栏点击事件，get相应控件
         topMenu.getTopIvLeft().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,6 +52,7 @@ public class MainActivity extends BaseActivity {
             }
         });
         topMenu.getTopIvRight().setImageResource(R.mipmap.title_seek);
+        topMenu.getTopIvLeft().setImageResource(R.mipmap.title_menu);
         topMenu.getTopIvRight().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
