@@ -11,7 +11,6 @@ import com.shushijuhe.shushijuheread.activity.base.BaseActivity;
 import com.shushijuhe.shushijuheread.adapter.ViewPagerAdapter;
 import com.shushijuhe.shushijuheread.fragment.BookCategoryFragment;
 import com.shushijuhe.shushijuheread.fragment.BookrackFragment;
-import com.shushijuhe.shushijuheread.fragment.BookstoreFragment;
 import com.shushijuhe.shushijuheread.fragment.FindFragment;
 import com.shushijuhe.shushijuheread.utils.Tool;
 import com.shushijuhe.shushijuheread.utils.TopMenuHeader;
