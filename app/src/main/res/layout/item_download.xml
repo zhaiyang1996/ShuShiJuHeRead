@@ -23,8 +23,7 @@
         android:textSize="18sp"
         android:textColor="#ff0000"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/content_view_text"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentRight="true"
         android:layout_marginLeft="10dp"
         />
 </RelativeLayout>

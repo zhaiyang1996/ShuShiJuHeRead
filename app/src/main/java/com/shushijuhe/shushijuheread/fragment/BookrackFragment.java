@@ -99,7 +99,7 @@ public class BookrackFragment extends Fragment {
         list = bookshelfBeanDaoUtils.queryAllBookshelfBean();
         bookshelfBeanDaoUtils.closeConnection();//关闭数据库
         bookrackAdapter.setData(list);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(linearLayoutManager);//设置布局管理器
         mRecyclerView.setAdapter(bookrackAdapter);//设置Adapter
         mRecyclerView.addItemDecoration(new DividerItemDecoration(Objects.requireNonNull(getActivity()), DividerItemDecoration.VERTICAL)); //添加Android自带的分割线
