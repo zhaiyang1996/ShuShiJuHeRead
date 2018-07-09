@@ -29,6 +29,7 @@ import com.shushijuhe.shushijuheread.http.SubscriberOnNextListenerInstance;
 import com.shushijuhe.shushijuheread.utils.IOUtils;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -49,6 +50,7 @@ public class DownloadService extends Service {
     //通知栏进度条
     private NotificationManager mNotificationManager=null;
     private Notification mNotification;
+    private int mNotificationNum = 0;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -138,6 +140,7 @@ public class DownloadService extends Service {
 //        mSingleExecutor.execute(runnable);
     }
     private void notificationInit(){
+        mNotificationNum++;
         //通知栏内显示下载进度条
 //        Intent intent=new Intent(this, MainActivity.class);//点击进度条，进入程序
 //        PendingIntent pIntent=PendingIntent.getActivity(this, 0, intent, 0);
@@ -146,7 +149,7 @@ public class DownloadService extends Service {
         mNotification.icon= R.drawable.ic_launcher;
         mNotification.tickerText="《"+bookName+"》开始下载";
         mNotification.contentView=new RemoteViews(getPackageName(),R.layout.item_download);//通知栏中进度布局
-        mNotificationManager.notify(0,mNotification);
+        mNotificationManager.notify(bookMixATocLocalBeans.size(),mNotification);
     }
     @SuppressLint("HandlerLeak")
     public Handler handler = new Handler(){
@@ -155,11 +158,14 @@ public class DownloadService extends Service {
             super.handleMessage(msg);
             switch (msg.what){
                 case 0x123:
-                    double i = downloadNum/bookMixATocLocalBeans.size();
-                    DecimalFormat df = new DecimalFormat("0.00%");
-                    mNotification.contentView.setTextViewText(R.id.content_view_text,"《"+bookName+"》开始下载");
-                    mNotification.contentView.setTextViewText(R.id.content_view_text1,downloadNum+"/"+bookMixATocLocalBeans.size());
-                    mNotificationManager.notify(0, mNotification);
+                    double i = ((double) downloadNum/(double)bookMixATocLocalBeans.size());
+                    //获取格式化对象
+                    NumberFormat nt = NumberFormat.getPercentInstance();
+                    //设置百分数精确度2即保留两位小数
+                    nt.setMinimumFractionDigits(2);
+                    mNotification.contentView.setTextViewText(R.id.content_view_text,"《"+bookName+"》正在下载");
+                    mNotification.contentView.setTextViewText(R.id.content_view_text1,nt.format(i));
+                    mNotificationManager.notify(bookMixATocLocalBeans.size(), mNotification);
                     break;
                 case 0x223:
                     if(downloadNum<bookMixATocLocalBeans.size()){
@@ -171,6 +177,9 @@ public class DownloadService extends Service {
                     }
                     break;
                 case 0x333:
+                    mNotification.contentView.setTextViewText(R.id.content_view_text,"《"+bookName+"》下载完成");
+                    mNotification.contentView.setTextViewText(R.id.content_view_text1,"100%");
+                    mNotificationManager.notify(bookMixATocLocalBeans.size(), mNotification);
                     break;
             }
         }
