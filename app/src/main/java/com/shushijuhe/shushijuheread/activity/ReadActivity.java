@@ -156,10 +156,10 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     private List<BookMixATocLocalBean> bookMixATocLocalBean;
     private String book; //书籍详细类容
     private String bookx; //书籍详细类容备份
-    private List<String> bookBodylist;
+    private List<String>  bookBodylist = new ArrayList<>();;
     int mixAtoc = 1;//章节
     private boolean mPagerMode = true;
-    private ArrayList<Integer> offsetArrayList;
+    private ArrayList<Integer>  offsetArrayList = new ArrayList<>();;
     private int statusBarHeight = 0;
     private boolean jianqu = true;
     private boolean bookCurrent = false;
@@ -182,7 +182,6 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     public static String BOOKPAGE = "BOOKPAGE";//阅读章节页码
     public static String BOOKISONLINE = "BOOKISONLINE"; //是否为在线阅读
     public static String ISMIX = "ISMIX";
-    public List<TxtPageBean> txtPageBeans; //章节分页list
     public boolean isOnline = true;
     boolean isRefresh = false; //是否需要刷新
     boolean isMix = false;
@@ -232,8 +231,6 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             getMoShi();
         }
         ZhuBeiJing.setBackground(drawable);
-        offsetArrayList = new ArrayList<>();
-        bookBodylist = new ArrayList<>();
         btnUp.setOnClickListener(this);
         btnDown.setOnClickListener(this);
         button.setOnClickListener(this);
@@ -432,7 +429,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                             int i1 = p.indexOf(s);
                             if(i1!=-1){
                                 s = p.substring(0,i1);
-                                Log.d("Read", "\n所在位置："+i1+"\n裁剪后的字符："+s);
+//                                Log.d("Read", "\n所在位置："+i1+"\n裁剪后的字符："+s);
                                 bookBodylist.set(i-1,s);
                             }
                         }
@@ -695,10 +692,6 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             huadongBeijingZhu.setBackground(drawable);
             bookBody.setTextColor(fontcor);
             bookBody.setTextSize(zitidaxiao);
-            //开启时间监控
-            getTime();
-            //开启电池监控
-            getDian();
             if (!"1".equals(fontsrc)) {
                 typeface = Typeface.createFromFile(fontsrc);
                 bookBody.setTypeface(typeface);
@@ -707,6 +700,14 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                 size =  bookMixAToc.mixToc.chapters.size();
             }else{
                 size = bookMixATocLocalBean.size();
+            }
+            //判断项目是否为第一次运行
+            if(no_1){
+                //开启时间监控
+                getTime();
+                //开启电池监控
+                getDian();
+                no_1 = false;
             }
         }
     }
@@ -723,7 +724,6 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                 do {
                     try {
                         Thread.sleep(1000);
-                        Message msg = new Message();
                         handler.sendEmptyMessage(0x667);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -765,7 +765,6 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                 do {
                     try {
                         Thread.sleep(1000);
-                        Message msg = new Message();
                         handler.sendEmptyMessage(0x677);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -777,27 +776,6 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
 
     int height;
     int width;
-
-    /**
-     * 获取重新规划后的文字排版
-     *
-     * @param textView
-     * @return
-     */
-    private int getPaddingBottom(TextView textView) {
-        int bottom = 0;
-        DisplayMetrics display = mContext.getResources().getDisplayMetrics();
-        int height = display.heightPixels;
-        int textHeight = height - getStatusBarHeight() - textView.getPaddingBottom() - textView.getPaddingTop() - 25;
-        double lineFloat = textHeight * 1.0 / textView.getLineHeight();
-        int line = (int) lineFloat;
-        double lineRemainder = lineFloat - line;
-        if (lineRemainder < 0.9) {
-            lineRemainder = lineRemainder + 0.1;
-        }
-        bottom = textView.getPaddingBottom() + (int) (lineRemainder * textView.getLineHeight());
-        return bottom;
-    }
 
     private int getStatusBarHeight() {
         if (statusBarHeight == 0) {

@@ -37,7 +37,7 @@ import butterknife.ButterKnife;
 public class BookrackFragment extends Fragment {
     @BindView(R.id.bookrack_rv_shelf)
     RecyclerView mRecyclerView;//书架
-    @BindView(R.id.bookrack_refreshLayout)
+    @BindView(R.id.boorrack_smart)
     RefreshLayout refreshLayout;//书架
     private BookrackAdapter bookrackAdapter;
     private List<BookshelfBean> list;

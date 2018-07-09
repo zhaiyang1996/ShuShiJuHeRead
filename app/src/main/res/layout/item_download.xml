@@ -2,9 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#00000000"
-    android:orientation="vertical"
-    android:padding="5dp">
+    android:background="@color/colorBackground"
+    android:padding="10dp">
 
     <TextView
         android:id="@+id/content_view_text"
@@ -12,7 +11,7 @@
         android:layout_height="wrap_content"
         android:text="《书视聚合》下载中"
         android:layout_centerVertical="true"
-        android:textColor="#000"
+        android:textColor="#fff"
         android:textSize="18sp"
         android:src="@drawable/ic_launcher"
         />

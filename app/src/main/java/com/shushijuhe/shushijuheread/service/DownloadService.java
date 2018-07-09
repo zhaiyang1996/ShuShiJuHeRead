@@ -70,12 +70,15 @@ public class DownloadService extends Service {
     public void download(String bookid,String bookName){
         this.bookName = bookName;
         bookMixATocLocalBeans = bookMixATocLocalBeanDaoUtils.queryBookMixATocLocalBeanByQueryBuilder(bookid);
+        notificationInit();
         if(bookMixATocLocalBeans!=null&&bookMixATocLocalBeans.size()>0){
-            //执行任务
-            for(BookMixATocLocalBean bookMixATocLocalBean:bookMixATocLocalBeans){
-                executeTask(bookMixATocLocalBean);
-            }
-            mSingleExecutor.shutdown();
+            BookMixATocLocalBean bookMixATocLocalBean = bookMixATocLocalBeans.get(downloadNum);
+            executeTask(bookMixATocLocalBean);
+//            //执行任务
+//            for(BookMixATocLocalBean bookMixATocLocalBean:bookMixATocLocalBeans){
+//                executeTask(bookMixATocLocalBean);
+//            }
+//            mSingleExecutor.shutdown();
         }else{
             //目录为空，目前貌似没有写的必要
         }
@@ -112,26 +115,27 @@ public class DownloadService extends Service {
                                 String path = "./sdcard/ShuShiJuhe/BOOKTXT/"+bookMixATocLocalBean.bookid+"/"+bookMixATocLocalBean.title+".txt";
                                 //将书籍文件写入数据库当中
                                 //将目录状态进行更新
-                                 bookMixATocLocalBean.setIsOnline(false);
-                                 bookMixATocLocalBeanDaoUtils.updateBookMixATocLocalBean(bookMixATocLocalBean);
-//                                BookData bookData = new BookData(null,bookMixATocLocalBean.bookid,bookMixATocLocalBean.title,path);
-                                 //将文件写入内存和数据库保存文件路径
-//                                bookDataDaoUtils.insertBookData(bookData);
-//                                IOUtils.setText_SD(DownloadService.this,bookMixATocLocalBean.bookid,bookMixATocLocalBean.title,book);
+                                bookMixATocLocalBean.setIsOnline(false);
+                                bookMixATocLocalBeanDaoUtils.updateBookMixATocLocalBean(bookMixATocLocalBean);
+                                BookData bookData = new BookData(null,bookMixATocLocalBean.bookid,bookMixATocLocalBean.title,path);
+                                //将文件写入内存和数据库保存文件路径
+                                bookDataDaoUtils.insertBookData(bookData);
+                                IOUtils.setText_SD(DownloadService.this,bookMixATocLocalBean.bookid,bookMixATocLocalBean.title,book);
+                                bookMixATocLocalBeanDaoUtils.closeConnection();
+                                bookDataDaoUtils.closeConnection();
+                                downloadNum++;
+                                handler.sendEmptyMessage(0x223);
                             }
                         }
                     }, DownloadService.this, null),bookMixATocLocalBean.link);
-                    ++downloadNum;
-                    if(downloadNum>=bookMixATocLocalBeans.size()-1){
-                        //通知状态栏下载完成
-                        handler.sendEmptyMessage(0x223);
-                    }else{
-                    }
+                }else {
+                    downloadNum++;
+                    handler.sendEmptyMessage(0x223);
                 }
             }
         };
-
-        mSingleExecutor.execute(runnable);
+        new Thread(runnable).start();
+//        mSingleExecutor.execute(runnable);
     }
     private void notificationInit(){
         //通知栏内显示下载进度条
@@ -154,10 +158,19 @@ public class DownloadService extends Service {
                     double i = downloadNum/bookMixATocLocalBeans.size();
                     DecimalFormat df = new DecimalFormat("0.00%");
                     mNotification.contentView.setTextViewText(R.id.content_view_text,"《"+bookName+"》开始下载");
-                    mNotification.contentView.setTextViewText(R.id.content_view_text1,df.format(i));
+                    mNotification.contentView.setTextViewText(R.id.content_view_text1,downloadNum+"/"+bookMixATocLocalBeans.size());
                     mNotificationManager.notify(0, mNotification);
                     break;
                 case 0x223:
+                    if(downloadNum<bookMixATocLocalBeans.size()){
+                        BookMixATocLocalBean bookMixATocLocalBean = bookMixATocLocalBeans.get(downloadNum);
+                        executeTask(bookMixATocLocalBean);
+                        handler.sendEmptyMessage(0x123);
+                    }else{
+                        handler.sendEmptyMessage(0x333);
+                    }
+                    break;
+                case 0x333:
                     break;
             }
         }

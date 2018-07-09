@@ -350,7 +350,7 @@ public class Tool {
         String my_time_2;
 
         year = String.valueOf(cal.get(Calendar.YEAR));
-        month = String.valueOf(cal.get(Calendar.MONTH))+1;
+        month = Integer.parseInt(String.valueOf(cal.get(Calendar.MONTH)))+1+"";
         day = String.valueOf(cal.get(Calendar.DATE));
         if (cal.get(Calendar.AM_PM) == 0)
             hour = String.valueOf(cal.get(Calendar.HOUR));
@@ -360,7 +360,7 @@ public class Tool {
         second = String.valueOf(cal.get(Calendar.SECOND));
 
         my_time_1 = year + "年" + month + "月" + day+"日";
-        my_time_2 = hour + "-" + minute + "-" + second;
+        my_time_2 = hour + ":" + minute + ":" + second;
         return my_time_1+my_time_2;
     }
 }

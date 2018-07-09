@@ -9,6 +9,7 @@ import android.view.View;
 import com.shushijuhe.shushijuheread.activity.SeekBookActivity;
 import com.shushijuhe.shushijuheread.activity.base.BaseActivity;
 import com.shushijuhe.shushijuheread.adapter.ViewPagerAdapter;
+import com.shushijuhe.shushijuheread.fragment.BookCategoryFragment;
 import com.shushijuhe.shushijuheread.fragment.BookrackFragment;
 import com.shushijuhe.shushijuheread.fragment.BookstoreFragment;
 import com.shushijuhe.shushijuheread.fragment.FindFragment;
@@ -43,7 +44,7 @@ public class MainActivity extends BaseActivity {
     public void initToolBar() {
         topMenu = new TopMenuHeader(getWindow().getDecorView(), this);
         topMenu.setTopMenuHeader(true, "",
-                "书视聚合", false, false);
+                "书视聚合", false, true);
         //标题栏点击事件，get相应控件
         topMenu.getTopIvLeft().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +87,7 @@ public class MainActivity extends BaseActivity {
 
     public void setVpFragment() {
         fragments.add(new BookrackFragment());
-        fragments.add(new BookstoreFragment());
+        fragments.add(new BookCategoryFragment());
         fragments.add(new FindFragment());
         adapter = new ViewPagerAdapter(getSupportFragmentManager(), fragments);
         vpFragment.setAdapter(adapter);

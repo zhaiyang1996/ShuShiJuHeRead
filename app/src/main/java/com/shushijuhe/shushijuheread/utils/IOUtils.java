@@ -113,9 +113,9 @@ public class IOUtils {
         StringBuffer content = new StringBuffer();
         try {
             fin = new FileInputStream(path);
-            reader = new BufferedReader(new InputStreamReader(fin, "GBK"));
+            reader = new BufferedReader(new InputStreamReader(fin, "UTF-8"));
             while ((res = reader.readLine()) != null) {
-                content.append(res);
+                content.append(res+"\r\n");
             }
         } catch (IOException e) {
             // TODO Auto-generated catch block
