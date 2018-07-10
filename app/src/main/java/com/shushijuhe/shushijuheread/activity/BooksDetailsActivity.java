@@ -23,7 +23,7 @@ import butterknife.BindView;
 /**
  * 书籍 详情
  */
-public class BooksDetailsActivity extends BaseActivity implements View.OnClickListener{
+public class BooksDetailsActivity extends BaseActivity implements View.OnClickListener {
     @BindView(R.id.booksdetails_text_read)
     TextView read;//开始阅读
     @BindView(R.id.booksdetails_text_chase)
@@ -86,7 +86,8 @@ public class BooksDetailsActivity extends BaseActivity implements View.OnClickLi
         read.setOnClickListener(this);
         chase.setOnClickListener(this);
     }
-    public void setData(){
+
+    public void setData() {
         DataManager.getInstance().getBookDetail(new ProgressSubscriber<BookDetailBean>(new SubscriberOnNextListenerInstance() {
             @Override
             public void onNext(Object o) {
@@ -95,26 +96,26 @@ public class BooksDetailsActivity extends BaseActivity implements View.OnClickLi
                 title.setText(bookDetailBean.title);
                 genre.setText(bookDetailBean.cat);
                 String wordCount;
-                if(bookDetailBean.wordCount<1000){
-                    wordCount = bookDetailBean.wordCount+"字";
-                }else{
-                    double i = (bookDetailBean.wordCount/10000);
-                    wordCount = i+"万字";
+                if (bookDetailBean.wordCount < 1000) {
+                    wordCount = bookDetailBean.wordCount + "字";
+                } else {
+                    double i = (bookDetailBean.wordCount / 10000);
+                    wordCount = i + "万字";
                 }
                 words.setText(wordCount);
-                wordCount = bookDetailBean.latelyFollower+"";
-                subscription.setText(wordCount+"人订阅");
-                if(bookDetailBean.isSerial){
+                wordCount = bookDetailBean.latelyFollower + "";
+                subscription.setText(wordCount + "人订阅");
+                if (bookDetailBean.isSerial) {
                     wordCount = "连载";
-                }else{
+                } else {
                     wordCount = "完结";
                 }
                 status.setText(wordCount);
                 writer.setText(bookDetailBean.author);
                 int i = bookDetailBean.longIntro.indexOf(bookMsg);
-                if(i != -1){
-                    synopsis.setText(bookMsg);
-                }else{
+                if (i != -1) {
+                    synopsis.setText(String.valueOf("\f\f\r\r\f\f\r\r" + bookMsg));
+                } else {
                     synopsis.setText("暂无简介");
                 }
 
@@ -123,7 +124,7 @@ public class BooksDetailsActivity extends BaseActivity implements View.OnClickLi
                         .into(cover);
                 app.bookDetailBean = bookDetailBean;
             }
-        },mContext,null),bookId);
+        }, mContext, null), bookId);
         //获取目录数据
         DataManager.getInstance().getBookMixAToc(new ProgressSubscriber<BookMixAToc>(new SubscriberOnNextListenerInstance() {
             @Override
@@ -140,44 +141,43 @@ public class BooksDetailsActivity extends BaseActivity implements View.OnClickLi
     }
 
     /**
-     *
      * @param context
-     * @param id 书籍ID
+     * @param id      书籍ID
      */
-    public static void  starActivity(Context context, String id,String msg){
-        Intent intent = new Intent(context,BooksDetailsActivity.class);
-        intent.putExtra(BOOKID,id);
-        intent.putExtra(BOOKMSG,msg);
+    public static void starActivity(Context context, String id, String msg) {
+        Intent intent = new Intent(context, BooksDetailsActivity.class);
+        intent.putExtra(BOOKID, id);
+        intent.putExtra(BOOKMSG, msg);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //同名activity只允许一个存活
         context.startActivity(intent);
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.booksdetails_text_read:
                 //开始阅读
-                if(bookMixAToc!=null){
-                    if(bookMixAToc.mixToc!=null&&bookMixAToc.mixToc.chapters.size()>0){
-                        ReadActivity.statrActivity(this,bookMixAToc,null,bookDetailBean.title,0,0,false);
-                    }else{
+                if (bookMixAToc != null) {
+                    if (bookMixAToc.mixToc != null && bookMixAToc.mixToc.chapters.size() > 0) {
+                        ReadActivity.statrActivity(this, bookMixAToc, null, bookDetailBean.title, 0, 0, false);
+                    } else {
                         toast("本书暂无资源，换本书看吧~");
                     }
 
-                }else{
+                } else {
                     toast("数据还在加载呢！");
                 }
                 break;
             case R.id.booksdetails_text_chase:
                 //查看目录
-                if(bookMixAToc!=null){
-                    if(bookMixAToc.mixToc!=null&&bookMixAToc.mixToc.chapters.size()>0){
-                        BookMixATocActivity.statrActivity(this,bookMixAToc,null,0,bookDetailBean.title);
-                    }else{
+                if (bookMixAToc != null) {
+                    if (bookMixAToc.mixToc != null && bookMixAToc.mixToc.chapters.size() > 0) {
+                        BookMixATocActivity.statrActivity(this, bookMixAToc, null, 0, bookDetailBean.title);
+                    } else {
                         toast("本书暂无资源，换本书看吧~");
                     }
 
-                }else{
+                } else {
                     toast("数据还在加载呢！");
                 }
                 break;

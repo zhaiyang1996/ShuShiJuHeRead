@@ -16,9 +16,17 @@
 
         <ImageView
             android:id="@+id/item_bookrack_cover"
-            android:layout_width="75dp"
-            android:layout_height="90dp"
+            android:layout_width="60dp"
+            android:layout_height="80dp"
             android:scaleType="fitXY" />
+
+        <ImageView
+            android:id="@+id/item_bookrack_update"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/item_bookrack_cover"
+            app:srcCompat="@mipmap/bookrack_update" />
     </android.support.constraint.ConstraintLayout>
 
 
@@ -66,17 +74,18 @@
             android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/item_bookrack_chapter"
-            app:srcCompat="@mipmap/ic_time" />
+            app:srcCompat="@mipmap/bookrack_time" />
 
         <ImageView
             android:id="@+id/item_bookrack_selected"
             android:layout_width="20dp"
             android:layout_height="20dp"
+            android:layout_marginBottom="8dp"
             android:layout_marginEnd="32dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/item_bookrack_chapter"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/item_bookrack_chapter" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 </LinearLayout>

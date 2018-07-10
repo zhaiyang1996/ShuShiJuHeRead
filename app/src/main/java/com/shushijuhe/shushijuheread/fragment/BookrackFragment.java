@@ -1,17 +1,14 @@
 package com.shushijuhe.shushijuheread.fragment;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -29,7 +26,6 @@ import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * 刘鹏
@@ -38,8 +34,12 @@ import butterknife.ButterKnife;
 public class BookrackFragment extends BaseFragment {
     @BindView(R.id.bookrack_rv_shelf)
     RecyclerView mRecyclerView;//书架
+    @BindView(R.id.bookrack_ll_layout)
+    LinearLayout linearLayout;//背景图
+    @BindView(R.id.bookrack_bt_addbook)
+    Button button;//添加书籍
     @BindView(R.id.boorrack_smart)
-    RefreshLayout refreshLayout;//书架
+    RefreshLayout refreshLayout;//下拉刷新
     private BookrackAdapter bookrackAdapter;
     private List<BookshelfBean> list;
     private BookshelfBeanDaoUtils bookshelfBeanDaoUtils;
@@ -77,7 +77,8 @@ public class BookrackFragment extends BaseFragment {
      * 下拉刷新
      */
     private void initRefresh() {
-        //设置 Header 为 贝塞尔雷达 样式
+        //设置 Header 为 金典 样式
+        refreshLayout.setEnableLoadMore(false);//是否启用上拉加载功能
         refreshLayout.setRefreshHeader(new ClassicsHeader(Objects.requireNonNull(getActivity())));
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -85,8 +86,6 @@ public class BookrackFragment extends BaseFragment {
                 refreshLayout.finishRefresh(2000/*,false*/);
             }
         });
-        //关闭上拉加载
-        refreshLayout.setEnableAutoLoadMore(false);
     }
 
     /**
@@ -110,14 +109,29 @@ public class BookrackFragment extends BaseFragment {
      * 初始化数据
      */
     private void initData() {
+        refreshLayout.setEnableRefresh(true);
         list = bookshelfBeanDaoUtils.queryAllBookshelfBean();
         bookshelfBeanDaoUtils.closeConnection();//关闭数据库
-        bookrackAdapter.setData(list);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        mRecyclerView.setLayoutManager(linearLayoutManager);//设置布局管理器
-        mRecyclerView.setAdapter(bookrackAdapter);//设置Adapter
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(Objects.requireNonNull(getActivity()), DividerItemDecoration.VERTICAL)); //添加Android自带的分割线
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator()); //设置增加或删除条目的动画
+        if (list.size() > 0) {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            linearLayout.setVisibility(View.GONE);
+            bookrackAdapter.setData(list);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//设置布局管理器
+            mRecyclerView.setAdapter(bookrackAdapter);//设置Adapter
+            mRecyclerView.addItemDecoration(new DividerItemDecoration(Objects.requireNonNull(getActivity()), DividerItemDecoration.VERTICAL)); //添加Android自带的分割线
+            mRecyclerView.setItemAnimator(new DefaultItemAnimator()); //设置增加或删除条目的动画
+        } else {
+            refreshLayout.setEnableRefresh(false);
+            mRecyclerView.setVisibility(View.GONE);
+            linearLayout.setVisibility(View.VISIBLE);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getActivity(), "敬请期待！", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
     }
 
 }

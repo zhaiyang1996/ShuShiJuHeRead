@@ -38,11 +38,12 @@
 
                 <ImageView
                     android:id="@+id/booksdetails_iv_cover"
-                    android:layout_width="96dp"
-                    android:layout_height="120dp"
+                    android:layout_width="80dp"
+                    android:layout_height="100dp"
                     android:layout_marginBottom="8dp"
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="8dp"
+                    android:scaleType="fitXY"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -52,54 +53,51 @@
                     android:id="@+id/booksdetails_text_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="32dp"
-                    android:layout_marginStart="32dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="16dp"
                     android:text="书名"
                     android:textColor="@color/title_black"
-                    app:layout_constraintStart_toEndOf="@+id/booksdetails_iv_cover"
-                    app:layout_constraintTop_toTopOf="@+id/booksdetails_iv_cover" />
+                    app:layout_constraintBottom_toTopOf="@+id/booksdetails_text_genre"
+                    app:layout_constraintStart_toEndOf="@+id/booksdetails_iv_cover" />
 
                 <TextView
                     android:id="@+id/booksdetails_text_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="32dp"
-                    android:layout_marginStart="32dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="6dp"
                     android:text="是否连载"
                     android:textSize="@dimen/booksdetails_introduce"
-                    app:layout_constraintBottom_toBottomOf="@+id/booksdetails_iv_cover"
-                    app:layout_constraintStart_toEndOf="@+id/booksdetails_iv_cover" />
+                    app:layout_constraintStart_toEndOf="@+id/booksdetails_iv_cover"
+                    app:layout_constraintTop_toBottomOf="@+id/booksdetails_text_words" />
 
                 <TextView
                     android:id="@+id/booksdetails_text_words"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginLeft="32dp"
-                    android:layout_marginStart="32dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="3dp"
                     android:text="字数"
                     android:textSize="@dimen/booksdetails_introduce"
-                    app:layout_constraintBottom_toTopOf="@+id/booksdetails_text_status"
-                    app:layout_constraintStart_toEndOf="@+id/booksdetails_iv_cover" />
+                    app:layout_constraintStart_toEndOf="@+id/booksdetails_iv_cover"
+                    app:layout_constraintTop_toBottomOf="@+id/view" />
 
                 <TextView
                     android:id="@+id/booksdetails_text_genre"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginLeft="32dp"
-                    android:layout_marginStart="32dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginStart="16dp"
                     android:text="类型"
                     android:textSize="@dimen/booksdetails_introduce"
-                    app:layout_constraintBottom_toTopOf="@+id/booksdetails_text_words"
+                    app:layout_constraintBottom_toTopOf="@+id/view"
                     app:layout_constraintStart_toEndOf="@+id/booksdetails_iv_cover" />
 
                 <TextView
                     android:id="@+id/booksdetails_text_writer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="32dp"
-                    android:layout_marginStart="32dp"
+                    android:layout_marginStart="16dp"
                     android:text="作者"
                     android:textSize="@dimen/booksdetails_introduce"
                     app:layout_constraintBottom_toBottomOf="@+id/booksdetails_text_genre"
@@ -110,13 +108,26 @@
                     android:id="@+id/booksdetails_text_subscription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="32dp"
-                    android:layout_marginStart="32dp"
+                    android:layout_marginStart="16dp"
                     android:text="订阅"
                     android:textSize="@dimen/booksdetails_introduce"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@+id/booksdetails_text_words"
                     app:layout_constraintStart_toEndOf="@+id/booksdetails_text_words"
                     app:layout_constraintTop_toTopOf="@+id/booksdetails_text_words" />
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="100dp"
+                    android:layout_height="1px"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/booksdetails_iv_cover"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="MissingConstraints" />
+
             </android.support.constraint.ConstraintLayout>
 
             <android.support.constraint.ConstraintLayout
@@ -149,9 +160,6 @@
                     app:layout_constraintStart_toStartOf="parent" />
             </android.support.constraint.ConstraintLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"></LinearLayout>
         </LinearLayout>
     </ScrollView>
 
