@@ -159,10 +159,10 @@
         android:id="@+id/booksdetails_text_chase"
         android:layout_width="0dp"
         android:layout_height="50dp"
+        android:background="@color/colorGray"
         android:gravity="center"
         android:text="查看目录"
         android:textColor="@color/colorBackground"
-        android:background="@color/colorGray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintWidth_percent="0.5" />

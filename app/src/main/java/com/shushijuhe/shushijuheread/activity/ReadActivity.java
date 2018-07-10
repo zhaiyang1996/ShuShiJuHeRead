@@ -692,6 +692,9 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             huadongBeijingZhu.setBackground(drawable);
             bookBody.setTextColor(fontcor);
             bookBody.setTextSize(zitidaxiao);
+            if(page>=bookBodylist.size()){
+                page = bookBodylist.size()-1;
+            }
             if (!"1".equals(fontsrc)) {
                 typeface = Typeface.createFromFile(fontsrc);
                 bookBody.setTypeface(typeface);

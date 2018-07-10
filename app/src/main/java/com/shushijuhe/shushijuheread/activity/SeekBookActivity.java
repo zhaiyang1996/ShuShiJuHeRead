@@ -1,5 +1,6 @@
 package com.shushijuhe.shushijuheread.activity;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.KeyEvent;
@@ -96,6 +97,10 @@ public class SeekBookActivity extends BaseActivity {
         rvResult.setAdapter(detailsAdapter);
         rvResult.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         rvResult.addItemDecoration(new SpacesItemDecoration(this));
+        View viewById = acTextView.findViewById(android.support.v7.appcompat.R.id.search_plate);
+        if (viewById != null) {
+            viewById.setBackgroundColor(Color.TRANSPARENT);
+        }
     }
 
     @Override
@@ -171,6 +176,7 @@ public class SeekBookActivity extends BaseActivity {
                     public void onClick(View v) {
                         // TODO Auto-generated method stub
                         // 执行搜索记录保存方法
+                        acTextView.setFocusable(false);
                         starSeekActvivty(a);
                     }
                 });

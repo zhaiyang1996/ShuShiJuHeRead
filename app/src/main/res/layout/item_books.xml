@@ -24,7 +24,7 @@
         android:adjustViewBounds="true"
         android:background="@drawable/card_black"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_menu_camera" />
+        android:src="@mipmap/timg" />
 
     <TextView
         android:id="@+id/books_name"

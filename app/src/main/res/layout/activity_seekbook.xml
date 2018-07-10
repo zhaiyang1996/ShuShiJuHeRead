@@ -19,21 +19,19 @@
         <LinearLayout
             android:id="@+id/search_box"
             android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_marginBottom="5dp"
+            android:layout_height="40dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp"
             android:layout_weight="8"
-            android:background="@drawable/biankuang_sousuo"
+
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <SearchView
                 android:id="@+id/seekbook_search"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:background="#f4f2f2"
+                android:layout_height="wrap_content"
+                android:background="@drawable/biankuang_sousuo"
                 android:queryHint="书名/作者/关键字"
                 android:singleLine="true"
                 android:textColorHint="#707070"
@@ -47,7 +45,7 @@
             android:layout_weight="2"
             android:background="#fff"
             android:text="返回"
-            android:textColor="#17942f"
+            android:textColor="@color/colorBackground"
             android:textSize="15sp" />
     </LinearLayout>
 
@@ -208,7 +206,7 @@
             android:layout_weight="2"
             android:background="#fff"
             android:text="清空"
-            android:textColor="#17942f"
+            android:textColor="@color/colorBackground"
             android:textSize="17sp" />
     </LinearLayout>
 

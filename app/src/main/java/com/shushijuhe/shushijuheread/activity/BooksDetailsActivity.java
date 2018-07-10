@@ -102,8 +102,8 @@ public class BooksDetailsActivity extends BaseActivity implements View.OnClickLi
                     wordCount = i+"万字";
                 }
                 words.setText(wordCount);
-                wordCount = bookDetailBean.totalFollower+"";
-                subscription.setText(wordCount);
+                wordCount = bookDetailBean.latelyFollower+"";
+                subscription.setText(wordCount+"人订阅");
                 if(bookDetailBean.isSerial){
                     wordCount = "连载";
                 }else{
