@@ -10,17 +10,24 @@ import android.view.ViewGroup;
 
 import com.shushijuhe.shushijuheread.R;
 
-public class BookstoreFragment extends Fragment {
+public class BookstoreFragment extends BaseFragment {
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_bookstore, container, false);
-        initView();
-        return view;
+    public int getLayoutId() {
+        return R.layout.fragment_bookstore;
     }
 
-    private void initView() {
+    @Override
+    public void initToolBar() {
+
+    }
+
+    public void initView() {
+
+    }
+
+    @Override
+    public void initEvent() {
 
     }
 }

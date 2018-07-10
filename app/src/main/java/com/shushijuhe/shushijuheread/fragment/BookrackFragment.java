@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
@@ -34,7 +35,7 @@ import butterknife.ButterKnife;
  * 刘鹏
  * 书架页面
  */
-public class BookrackFragment extends Fragment {
+public class BookrackFragment extends BaseFragment {
     @BindView(R.id.bookrack_rv_shelf)
     RecyclerView mRecyclerView;//书架
     @BindView(R.id.boorrack_smart)
@@ -43,16 +44,27 @@ public class BookrackFragment extends Fragment {
     private List<BookshelfBean> list;
     private BookshelfBeanDaoUtils bookshelfBeanDaoUtils;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_bookrack, container, false);
+    public int getLayoutId() {
+        return R.layout.fragment_bookrack;
+    }
+
+    @Override
+    public void initToolBar() {
+
+    }
+
+    @Override
+    public void initView() {
         bookrackAdapter = new BookrackAdapter(getActivity());
         bookshelfBeanDaoUtils = new BookshelfBeanDaoUtils(getActivity());
-        ButterKnife.bind(this, view);
         initRefresh();
         callBack();
-        return view;
+    }
+
+    @Override
+    public void initEvent() {
+
     }
 
     @Override
@@ -73,6 +85,8 @@ public class BookrackFragment extends Fragment {
                 refreshLayout.finishRefresh(2000/*,false*/);
             }
         });
+        //关闭上拉加载
+        refreshLayout.setEnableAutoLoadMore(false);
     }
 
     /**

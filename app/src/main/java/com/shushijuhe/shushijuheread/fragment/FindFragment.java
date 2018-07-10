@@ -1,28 +1,24 @@
 package com.shushijuhe.shushijuheread.fragment;
-
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.shushijuhe.shushijuheread.R;
 
-public class FindFragment extends Fragment {
+public class FindFragment extends BaseFragment {
 
-    private View view;
-
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_find, container, false);
-        initView();
-        return view;
+    public int getLayoutId() {
+        return R.layout.fragment_find;
     }
 
-    private void initView() {
+    @Override
+    public void initToolBar() {
+
+    }
+
+    public void initView() {
+
+    }
+
+    @Override
+    public void initEvent() {
 
     }
 }
