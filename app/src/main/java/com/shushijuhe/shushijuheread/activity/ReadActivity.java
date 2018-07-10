@@ -194,6 +194,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
 
     DownloadService.MyBind myBind;
     String bookid;
+    String formattedDate = "";
 
     //定义一个ServiceConnection对象
     private ServiceConnection connn = new ServiceConnection() {
@@ -473,15 +474,6 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                         }
                     }
                     break;
-                case 0x677:
-                    mBattery.setPower(cell);
-                    break;
-                case 0x667:
-                    Calendar c = Calendar.getInstance();
-                    SimpleDateFormat df = new SimpleDateFormat("HH:mm");
-                    String formattedDate = df.format(c.getTime());
-                    bookTime.setText(formattedDate);
-                    break;
             }
 
         }
@@ -704,14 +696,10 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             }else{
                 size = bookMixATocLocalBean.size();
             }
-            //判断项目是否为第一次运行
-            if(no_1){
-                //开启时间监控
-                getTime();
-                //开启电池监控
-                getDian();
-                no_1 = false;
-            }
+            //开启时间监控
+            getTime();
+            //开启电池监控
+            getDian();
         }
     }
 
@@ -721,19 +709,6 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
         SimpleDateFormat df = new SimpleDateFormat("HH:mm");
         String formattedDate = df.format(c.getTime());
         bookTime.setText(formattedDate);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                do {
-                    try {
-                        Thread.sleep(1000);
-                        handler.sendEmptyMessage(0x667);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                } while (true);
-            }
-        }).start();
     }
 
     @Override
@@ -762,19 +737,6 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
 
     public void getDian() {
         mBattery.setPower(cell);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                do {
-                    try {
-                        Thread.sleep(1000);
-                        handler.sendEmptyMessage(0x677);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                } while (true);
-            }
-        }).start();
     }
 
     int height;
@@ -805,28 +767,9 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
         isRefresh = false;
         switch (v.getId()) {
             case R.id.btn_up:
-//                if (mixAtoc > 0) {
-//                    --mixAtoc;
-//                    bookCurrent = true;
-//                    setBooksData();
-//                } else {
-//                    toast("已经是第一章啦~");
-//                }
                 break;
             case R.id.btn_down:
-//                int size;
-//                if(bookMixAToc!=null){
-//                    size =  bookMixAToc.mixToc.chapters.size();
-//                }else{
-//                    size = bookMixATocLocalBean.size();
-//                }
-//                if (mixAtoc < size - 1) {
-//                    ++mixAtoc;
-//                    bookCurrent = false;
-//                    setBooksData();
-//                } else {
-//                    toast("已经是最后一章啦~");
-//                }
+
                 break;
             case R.id.read_button:
                 //调用平移动画，打开菜单

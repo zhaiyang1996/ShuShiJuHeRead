@@ -137,13 +137,10 @@ public class DownloadService extends Service {
             }
         };
         new Thread(runnable).start();
-//        mSingleExecutor.execute(runnable);
     }
     private void notificationInit(){
         mNotificationNum++;
         //通知栏内显示下载进度条
-//        Intent intent=new Intent(this, MainActivity.class);//点击进度条，进入程序
-//        PendingIntent pIntent=PendingIntent.getActivity(this, 0, intent, 0);
         mNotificationManager=(NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
         mNotification=new Notification();
         mNotification.icon= R.drawable.ic_launcher;

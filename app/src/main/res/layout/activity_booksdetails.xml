@@ -111,7 +111,6 @@
                     android:layout_marginStart="16dp"
                     android:text="订阅"
                     android:textSize="@dimen/booksdetails_introduce"
-                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@+id/booksdetails_text_words"
                     app:layout_constraintStart_toEndOf="@+id/booksdetails_text_words"
                     app:layout_constraintTop_toTopOf="@+id/booksdetails_text_words" />
