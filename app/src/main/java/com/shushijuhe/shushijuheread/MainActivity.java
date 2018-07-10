@@ -48,7 +48,7 @@ public class MainActivity extends BaseActivity {
         topMenu.getTopIvLeft().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                toast("伦家还没开始做拉~");
             }
         });
         topMenu.getTopIvRight().setImageResource(R.mipmap.title_seek);

@@ -292,19 +292,6 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
 
             setBooksData();
         }
-
-//        DataManager.getInstance().getBookMixAToc(new ProgressSubscriber<BookMixAToc>(new SubscriberOnNextListenerInstance() {
-//            @Override
-//            public void onNext(Object o) {
-//                bookMixAToc = (BookMixAToc) o;
-//                if (bookMixAToc != null) {
-//                    setBooksData();
-//                } else {
-//                    toast("目录获取异常");
-//                }
-//            }
-//        }, this, null), "555abb2d91d0eb814e5db04f", "chapters");
-
     }
 
     private void switchSlidingMode() {
