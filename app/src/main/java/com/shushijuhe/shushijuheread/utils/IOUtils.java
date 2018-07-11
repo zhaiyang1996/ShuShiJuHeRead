@@ -97,15 +97,30 @@ public class IOUtils {
     }
 
     //删除指定txt文件   通过路径
-    public static void deleteFile(String filePath, String fileName) {
-        File f = new File(filePath + fileName);  // 输入要删除的文件位置
+    public static void deleteFile(String path) {
+        File f = new File(path);  // 输入要删除的文件位置
         if (f.exists()) {
             f.delete();
         }
 
     }
 
-    // 读取文件
+    //判断文件是否存在
+    public static boolean fileIsExists(String strFile) {
+        try {
+            File f = new File(strFile);
+            if (!f.exists()) {
+                return false;
+            }
+
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
+    }
+
+        // 读取文件
     public static String getText(String path) {
         String res = "";
         FileInputStream fin = null;

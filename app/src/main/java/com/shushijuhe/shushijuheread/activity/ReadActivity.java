@@ -278,7 +278,12 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             if(bookMixAToc!=null){
                 bookid = bookMixAToc.mixToc._id;
             }else{
-                bookid = bookMixATocLocalBean.get(0).bookid;
+                if(bookMixATocLocalBean!=null){
+                    bookid = bookMixATocLocalBean.get(0).bookid;
+                }else {
+                    toast("书籍发生了错误，重新添加此书到书架看看！");
+                    return;
+                }
             }
             //加入书籍历史记录
             if(!isMix){
@@ -289,7 +294,6 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                     isRefresh = true;
                 }
             }
-
             setBooksData();
         }
     }
@@ -323,10 +327,14 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
         String link;
         String titble;
         if(bookMixAToc!=null){
+            if(mixAtoc>=bookMixAToc.mixToc.chapters.size())
+                mixAtoc=bookMixAToc.mixToc.chapters.size()-1;
             isOnline = bookMixAToc.mixToc.chapters.get(mixAtoc).isOnline;
             link =  bookMixAToc.mixToc.chapters.get(mixAtoc).link;
             titble = bookMixAToc.mixToc.chapters.get(mixAtoc).title;
         }else{
+            if(mixAtoc>=bookMixATocLocalBean.size())
+            mixAtoc=bookMixATocLocalBean.size()-1;
             isOnline = bookMixATocLocalBean.get(mixAtoc).isOnline;
             link = bookMixATocLocalBean.get(mixAtoc).link;
             titble = bookMixATocLocalBean.get(mixAtoc).title;
@@ -365,7 +373,14 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             bookData = bookDataDaoUtils.queryBookDataDaoByQueryBuilder(bookid,titble);
             if(bookData!=null&&bookData.size()>0&&bookData.size()<2){
                 bookBodylist.add(bookData.get(0).getTitle());
-                book = IOUtils.getText(bookData.get(0).getBody());
+                if(IOUtils.fileIsExists(bookData.get(0).getBody())){
+                    book = IOUtils.getText(bookData.get(0).getBody());
+                }else {
+                    book = "离线书籍加载失败啦！原因以及解决方案如下：\n1.资源文件被删除\n2.退出重进刷新（将以在线方式加载文件）\n3.防止后面章节缺失，可打开目录，点击检查资源完整性来判断离线章节文件是否存在！\n4.加入官方QQ群：215636017";
+                    BookMixATocLocalBean bean = bookMixATocLocalBean.get(mixAtoc);
+                    bean.setIsOnline(true);
+                    bookMixATocLocalBeanDaoUtils.updateBookMixATocLocalBean(bean);
+                }
                 bookx = book;
                 //加载书籍文章
                 read_book_x.setText(book);
@@ -411,9 +426,12 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                             if(bookBodylist.get(i).length()>15){
                                 s = bookBodylist.get(i).substring(0,15);
                             }else{
-                                s = bookBodylist.get(i).substring(0,bookBodylist.get(i).length()-1);
+                                if(bookBodylist.get(i).length()>0){
+                                    s = bookBodylist.get(i).substring(0,bookBodylist.get(i).length()-1);
+                                }else{
+                                    s = "";
+                                }
                             }
-
                             int i1 = p.indexOf(s);
                             if(i1!=-1){
                                 s = p.substring(0,i1);
