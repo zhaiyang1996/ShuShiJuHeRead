@@ -27,6 +27,8 @@
 
     <!-- 硬件加速对X5视频播放非常重要，建议开启 -->
     <uses-permission android:name="android.permission.GET_TASKS"/>
+    <!--<action android:name="android.intent.action.BOOT_COMPLETED" />&lt;!&ndash;开机广播&ndash;&gt;-->
+    <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />&lt;!&ndash;网络状态改变广播&ndash;&gt;-->
 
     <application
         android:name=".application.app"
@@ -67,8 +69,6 @@
             android:process=":multiprocess"
             tools:node="replace" >
         </service>
-        <action android:name="android.intent.action.BOOT_COMPLETED" /><!--开机广播-->
-        <action android:name="android.net.conn.CONNECTIVITY_CHANGE" /><!--网络状态改变广播-->
     </application>
 
 </manifest>
