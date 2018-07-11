@@ -67,6 +67,8 @@
             android:process=":multiprocess"
             tools:node="replace" >
         </service>
+        <action android:name="android.intent.action.BOOT_COMPLETED" /><!--开机广播-->
+        <action android:name="android.net.conn.CONNECTIVITY_CHANGE" /><!--网络状态改变广播-->
     </application>
 
 </manifest>

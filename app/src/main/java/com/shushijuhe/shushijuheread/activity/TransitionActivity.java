@@ -1,5 +1,6 @@
 package com.shushijuhe.shushijuheread.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
@@ -50,6 +51,7 @@ public class TransitionActivity extends BaseActivity {
             }
         },2500);
     }
+    @SuppressLint("HandlerLeak")
     private Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
