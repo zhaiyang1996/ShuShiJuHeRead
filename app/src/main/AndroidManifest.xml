@@ -52,7 +52,6 @@
         <activity android:name=".activity.ReaderActivity"/>
         <activity android:name=".activity.SeekBookActivity"/>
         <activity android:name=".activity.SeekVideoActivity" />
-        <activity android:name=".activity.BookCategoryActivity"/>
         <activity android:name=".activity.CategoryDetailsActivity"/>
         <activity android:name=".activity.ReadActivity"/>
         <activity android:name=".activity.BooksDetailsActivity"/>
@@ -64,6 +63,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.BookRankActivity" />
+        <activity android:name=".activity.BookCategoryActivity" />
+
         <service android:name=".service.DownloadService"/>
         <service android:name="cn.jpush.android.service.PushService"
             android:process=":multiprocess"
