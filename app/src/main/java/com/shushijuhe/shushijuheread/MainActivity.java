@@ -11,8 +11,8 @@ import android.view.View;
 import com.shushijuhe.shushijuheread.activity.SeekBookActivity;
 import com.shushijuhe.shushijuheread.activity.base.BaseActivity;
 import com.shushijuhe.shushijuheread.adapter.ViewPagerAdapter;
-import com.shushijuhe.shushijuheread.fragment.BookCategoryFragment;
 import com.shushijuhe.shushijuheread.fragment.BookrackFragment;
+import com.shushijuhe.shushijuheread.fragment.BookstoreFragment;
 import com.shushijuhe.shushijuheread.fragment.FindFragment;
 import com.shushijuhe.shushijuheread.utils.Tool;
 import com.shushijuhe.shushijuheread.utils.TopMenuHeader;
@@ -90,7 +90,7 @@ public class MainActivity extends BaseActivity{
 
     public void setVpFragment() {
         fragments.add(new BookrackFragment());
-        fragments.add(new BookCategoryFragment());
+        fragments.add(new BookstoreFragment());
         fragments.add(new FindFragment());
         adapter = new ViewPagerAdapter(getSupportFragmentManager(), fragments);
         vpFragment.setAdapter(adapter);

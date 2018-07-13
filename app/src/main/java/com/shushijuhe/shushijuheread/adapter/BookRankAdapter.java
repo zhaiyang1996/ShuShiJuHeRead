@@ -21,8 +21,8 @@ public class BookRankAdapter extends RecyclerView.Adapter<BookRankAdapter.MyView
 
     private Context context;
     private List<Rank_categoryBean.MaleBean> list;
-    private List<Integer> cover;
     private MyOnClickListener myOnClickListener;
+    private List<Integer> cover;
 
     public BookRankAdapter(Context context) {
         this.context = context;
@@ -54,11 +54,12 @@ public class BookRankAdapter extends RecyclerView.Adapter<BookRankAdapter.MyView
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         holder.tv_title.setText(list.get(position).title);
-        if (position < 9) {
+        if (list.get(position).cover == null) {
             holder.iv_cover.setBackgroundResource(cover.get(position));
         } else {
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.iv_cover.getLayoutParams();
             layoutParams.height = 0;
+            layoutParams.weight = 15;
             holder.iv_cover.setLayoutParams(layoutParams);
         }
         holder.ll_click.setOnClickListener(new View.OnClickListener() {
