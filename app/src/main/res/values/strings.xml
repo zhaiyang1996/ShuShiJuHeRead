@@ -49,5 +49,8 @@
     <string name="read_str_typeface_sp_x">在线字体</string>
     <string name="read_str_typeface_sp_msg">还没有字体哦，去下载吧~</string>
 
+    
+    <!--关于我们-->
+    <string name="aboutus_ed">版本</string>
 
 </resources>
