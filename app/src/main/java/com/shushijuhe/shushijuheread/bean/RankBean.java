@@ -77,6 +77,8 @@ public class RankBean {
             public String cover;
             public String site;
             public String cat;
+            public String majorCate;
+            public String minorCate;
             public int banned;
             public int latelyFollower;
             public int latelyFollowerBase;

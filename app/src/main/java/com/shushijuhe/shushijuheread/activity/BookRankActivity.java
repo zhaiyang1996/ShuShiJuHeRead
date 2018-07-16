@@ -2,6 +2,7 @@ package com.shushijuhe.shushijuheread.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -10,7 +11,6 @@ import android.view.View;
 import com.shushijuhe.shushijuheread.R;
 import com.shushijuhe.shushijuheread.activity.base.BaseActivity;
 import com.shushijuhe.shushijuheread.adapter.BookRankVpAdapter;
-import com.shushijuhe.shushijuheread.fragment.bookrank.FemaleRankFragment;
 import com.shushijuhe.shushijuheread.fragment.bookrank.MaleRankFragment;
 import com.shushijuhe.shushijuheread.utils.TopMenuHeader;
 
@@ -59,8 +59,18 @@ public class BookRankActivity extends BaseActivity {
     @Override
     public void initView() {
         List<Fragment> fragments = new ArrayList<>();
-        fragments.add(new MaleRankFragment());
-        fragments.add(new MaleRankFragment());
+        MaleRankFragment fragment1 = new MaleRankFragment();
+        Bundle bundle1 = new Bundle();
+        bundle1.putInt("type", 0);
+        fragment1.setArguments(bundle1);
+        fragments.add(fragment1);
+
+
+        MaleRankFragment fragment2 = new MaleRankFragment();
+        Bundle bundle2 = new Bundle();
+        bundle2.putInt("type", 1);
+        fragment2.setArguments(bundle2);
+        fragments.add(fragment2);
         List<String> titles = new ArrayList<>();
         titles.add("男生专场");
         titles.add("女生专场");

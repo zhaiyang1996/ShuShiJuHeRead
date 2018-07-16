@@ -129,11 +129,13 @@ public class BookDialog extends Dialog implements View.OnClickListener {
         }
 
         if (!TextUtils.isEmpty(author) && !TextUtils.isEmpty(tags)) {
-            bookinfo_author.setText(author + "      |      " + tags);
+            bookinfo_author.setText(author + "   |   " + tags);
         }
 
         if (!TextUtils.isEmpty(lastChapter)) {
             bookinfo_lastChapter.setText(lastChapter);
+        }else {
+            bookinfo_lastChapter.setVisibility(View.GONE);
         }
 
         if (!TextUtils.isEmpty(latelyFollower)) {
