@@ -17,6 +17,10 @@ import java.util.List;
 
 import butterknife.BindView;
 
+/**
+ * 唐鹏
+ * 女声排行页面
+ */
 public class FemaleRankFragment extends BaseFragment {
 
 

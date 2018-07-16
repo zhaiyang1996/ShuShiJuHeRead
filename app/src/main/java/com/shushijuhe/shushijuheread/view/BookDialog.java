@@ -1,4 +1,4 @@
-package com.shushijuhe.shushijuheread.utils;
+package com.shushijuhe.shushijuheread.view;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -15,6 +15,10 @@ import com.shushijuhe.shushijuheread.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * 唐鹏
+ * 书籍详情展示提示框
+ */
 public class BookDialog extends Dialog implements View.OnClickListener {
 
     @BindView(R.id.dialog_long_bookinfo_cover)

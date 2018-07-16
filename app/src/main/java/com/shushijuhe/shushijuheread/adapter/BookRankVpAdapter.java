@@ -7,6 +7,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.List;
 
+/**
+ * 唐鹏
+ * 书籍排行界面滑动适配器
+ */
 public class BookRankVpAdapter extends FragmentPagerAdapter {
 
     private List<String> titles;

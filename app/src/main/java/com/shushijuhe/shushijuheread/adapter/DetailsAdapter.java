@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.shushijuhe.shushijuheread.R;
@@ -19,14 +18,15 @@ import com.shushijuhe.shushijuheread.activity.BooksDetailsActivity;
 import com.shushijuhe.shushijuheread.bean.Book_infoBean;
 import com.shushijuhe.shushijuheread.bean.Categories_infoBean;
 import com.shushijuhe.shushijuheread.constants.Constants;
-import com.shushijuhe.shushijuheread.utils.BookDialog;
+import com.shushijuhe.shushijuheread.view.BookDialog;
 import com.shushijuhe.shushijuheread.utils.Tool;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
 /**
- * Created by Boy on 2018/6/8.
+ * 唐鹏 2018/6/8.
+ * 书籍分类详情适配器
  */
 
 public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.MyViewHolder> {

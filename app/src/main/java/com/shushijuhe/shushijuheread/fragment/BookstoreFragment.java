@@ -10,6 +10,10 @@ import com.shushijuhe.shushijuheread.activity.BookRankActivity;
 
 import butterknife.BindView;
 
+/**
+ * 唐鹏
+ * 书城页面
+ */
 public class BookstoreFragment extends BaseFragment implements View.OnClickListener {
 
     @BindView(R.id.book_store_tv_category)

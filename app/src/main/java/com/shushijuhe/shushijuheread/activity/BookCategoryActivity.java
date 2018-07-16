@@ -17,6 +17,10 @@ import com.shushijuhe.shushijuheread.utils.TopMenuHeader;
 
 import butterknife.BindView;
 
+/**
+ * 唐鹏
+ * 书籍分类界面
+ */
 public class BookCategoryActivity extends BaseActivity implements View.OnClickListener {
 
     @BindView(R.id.bookcategory_tv_show_male)

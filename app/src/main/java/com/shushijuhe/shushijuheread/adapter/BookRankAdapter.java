@@ -17,6 +17,10 @@ import com.shushijuhe.shushijuheread.bean.Rank_categoryBean;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 唐鹏
+ * 书籍排行展示适配器
+ */
 public class BookRankAdapter extends RecyclerView.Adapter<BookRankAdapter.MyViewHolder> {
 
     private Context context;

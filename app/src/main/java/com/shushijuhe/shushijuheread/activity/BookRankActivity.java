@@ -19,6 +19,10 @@ import java.util.List;
 
 import butterknife.BindView;
 
+/**
+ * 唐鹏
+ * 书籍排行界面
+ */
 public class BookRankActivity extends BaseActivity {
 
     @BindView(R.id.book_rank_tl_title)

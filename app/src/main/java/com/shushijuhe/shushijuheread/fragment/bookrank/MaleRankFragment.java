@@ -17,6 +17,10 @@ import java.util.List;
 
 import butterknife.BindView;
 
+/**
+ * 唐鹏
+ * 男生排行页面
+ */
 public class MaleRankFragment extends BaseFragment {
 
 

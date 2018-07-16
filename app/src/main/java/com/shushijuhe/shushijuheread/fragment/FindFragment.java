@@ -1,6 +1,10 @@
 package com.shushijuhe.shushijuheread.fragment;
 import com.shushijuhe.shushijuheread.R;
 
+/**
+ * 唐鹏
+ * 发现页面
+ */
 public class FindFragment extends BaseFragment {
 
     @Override

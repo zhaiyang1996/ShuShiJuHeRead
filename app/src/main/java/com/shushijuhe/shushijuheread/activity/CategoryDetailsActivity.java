@@ -37,7 +37,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * Created by Boy on 2018/6/8.
+ * 唐鹏 2018/6/8.
+ * 分类详情界面
  */
 
 public class CategoryDetailsActivity extends BaseActivity {

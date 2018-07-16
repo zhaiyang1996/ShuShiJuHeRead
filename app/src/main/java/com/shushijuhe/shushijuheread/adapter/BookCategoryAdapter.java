@@ -13,6 +13,10 @@ import com.shushijuhe.shushijuheread.R;
 import com.shushijuhe.shushijuheread.activity.CategoryDetailsActivity;
 import com.shushijuhe.shushijuheread.bean.CategoriesBean;
 
+/**
+ * 唐鹏
+ * 分类详情适配器
+ */
 public class BookCategoryAdapter extends RecyclerView.Adapter<BookCategoryAdapter.MyViewHolder> {
 
     private Context context;
