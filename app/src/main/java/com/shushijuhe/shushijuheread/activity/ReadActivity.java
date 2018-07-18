@@ -1103,15 +1103,16 @@ public void isTiemx(){
      */
     public void setShelf(){
         BookshelfBean bookshelfBean = new BookshelfBean();
-        bookshelfBean.setBookId(bookMixAToc.mixToc._id);
+        bookshelfBean.setBookId(bookMixAToc.mixToc.book);
         bookshelfBean.setCover(Constants.IMG_BASE_URL+app.bookDetailBean.cover);
         bookshelfBean.setName(app.bookDetailBean.title);
         bookshelfBean.setTime(Tool.getTime());
         bookshelfBeanDaoUtils.insertBookshelfBean(bookshelfBean);
         List<BookMixATocLocalBean> bookMixATocLocalBeans = new ArrayList<>();
+        int i=0;
         for(BookMixAToc.mixToc.Chapters chapters:bookMixAToc.mixToc.chapters){
             BookMixATocLocalBean bookMixATocLocalBean = new BookMixATocLocalBean();
-            bookMixATocLocalBean.setBookid(bookMixAToc.mixToc._id);
+            bookMixATocLocalBean.setBookid(bookMixAToc.mixToc.book);
             bookMixATocLocalBean.setIsOnline(true);
             bookMixATocLocalBean.setLink(chapters.link);
             bookMixATocLocalBean.setTitle(chapters.title);

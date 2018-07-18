@@ -1,10 +1,14 @@
 package com.shushijuhe.shushijuheread.fragment;
 
+import android.annotation.SuppressLint;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,10 +22,16 @@ import com.shushijuhe.shushijuheread.R;
 import com.shushijuhe.shushijuheread.activity.ReadActivity;
 import com.shushijuhe.shushijuheread.activity.base.BaseActivity;
 import com.shushijuhe.shushijuheread.adapter.BookrackAdapter;
+import com.shushijuhe.shushijuheread.bean.BookMixAToc;
 import com.shushijuhe.shushijuheread.bean.BookMixATocLocalBean;
 import com.shushijuhe.shushijuheread.bean.BookshelfBean;
+import com.shushijuhe.shushijuheread.dao.BookMixATocLocalBeanDaoUtils;
 import com.shushijuhe.shushijuheread.dao.BookshelfBeanDaoUtils;
+import com.shushijuhe.shushijuheread.http.DataManager;
+import com.shushijuhe.shushijuheread.http.ProgressSubscriber;
+import com.shushijuhe.shushijuheread.http.SubscriberOnNextListenerInstance;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,6 +53,8 @@ public class BookrackFragment extends BaseFragment {
     private BookrackAdapter bookrackAdapter;
     private List<BookshelfBean> list;
     private BookshelfBeanDaoUtils bookshelfBeanDaoUtils;
+    private BookMixATocLocalBeanDaoUtils bookMixATocLocalBeanDaoUtils;
+    private List<BookMixATocLocalBean> bookMixATocLocalBeans;
 
     @Override
     public int getLayoutId() {
@@ -58,6 +70,7 @@ public class BookrackFragment extends BaseFragment {
     public void initView() {
         bookrackAdapter = new BookrackAdapter(getActivity());
         bookshelfBeanDaoUtils = new BookshelfBeanDaoUtils(getActivity());
+        bookMixATocLocalBeanDaoUtils = new BookMixATocLocalBeanDaoUtils(getActivity());
         initRefresh();
         callBack();
     }
@@ -83,11 +96,50 @@ public class BookrackFragment extends BaseFragment {
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                refreshLayout.finishRefresh(2000/*,false*/);
+                upDate();
             }
         });
     }
-
+    int page = 0;
+    private void upDate(){
+        //创建循环重复获取书籍目录
+        for(final BookshelfBean bean:list){
+            //获取目录数据
+            DataManager.getInstance().getBookMixAToc(new ProgressSubscriber<BookMixAToc>(new SubscriberOnNextListenerInstance() {
+                @Override
+                public void onNext(Object o) {
+                    BookMixAToc bookMixAToc = (BookMixAToc) o;
+                    String id = bean.getBookId();
+                    if (bookMixAToc != null) {
+                        bookMixATocLocalBeans = bookMixATocLocalBeanDaoUtils.queryBookMixATocLocalBeanByQueryBuilder(id);
+                        if(bookMixATocLocalBeans.size()<bookMixAToc.mixToc.chapters.size()){
+                            int size = bookMixAToc.mixToc.chapters.size() - bookMixATocLocalBeans.size();
+                            //在线章节大于本地章节则更新本地章节并且展示小红点
+                            List<BookMixATocLocalBean> bookMixATocLocalBeanss = new ArrayList<>();
+                            for(int i=0;i<size;i++){
+                                BookMixATocLocalBean bookMixATocLocalBean = new BookMixATocLocalBean();
+                                bookMixATocLocalBean.setBookid(bookMixAToc.mixToc.book);
+                                bookMixATocLocalBean.setIsOnline(true);
+                                bookMixATocLocalBean.setLink(bookMixAToc.mixToc.chapters.get(bookMixATocLocalBeans.size()+i).link);
+                                bookMixATocLocalBean.setTitle(bookMixAToc.mixToc.chapters.get(bookMixATocLocalBeans.size()+i).title);
+                                bookMixATocLocalBeanss.add(bookMixATocLocalBean);
+                            }
+                            bean.setIsUpdate(true);
+                            bookshelfBeanDaoUtils.updateBookshelfBean(bean);
+                            bookMixATocLocalBeanDaoUtils.insertMultBookMixATocLocalBean(bookMixATocLocalBeanss);
+                        }
+                    } else {
+                        toast("目录获取异常");
+                    }
+                    if(page >= list.size()-1){
+                        initData();
+                        refreshLayout.finishRefresh(2000/*,false*/);
+                    }
+                    page++;
+                }
+            }, getActivity(), null), bean.getBookId(), "chapters");
+        }
+    }
     /**
      * 回调
      */
@@ -98,6 +150,10 @@ public class BookrackFragment extends BaseFragment {
                 if (imageView != null) {
 
                 } else {
+                    //更新点击状态
+                    BookshelfBean bean = bookshelfBea;
+                    bean.setIsUpdate(false);
+                    bookshelfBeanDaoUtils.updateBookshelfBean(bean);
                     ReadActivity.statrActivity((BaseActivity) getActivity(), null,
                             bookMixATocLocalList, bookshelfBea.getName(), 0, 0, false);
                 }

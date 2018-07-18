@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -50,6 +51,7 @@ public class BookrackAdapter extends RecyclerView.Adapter<BookrackAdapter.MyView
 
     public void setData(List<BookshelfBean> list) {
         this.bookshelfList = list;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -61,6 +63,11 @@ public class BookrackAdapter extends RecyclerView.Adapter<BookrackAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
+        if(bookshelfList.get(position).getIsUpdate()){
+            holder.isUpdate.setVisibility(View.VISIBLE);
+        }else{
+            holder.isUpdate.setVisibility(View.GONE);
+        }
         holder.name.setText(String.valueOf(bookshelfList.get(position).getName()));
         holder.chapter.setText(String.valueOf("最新：" + getChapter(bookshelfList.get(position).getBookId(),position)));
         holder.time.setText(String.valueOf(bookshelfList.get(position).getTime()));
@@ -113,7 +120,9 @@ public class BookrackAdapter extends RecyclerView.Adapter<BookrackAdapter.MyView
         @BindView(R.id.item_bookrack_selected)
         ImageView selected;//是否选中
         @BindView(R.id.item_bookrack_linearLayout)
-        LinearLayout mlayout;//item
+        RelativeLayout mlayout;//item
+        @BindView(R.id.item_bookrack_dot)
+        ImageView isUpdate; //章节是否更新
 
 
         MyViewHolder(View itemView) {

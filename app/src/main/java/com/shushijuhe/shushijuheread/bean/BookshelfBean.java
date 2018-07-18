@@ -26,14 +26,18 @@ public class BookshelfBean {
     private String name;//书名
     private String cover;//封面图
     private String time;//最新打开时间
-    @Generated(hash = 184990247)
+    private boolean isUpdate = false;//书籍是否有更新、默认否
+    private boolean isChecked = false; //书籍是否被选中、默认否
+    @Generated(hash = 447675567)
     public BookshelfBean(Long id, @NotNull String bookId, String name, String cover,
-            String time) {
+            String time, boolean isUpdate, boolean isChecked) {
         this.id = id;
         this.bookId = bookId;
         this.name = name;
         this.cover = cover;
         this.time = time;
+        this.isUpdate = isUpdate;
+        this.isChecked = isChecked;
     }
     @Generated(hash = 1774987038)
     public BookshelfBean() {
@@ -67,5 +71,17 @@ public class BookshelfBean {
     }
     public void setTime(String time) {
         this.time = time;
+    }
+    public boolean getIsUpdate() {
+        return this.isUpdate;
+    }
+    public void setIsUpdate(boolean isUpdate) {
+        this.isUpdate = isUpdate;
+    }
+    public boolean getIsChecked() {
+        return this.isChecked;
+    }
+    public void setIsChecked(boolean isChecked) {
+        this.isChecked = isChecked;
     }
 }

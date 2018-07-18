@@ -29,6 +29,8 @@ public class BookshelfBeanDao extends AbstractDao<BookshelfBean, Long> {
         public final static Property Name = new Property(2, String.class, "name", false, "NAME");
         public final static Property Cover = new Property(3, String.class, "cover", false, "COVER");
         public final static Property Time = new Property(4, String.class, "time", false, "TIME");
+        public final static Property IsUpdate = new Property(5, boolean.class, "isUpdate", false, "IS_UPDATE");
+        public final static Property IsChecked = new Property(6, boolean.class, "isChecked", false, "IS_CHECKED");
     }
 
 
@@ -48,7 +50,9 @@ public class BookshelfBeanDao extends AbstractDao<BookshelfBean, Long> {
                 "\"BOOK_ID\" TEXT NOT NULL ," + // 1: bookId
                 "\"NAME\" TEXT," + // 2: name
                 "\"COVER\" TEXT," + // 3: cover
-                "\"TIME\" TEXT);"); // 4: time
+                "\"TIME\" TEXT," + // 4: time
+                "\"IS_UPDATE\" INTEGER NOT NULL ," + // 5: isUpdate
+                "\"IS_CHECKED\" INTEGER NOT NULL );"); // 6: isChecked
     }
 
     /** Drops the underlying database table. */
@@ -81,6 +85,8 @@ public class BookshelfBeanDao extends AbstractDao<BookshelfBean, Long> {
         if (time != null) {
             stmt.bindString(5, time);
         }
+        stmt.bindLong(6, entity.getIsUpdate() ? 1L: 0L);
+        stmt.bindLong(7, entity.getIsChecked() ? 1L: 0L);
     }
 
     @Override
@@ -107,6 +113,8 @@ public class BookshelfBeanDao extends AbstractDao<BookshelfBean, Long> {
         if (time != null) {
             stmt.bindString(5, time);
         }
+        stmt.bindLong(6, entity.getIsUpdate() ? 1L: 0L);
+        stmt.bindLong(7, entity.getIsChecked() ? 1L: 0L);
     }
 
     @Override
@@ -121,7 +129,9 @@ public class BookshelfBeanDao extends AbstractDao<BookshelfBean, Long> {
             cursor.getString(offset + 1), // bookId
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // cover
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // time
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // time
+            cursor.getShort(offset + 5) != 0, // isUpdate
+            cursor.getShort(offset + 6) != 0 // isChecked
         );
         return entity;
     }
@@ -133,6 +143,8 @@ public class BookshelfBeanDao extends AbstractDao<BookshelfBean, Long> {
         entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setCover(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setTime(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setIsUpdate(cursor.getShort(offset + 5) != 0);
+        entity.setIsChecked(cursor.getShort(offset + 6) != 0);
      }
     
     @Override
