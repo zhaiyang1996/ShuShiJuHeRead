@@ -140,6 +140,20 @@ public class BookrackFragment extends BaseFragment {
                     }
                     page++;
                 }
+
+                @Override
+                public void onError(Throwable e) {
+                    super.onError(e);
+                    if(page >= list.size()-1){
+                        initData();
+                        toast("网络异常，请检查你的网络哟~");
+                        refreshLayout.finishRefresh(2000/*,false*/);
+                        //关闭数据库
+                        bookshelfBeanDaoUtils.closeConnection();
+                        bookMixATocLocalBeanDaoUtils.closeConnection();
+                    }
+                    page++;
+                }
             }, getActivity(), null), bean.getBookId(), "chapters");
         }
     }
