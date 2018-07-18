@@ -134,6 +134,9 @@ public class BookrackFragment extends BaseFragment {
                     if(page >= list.size()-1){
                         initData();
                         refreshLayout.finishRefresh(2000/*,false*/);
+                        //关闭数据库
+                        bookshelfBeanDaoUtils.closeConnection();
+                        bookMixATocLocalBeanDaoUtils.closeConnection();
                     }
                     page++;
                 }
