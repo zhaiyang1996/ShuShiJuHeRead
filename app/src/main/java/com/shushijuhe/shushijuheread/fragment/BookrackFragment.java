@@ -30,6 +30,7 @@ import com.shushijuhe.shushijuheread.dao.BookshelfBeanDaoUtils;
 import com.shushijuhe.shushijuheread.http.DataManager;
 import com.shushijuhe.shushijuheread.http.ProgressSubscriber;
 import com.shushijuhe.shushijuheread.http.SubscriberOnNextListenerInstance;
+import com.shushijuhe.shushijuheread.utils.Tool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -175,6 +176,8 @@ public class BookrackFragment extends BaseFragment {
                     //更新点击状态
                     BookshelfBean bean = bookshelfBea;
                     bean.setIsUpdate(false);
+                    bean.setTime(Tool.getTime());
+                    bean.setTimeMillis(System.currentTimeMillis());
                     bookshelfBeanDaoUtils.updateBookshelfBean(bean);
                     ReadActivity.statrActivity((BaseActivity) getActivity(), null,
                             bookMixATocLocalList, bookshelfBea.getName(), 0, 0, false);
@@ -188,7 +191,7 @@ public class BookrackFragment extends BaseFragment {
      */
     private void initData() {
         refreshLayout.setEnableRefresh(true);
-        list = bookshelfBeanDaoUtils.queryAllBookshelfBean();
+        list = bookshelfBeanDaoUtils.queryBookshelfBeanByQueryBuilder_TimeA();
         bookshelfBeanDaoUtils.closeConnection();//关闭数据库
         if (list.size() > 0) {
             mRecyclerView.setVisibility(View.VISIBLE);

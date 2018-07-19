@@ -26,18 +26,23 @@ public class BookshelfBean {
     private String name;//书名
     private String cover;//封面图
     private String time;//最新打开时间
+    private long timeMillis; //最新打开的时间轴，用来进行书架排序
     private boolean isUpdate = false;//书籍是否有更新、默认否
     private boolean isChecked = false; //书籍是否被选中、默认否
-    @Generated(hash = 447675567)
+    private boolean isEnd = false; //是否完结、默认连载
+    @Generated(hash = 1973757242)
     public BookshelfBean(Long id, @NotNull String bookId, String name, String cover,
-            String time, boolean isUpdate, boolean isChecked) {
+            String time, long timeMillis, boolean isUpdate, boolean isChecked,
+            boolean isEnd) {
         this.id = id;
         this.bookId = bookId;
         this.name = name;
         this.cover = cover;
         this.time = time;
+        this.timeMillis = timeMillis;
         this.isUpdate = isUpdate;
         this.isChecked = isChecked;
+        this.isEnd = isEnd;
     }
     @Generated(hash = 1774987038)
     public BookshelfBean() {
@@ -72,6 +77,12 @@ public class BookshelfBean {
     public void setTime(String time) {
         this.time = time;
     }
+    public long getTimeMillis() {
+        return this.timeMillis;
+    }
+    public void setTimeMillis(long timeMillis) {
+        this.timeMillis = timeMillis;
+    }
     public boolean getIsUpdate() {
         return this.isUpdate;
     }
@@ -83,5 +94,11 @@ public class BookshelfBean {
     }
     public void setIsChecked(boolean isChecked) {
         this.isChecked = isChecked;
+    }
+    public boolean getIsEnd() {
+        return this.isEnd;
+    }
+    public void setIsEnd(boolean isEnd) {
+        this.isEnd = isEnd;
     }
 }

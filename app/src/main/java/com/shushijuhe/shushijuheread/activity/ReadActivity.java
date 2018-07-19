@@ -1063,7 +1063,11 @@ public void isTiemx(){
     //对返回键进行监听
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        bookShelf();
+        switch (keyCode){
+            case KeyEvent.KEYCODE_BACK:
+                 bookShelf();
+                 break;
+        }
         return super.onKeyDown(keyCode, event);
     }
     //退出应用执行是否加入书架方法
@@ -1107,6 +1111,8 @@ public void isTiemx(){
         bookshelfBean.setCover(Constants.IMG_BASE_URL+app.bookDetailBean.cover);
         bookshelfBean.setName(app.bookDetailBean.title);
         bookshelfBean.setTime(Tool.getTime());
+        bookshelfBean.setTimeMillis(System.currentTimeMillis());
+        bookshelfBean.setIsEnd(!app.bookDetailBean.isSerial);
         bookshelfBeanDaoUtils.insertBookshelfBean(bookshelfBean);
         List<BookMixATocLocalBean> bookMixATocLocalBeans = new ArrayList<>();
         int i=0;
