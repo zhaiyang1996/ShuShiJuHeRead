@@ -47,10 +47,15 @@ public class BookrackAdapter extends RecyclerView.Adapter<BookrackAdapter.MyView
         this.context = context;
         bookMixATocLocalBeanDaoUtils = new BookMixATocLocalBeanDaoUtils(context);
         bookMixATocLocalList = new ArrayList<>();
+        bookshelfList = new ArrayList<>();
     }
 
     public void setData(List<BookshelfBean> list) {
-        this.bookshelfList = list;
+        if(this.bookshelfList!=null){
+            this.bookshelfList.clear();
+            this.bookMixATocLocalList.clear();
+        }
+        this.bookshelfList.addAll(list);
         notifyDataSetChanged();
     }
 
@@ -104,7 +109,7 @@ public class BookrackAdapter extends RecyclerView.Adapter<BookrackAdapter.MyView
 
     @Override
     public int getItemCount() {
-        return bookshelfList.size();
+        return bookshelfList==null&&bookshelfList.size()<=0?0:bookshelfList.size();
     }
 
 

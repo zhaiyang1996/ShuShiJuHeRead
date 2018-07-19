@@ -71,6 +71,8 @@ public class BookrackFragment extends BaseFragment {
         bookrackAdapter = new BookrackAdapter(getActivity());
         bookshelfBeanDaoUtils = new BookshelfBeanDaoUtils(getActivity());
         bookMixATocLocalBeanDaoUtils = new BookMixATocLocalBeanDaoUtils(getActivity());
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//设置布局管理器
+        mRecyclerView.setAdapter(bookrackAdapter);//设置Adapter
         initRefresh();
         callBack();
     }
@@ -189,8 +191,6 @@ public class BookrackFragment extends BaseFragment {
             mRecyclerView.setVisibility(View.VISIBLE);
             linearLayout.setVisibility(View.GONE);
             bookrackAdapter.setData(list);
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//设置布局管理器
-            mRecyclerView.setAdapter(bookrackAdapter);//设置Adapter
             mRecyclerView.addItemDecoration(new DividerItemDecoration(Objects.requireNonNull(getActivity()), DividerItemDecoration.VERTICAL)); //添加Android自带的分割线
             mRecyclerView.setItemAnimator(new DefaultItemAnimator()); //设置增加或删除条目的动画
         } else {
