@@ -101,8 +101,6 @@ public class BookrackFragment extends BaseFragment implements View.OnClickListen
         mRecyclerView.setAdapter(bookrackAdapter);//设置Adapter
         initRefresh();
         callBack();
-        //启动时检查追更
-        upDate();
     }
 
     @Override

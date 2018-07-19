@@ -274,7 +274,6 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             page = getIntent().getIntExtra(BOOKPAGE,0);
             isMix = getIntent().getBooleanExtra(ISMIX,false);
             //查询历史记录
-
             if(bookMixAToc!=null){
                 bookid = bookMixAToc.mixToc.book;
             }else{
@@ -1067,8 +1066,14 @@ public void isTiemx(){
             case KeyEvent.KEYCODE_BACK:
                  bookShelf();
                  break;
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                slidingContainer.slideNext();
+                break;
+            case KeyEvent.KEYCODE_VOLUME_UP:
+                slidingContainer.slidePrevious();
+                break;
         }
-        return super.onKeyDown(keyCode, event);
+        return true;
     }
     //退出应用执行是否加入书架方法
     public void bookShelf(){
@@ -1131,7 +1136,7 @@ public void isTiemx(){
         finish();
         String id;
         if(bookMixAToc!=null){
-            id = bookMixAToc.mixToc._id;
+            id = bookMixAToc.mixToc.book;
         }else{
             id = bookMixATocLocalBean.get(0).bookid;
         }

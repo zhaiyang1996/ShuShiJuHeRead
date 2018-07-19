@@ -1,6 +1,7 @@
 package com.shushijuhe.shushijuheread;
 
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -8,18 +9,32 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Toast;
 
+import com.allenliu.versionchecklib.callback.OnCancelListener;
+import com.allenliu.versionchecklib.v2.AllenVersionChecker;
+import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
+import com.allenliu.versionchecklib.v2.builder.UIData;
+import com.allenliu.versionchecklib.v2.callback.ForceUpdateListener;
+import com.allenliu.versionchecklib.v2.callback.RequestVersionListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.shushijuhe.shushijuheread.activity.SeekBookActivity;
 import com.shushijuhe.shushijuheread.activity.base.BaseActivity;
 import com.shushijuhe.shushijuheread.adapter.ViewPagerAdapter;
+import com.shushijuhe.shushijuheread.bean.UpAppBean;
 import com.shushijuhe.shushijuheread.fragment.BookrackFragment;
 import com.shushijuhe.shushijuheread.fragment.BookstoreFragment;
 import com.shushijuhe.shushijuheread.fragment.FindFragment;
 import com.shushijuhe.shushijuheread.utils.Tool;
 import com.shushijuhe.shushijuheread.utils.TopMenuHeader;
 
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -116,5 +131,43 @@ public class MainActivity extends BaseActivity{
 
     @Override
     public void initEvent() {
+        DownloadBuilder builder = AllenVersionChecker
+                .getInstance()
+                .requestVersion()
+                .setRequestUrl("http://47.106.114.175/upApp.json")
+                .request(new RequestVersionListener() {
+                    @Nullable
+                    @Override
+                    public UIData onRequestVersionSuccess(String result) {
+                        UpAppBean upAppBean = null;
+                        Type type =  new TypeToken<UpAppBean>(){}.getType();
+                        upAppBean =new Gson().fromJson(result, type);
+                        if(upAppBean!=null){
+                            if(!Tool.getVerName(mContext).equals(upAppBean.getEdition())){
+                                UIData uiData = UIData
+                                        .create()
+                                        .setDownloadUrl(upAppBean.getUrl())
+                                        .setTitle("版本更新："+upAppBean.getSize())
+                                        .setContent(upAppBean.getMsg());
+                                return uiData;
+                            }else{
+                                return null;
+                            }
+                        }else{
+                            return null;
+                        }
+                    }
+                    @Override
+                    public void onRequestVersionFailure(String message) {
+
+                    }
+                });
+        builder.excuteMission(mContext);
+        builder.setOnCancelListener(new OnCancelListener() {
+            @Override
+            public void onCancel() {
+                MainActivity.this.finish();
+            }
+        });
     }
 }

@@ -11,6 +11,7 @@ import com.shushijuhe.shushijuheread.bean.ChapterRead;
 import com.shushijuhe.shushijuheread.bean.RankBean;
 import com.shushijuhe.shushijuheread.bean.Rank_categoryBean;
 import com.shushijuhe.shushijuheread.bean.Sub_CategoriesBean;
+import com.shushijuhe.shushijuheread.bean.UpAppBean;
 import com.shushijuhe.shushijuheread.bean.VideoSeekBean;
 
 import java.util.List;
@@ -149,6 +150,7 @@ public class DataManager {
         Observable observable=mRetrofitService.getChapterRead(url);
         toSubscribe(observable,listSubscriber);
     }
+
 
     private <T> void toSubscribe(Observable<T> o, Subscriber<T> s){
         o.subscribeOn(Schedulers.io())

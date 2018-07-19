@@ -7,8 +7,8 @@ android {
         applicationId "com.shushijuhe.shushijuheread"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 2
-        versionName "2.0"
+        versionCode 6
+        versionName "6.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters"armeabi","armeabi-v7a","x86","mips"
@@ -79,4 +79,6 @@ dependencies {
     implementation 'cn.jiguang.sdk:janalytics:1.1.1' // 此处以JAnalytics 1.1.1 版本为例。
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.3'//一个开源gif控件
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    //检查版本更新
+    implementation 'com.allenliu.versionchecklib:library:2.0.5'
 }
