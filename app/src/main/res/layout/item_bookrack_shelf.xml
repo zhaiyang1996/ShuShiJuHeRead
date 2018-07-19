@@ -13,6 +13,14 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
         />
+    <ImageView
+        android:id="@+id/item_bookrack_isbatch"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@mipmap/batch_1"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_centerVertical="true"/>
     <android.support.constraint.ConstraintLayout
         android:id="@+id/bookrack_bt_addbook_shelf_constr"
         android:layout_width="wrap_content"

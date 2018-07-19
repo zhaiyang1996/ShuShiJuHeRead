@@ -276,7 +276,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             //查询历史记录
 
             if(bookMixAToc!=null){
-                bookid = bookMixAToc.mixToc._id;
+                bookid = bookMixAToc.mixToc.book;
             }else{
                 if(bookMixATocLocalBean!=null){
                     bookid = bookMixATocLocalBean.get(0).bookid;
@@ -1074,7 +1074,7 @@ public void isTiemx(){
     public void bookShelf(){
     String id;
     if(bookMixAToc!=null){
-        id = bookMixAToc.mixToc._id;
+        id = bookMixAToc.mixToc.book;
     }else{
         id = bookMixATocLocalBean.get(0).bookid;
     }

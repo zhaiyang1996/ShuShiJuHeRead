@@ -35,6 +35,7 @@ public class BookrackAdapter extends RecyclerView.Adapter<BookrackAdapter.MyView
     private List<List<BookMixATocLocalBean>> bookMixATocLocalList;
     private OnItemClickListener onItemClickListener;
     private BookMixATocLocalBeanDaoUtils bookMixATocLocalBeanDaoUtils;
+    private boolean isbatch = false;
 
 
     public interface OnItemClickListener {
@@ -52,7 +53,8 @@ public class BookrackAdapter extends RecyclerView.Adapter<BookrackAdapter.MyView
         bookshelfList = new ArrayList<>();
     }
 
-    public void setData(List<BookshelfBean> list) {
+    public void setData(List<BookshelfBean> list,boolean isbatch) {
+        this.isbatch = isbatch;
         if(this.bookshelfList!=null){
             this.bookshelfList.clear();
             this.bookMixATocLocalList.clear();
@@ -86,6 +88,17 @@ public class BookrackAdapter extends RecyclerView.Adapter<BookrackAdapter.MyView
             drawable = res.getDrawable(R.mipmap.bookrack_serial);
         }
         holder.isEnd.setImageDrawable(drawable);
+        if(bookshelfList.get(position).getIsChecked()){
+            drawable = res.getDrawable(R.mipmap.batch_2);
+        }else{
+            drawable = res.getDrawable(R.mipmap.batch_1);
+        }
+        holder.isBatch.setImageDrawable(drawable);
+        if(isbatch){
+            holder.isBatch.setVisibility(View.VISIBLE);
+        }else{
+            holder.isBatch.setVisibility(View.GONE);
+        }
         Glide.with(context)
                 .load(bookshelfList.get(position).getCover())
                 .into(holder.cover);
@@ -140,6 +153,8 @@ public class BookrackAdapter extends RecyclerView.Adapter<BookrackAdapter.MyView
         ImageView isUpdate; //章节是否更新
         @BindView(R.id.item_bookrack_update)
         ImageView isEnd; //章节是否完结
+        @BindView(R.id.item_bookrack_isbatch)
+        ImageView isBatch; //是否展示多选
 
         MyViewHolder(View itemView) {
             super(itemView);

@@ -145,7 +145,7 @@ public class BookshelfBeanDaoUtils {
      */
     public List<BookshelfBean> queryBookshelfBeanByQueryBuilder_TimeA(){
         QueryBuilder<BookshelfBean> queryBuilder = mManager.getDaoSession().queryBuilder(BookshelfBean.class);
-        return queryBuilder.orderDesc(BookshelfBeanDao.Properties.TimeMillis).list();
+        return queryBuilder.orderAsc(BookshelfBeanDao.Properties.TimeMillis).list();
     }
 
     /**
