@@ -33,10 +33,12 @@ public class Rank_categoryBean {
         public String title;
         public String cover;
         public boolean collapse;
+        public int custom_cover;
         public String monthRank;
         public String totalRank;
 
         public MaleBean() {
+            custom_cover = -1;
         }
 
         public MaleBean(String title) {

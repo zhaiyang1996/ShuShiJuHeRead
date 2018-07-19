@@ -26,30 +26,15 @@ public class BookRankAdapter extends RecyclerView.Adapter<BookRankAdapter.MyView
     private Context context;
     private List<Rank_categoryBean.MaleBean> list;
     private MyOnClickListener myOnClickListener;
-    private List<Integer> cover;
 
     public BookRankAdapter(Context context) {
         this.context = context;
         list = new ArrayList<>();
-        cover = new ArrayList<>();
     }
 
     public void setList(List<Rank_categoryBean.MaleBean> list) {
         this.list = list;
         notifyDataSetChanged();
-    }
-
-    private void updateCover(){
-        cover.clear();
-        cover.add(R.mipmap.rank_fire);
-        cover.add(R.mipmap.rank_good);
-        cover.add(R.mipmap.rank_rocket);
-        cover.add(R.mipmap.rank_rank);
-        cover.add(R.mipmap.rank_face);
-        cover.add(R.mipmap.rank_paint);
-        cover.add(R.mipmap.rank_vip);
-        cover.add(R.mipmap.rank_trophy);
-        cover.add(R.mipmap.rank_more);
     }
 
     @NonNull
@@ -62,13 +47,12 @@ public class BookRankAdapter extends RecyclerView.Adapter<BookRankAdapter.MyView
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         holder.tv_title.setText(list.get(position).title);
-        if (list.get(position).cover==null) {
-            updateCover();
-            holder.iv_cover.setBackgroundResource(cover.get(position));
+        if (list.get(position).custom_cover!=-1) {
+            holder.iv_cover.setBackgroundResource(list.get(position).custom_cover);
         } else {
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.iv_cover.getLayoutParams();
             layoutParams.height = 0;
-            layoutParams.width = 15;
+            layoutParams.width = 5;
             holder.iv_cover.setLayoutParams(layoutParams);
         }
         holder.ll_click.setOnClickListener(new View.OnClickListener() {
