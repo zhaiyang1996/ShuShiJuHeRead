@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="30dp"
+    android:layout_marginTop="10dp"
     android:id="@+id/item_book_rank_click"
     android:orientation="horizontal">
 
@@ -14,7 +15,7 @@
         android:layout_height="match_parent" />
     <TextView
         android:textColor="@color/colorBackground"
-        android:textSize="16dp"
+        android:textSize="18dp"
         android:layout_marginLeft="20dp"
         android:gravity="center_vertical"
         android:id="@+id/item_book_rank_title"
