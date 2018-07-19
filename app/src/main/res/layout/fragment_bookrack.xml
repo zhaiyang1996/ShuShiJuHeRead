@@ -33,11 +33,50 @@
 
     </LinearLayout>
 
+    <RelativeLayout
+        android:id="@+id/bookrack_batch"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:background="@drawable/frame_top"
+        android:layout_alignParentBottom="true">
+    <TextView
+        android:id="@+id/bookrack_text_num"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="已选择：0"
+        android:gravity="center_vertical"/>
+        <Button
+            android:id="@+id/bookrack_del"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="退出批量"
+            android:background="@drawable/frame_red"
+            android:layout_alignParentRight="true"
+            android:textColor="#fff"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"/>
+        <Button
+            android:id="@+id/bookrack_all"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@id/bookrack_del"
+            android:background="@drawable/frame_gray"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="10dp"
+            android:text="全选"/>
 
+    </RelativeLayout>
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/boorrack_smart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@id/bookrack_batch">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/bookrack_rv_shelf"
