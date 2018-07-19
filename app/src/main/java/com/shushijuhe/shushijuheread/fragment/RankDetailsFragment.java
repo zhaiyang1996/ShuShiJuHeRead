@@ -16,7 +16,7 @@ import butterknife.BindView;
 
 /**
  * 唐鹏 2018/7/16.
- * 分类详情页面
+ * 排行详情页面
  */
 public class RankDetailsFragment extends BaseFragment {
 

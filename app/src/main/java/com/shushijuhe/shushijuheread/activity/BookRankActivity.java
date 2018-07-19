@@ -11,8 +11,7 @@ import android.view.View;
 import com.shushijuhe.shushijuheread.R;
 import com.shushijuhe.shushijuheread.activity.base.BaseActivity;
 import com.shushijuhe.shushijuheread.adapter.BookRankVpAdapter;
-import com.shushijuhe.shushijuheread.fragment.bookrank.FemaleRankFragment;
-import com.shushijuhe.shushijuheread.fragment.bookrank.MaleRankFragment;
+import com.shushijuhe.shushijuheread.fragment.RankFragment;
 import com.shushijuhe.shushijuheread.utils.TopMenuHeader;
 
 import java.util.ArrayList;
@@ -26,6 +25,7 @@ import butterknife.BindView;
  */
 public class BookRankActivity extends BaseActivity {
 
+    public static final String TYPE = "type";
     @BindView(R.id.book_rank_tl_title)
     TabLayout tlTitle;
     @BindView(R.id.book_rank_vp_rank)
@@ -60,8 +60,19 @@ public class BookRankActivity extends BaseActivity {
     @Override
     public void initView() {
         List<Fragment> fragments = new ArrayList<>();
-        fragments.add(new MaleRankFragment());
-        fragments.add(new FemaleRankFragment());
+
+        RankFragment fragment1 = new RankFragment();
+        Bundle bundle1 = new Bundle();
+        bundle1.putBoolean(TYPE, true);
+        fragment1.setArguments(bundle1);
+        fragments.add(fragment1);
+
+        RankFragment fragment2 = new RankFragment();
+        Bundle bundle2 = new Bundle();
+        bundle2.putBoolean(TYPE, false);
+        fragment2.setArguments(bundle2);
+        fragments.add(fragment2);
+
         List<String> titles = new ArrayList<>();
         titles.add("男生专场");
         titles.add("女生专场");
