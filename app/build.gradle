@@ -49,7 +49,7 @@ dependencies {
     implementation 'com.orhanobut:logger:2.2.0'
     implementation 'com.github.bumptech.glide:glide:4.6.1'//图片框架
     //轮播banner
-    implementation 'com.youth.banner:banner:1.4.2'
+    implementation 'com.youth.banner:banner:1.4.10'
     //net
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava:2.0.1'
