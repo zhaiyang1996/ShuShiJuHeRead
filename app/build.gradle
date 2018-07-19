@@ -26,7 +26,7 @@ android {
         }
     }
     greendao {
-        schemaVersion 3
+        schemaVersion 5
         daoPackage 'com.shushijuhe.shushijuheread.greendao'
         targetGenDir 'src/main/java'
     }

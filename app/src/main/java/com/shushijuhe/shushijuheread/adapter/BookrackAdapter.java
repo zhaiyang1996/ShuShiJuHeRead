@@ -1,6 +1,8 @@
 package com.shushijuhe.shushijuheread.adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -76,6 +78,14 @@ public class BookrackAdapter extends RecyclerView.Adapter<BookrackAdapter.MyView
         holder.name.setText(String.valueOf(bookshelfList.get(position).getName()));
         holder.chapter.setText(String.valueOf("最新：" + getChapter(bookshelfList.get(position).getBookId(),position)));
         holder.time.setText(String.valueOf(bookshelfList.get(position).getTime()));
+        Resources res = context.getResources();
+        Drawable drawable;
+        if(bookshelfList.get(position).getIsEnd()){
+            drawable = res.getDrawable(R.mipmap.bookrack_end);
+        }else{
+            drawable = res.getDrawable(R.mipmap.bookrack_serial);
+        }
+        holder.isEnd.setImageDrawable(drawable);
         Glide.with(context)
                 .load(bookshelfList.get(position).getCover())
                 .into(holder.cover);
@@ -128,7 +138,8 @@ public class BookrackAdapter extends RecyclerView.Adapter<BookrackAdapter.MyView
         RelativeLayout mlayout;//item
         @BindView(R.id.item_bookrack_dot)
         ImageView isUpdate; //章节是否更新
-
+        @BindView(R.id.item_bookrack_update)
+        ImageView isEnd; //章节是否完结
 
         MyViewHolder(View itemView) {
             super(itemView);

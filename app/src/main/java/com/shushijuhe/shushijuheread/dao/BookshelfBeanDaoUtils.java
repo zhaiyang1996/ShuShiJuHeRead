@@ -140,6 +140,15 @@ public class BookshelfBeanDaoUtils {
     }
 
     /**
+     * 使用queryBuilder按时间排序进行查询
+     * @return
+     */
+    public List<BookshelfBean> queryBookshelfBeanByQueryBuilder_TimeA(){
+        QueryBuilder<BookshelfBean> queryBuilder = mManager.getDaoSession().queryBuilder(BookshelfBean.class);
+        return queryBuilder.orderDesc(BookshelfBeanDao.Properties.TimeMillis).list();
+    }
+
+    /**
      * 关闭数据库
      */
     public void closeConnection(){
