@@ -46,8 +46,8 @@ public class RankFragment extends BaseFragment {
     @Override
     public void initView() {
         Bundle bundle = getArguments();
-        if (bundle!=null){
-            type = bundle.getBoolean(TYPE,false);
+        if (bundle != null) {
+            type = bundle.getBoolean(TYPE, false);
         }
         adapter = new BookRankAdapter(context);
         setCover();
@@ -82,9 +82,9 @@ public class RankFragment extends BaseFragment {
                     bean.female.get(i).custom_cover = cover.get(i);
                     bean.male.get(i).custom_cover = cover.get(i);
                 }
-                if (type){
+                if (type) {
                     adapter.setList(bean.male);
-                }else {
+                } else {
                     adapter.setList(bean.female);
                 }
             }
@@ -93,13 +93,24 @@ public class RankFragment extends BaseFragment {
 
     private void setCover() {
         cover = new ArrayList<>();
-        cover.add(R.mipmap.rank_fire);
-        cover.add(R.mipmap.rank_good);
-        cover.add(R.mipmap.rank_rocket);
-        cover.add(R.mipmap.rank_rank);
-        cover.add(R.mipmap.rank_face);
-        cover.add(R.mipmap.rank_paint);
-        cover.add(R.mipmap.rank_vip);
-        cover.add(R.mipmap.rank_trophy);
+        if (type) {
+            cover.add(R.mipmap.rank_fire);
+            cover.add(R.mipmap.rank_good);
+            cover.add(R.mipmap.rank_rocket);
+            cover.add(R.mipmap.rank_rank);
+            cover.add(R.mipmap.rank_face);
+            cover.add(R.mipmap.rank_paint);
+            cover.add(R.mipmap.rank_vip);
+            cover.add(R.mipmap.rank_trophy);
+        } else {
+            cover.add(R.mipmap.rank_fire);
+            cover.add(R.mipmap.rank_good);
+            cover.add(R.mipmap.rank_rocket);
+            cover.add(R.mipmap.rank_vip);
+            cover.add(R.mipmap.rank_rank);
+            cover.add(R.mipmap.rank_face);
+            cover.add(R.mipmap.rank_paint);
+            cover.add(R.mipmap.rank_trophy);
+        }
     }
 }
