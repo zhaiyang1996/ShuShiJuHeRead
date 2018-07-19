@@ -1,7 +1,6 @@
 package com.shushijuhe.shushijuheread.fragment.bookrank;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -25,7 +24,6 @@ import butterknife.BindView;
  */
 public class MaleRankFragment extends BaseFragment {
 
-    private static final String TYPE = "type";
     @BindView(R.id.femalerank_rv_rank)
     RecyclerView rvRank;
     Context context;
@@ -33,7 +31,6 @@ public class MaleRankFragment extends BaseFragment {
     private Rank_categoryBean bean;
     private List<Rank_categoryBean.MaleBean> list;
     private boolean isAll = true;
-    private int type;
 
     @Override
     public int getLayoutId() {
@@ -47,10 +44,6 @@ public class MaleRankFragment extends BaseFragment {
 
     @Override
     public void initView() {
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            type = bundle.getInt(TYPE);
-        }
         adapter = new BookRankAdapter(context);
         list = new ArrayList<>();
         adapter.setMyOnClickListener(new BookRankAdapter.MyOnClickListener() {
@@ -83,23 +76,14 @@ public class MaleRankFragment extends BaseFragment {
     private void setData(boolean mIsAll) {
         list.clear();
         for (int i = 0; i < 8; i++) {
-            if (type == 0) {
-                list.add(bean.male.get(i));
-            } else if (type == 1) {
-                list.add(bean.female.get(i));
-            }
+            list.add(bean.male.get(i));
         }
         Rank_categoryBean.MaleBean maleBean = new Rank_categoryBean.MaleBean();
         maleBean.title = "更多排行";
         list.add(maleBean);
         if (mIsAll) {
             for (int i = 8; i < bean.male.size(); i++) {
-                if (type == 0) {
-                    maleBean = bean.male.get(i);
-                } else if (type == 1) {
-                    maleBean = bean.female.get(i);
-                }
-                list.add(maleBean);
+                list.add(bean.male.get(i));
             }
         }
         adapter.setList(list);
@@ -112,7 +96,6 @@ public class MaleRankFragment extends BaseFragment {
                 bean = (Rank_categoryBean) o;
                 for (int i = 0; i < 8; i++) {
                     bean.male.get(i).cover = null;
-                    bean.female.get(i).cover = null;
                 }
                 setData(mIsAll);
             }

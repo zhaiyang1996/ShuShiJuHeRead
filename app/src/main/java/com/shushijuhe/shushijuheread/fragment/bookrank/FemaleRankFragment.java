@@ -5,6 +5,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.shushijuhe.shushijuheread.R;
+import com.shushijuhe.shushijuheread.activity.RankDetailsActivity;
 import com.shushijuhe.shushijuheread.adapter.BookRankAdapter;
 import com.shushijuhe.shushijuheread.bean.Rank_categoryBean;
 import com.shushijuhe.shushijuheread.fragment.BaseFragment;
@@ -22,7 +23,6 @@ import butterknife.BindView;
  * 女声排行页面
  */
 public class FemaleRankFragment extends BaseFragment {
-
 
     @BindView(R.id.femalerank_rv_rank)
     RecyclerView rvRank;
@@ -52,6 +52,8 @@ public class FemaleRankFragment extends BaseFragment {
                 if (maleBean.title.equals("更多排行")) {
                     setData(isAll);
                     isAll = !isAll;
+                } else {
+                    RankDetailsActivity.start(context, maleBean.title, maleBean._id, maleBean.monthRank, maleBean.totalRank);
                 }
             }
         });
@@ -76,9 +78,9 @@ public class FemaleRankFragment extends BaseFragment {
         for (int i = 0; i < 8; i++) {
             list.add(bean.female.get(i));
         }
-        Rank_categoryBean.MaleBean bean_more = new Rank_categoryBean.MaleBean();
-        bean_more.title = "更多排行";
-        list.add(bean_more);
+        Rank_categoryBean.MaleBean maleBean = new Rank_categoryBean.MaleBean();
+        maleBean.title = "更多排行";
+        list.add(maleBean);
         if (mIsAll) {
             for (int i = 8; i < bean.female.size(); i++) {
                 list.add(bean.female.get(i));
@@ -92,6 +94,9 @@ public class FemaleRankFragment extends BaseFragment {
             @Override
             public void onNext(Object o) {
                 bean = (Rank_categoryBean) o;
+                for (int i = 0; i < 8; i++) {
+                    bean.female.get(i).cover = null;
+                }
                 setData(mIsAll);
             }
         }, context, "正在查找数据......"));
