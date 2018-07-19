@@ -3,10 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.youth.banner.Banner
+        android:id="@+id/book_store_banner_recommend"
+        android:layout_width="match_parent"
+        android:layout_height="200dp" />
+
     <RelativeLayout
         android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_centerInParent="true">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/book_store_banner_recommend"
+        android:layout_centerHorizontal="true">
 
         <TextView
             android:id="@+id/book_store_tv_category"
