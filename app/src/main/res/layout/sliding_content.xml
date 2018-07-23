@@ -15,7 +15,25 @@
         android:gravity="center"
         android:background="@drawable/hubeijin"
         android:orientation="vertical">
-
+        <TextView
+            android:id="@+id/zt_bookzj_x"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:textColor="#707070"
+            android:textSize="12dp"
+            />
+        <TextView
+            android:id="@+id/read_bookpage"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:gravity="center_vertical"
+            android:textColor="#707070"
+            android:textSize="12dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            />
         <RelativeLayout
             android:id="@+id/relativeLayout2_x"
             android:layout_width="fill_parent"
@@ -37,10 +55,9 @@
                     android:text="书名"
                     android:textSize="12dp"/>
                 <TextView
-                    android:id="@+id/zt_bookzj_x"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="章节名"
+                    android:text="书视聚合"
                     android:textColor="#707070"
                     android:layout_marginLeft="5dp"
                     android:maxEms="9"
@@ -82,11 +99,11 @@
                     android:singleLine="false"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:paddingTop="10dp"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="20dp"
                     android:letterSpacing="0.1"
                     android:lineSpacingMultiplier="1.5"
                     android:textSize="20sp"
-                    android:paddingBottom="20dp"
                     android:textColor="#000"
                     />
             </LinearLayout>

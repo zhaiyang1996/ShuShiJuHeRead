@@ -456,12 +456,16 @@
             android:id="@+id/read_book_x"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:ellipsize="none"
+            android:singleLine="false"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
             android:letterSpacing="0.1"
             android:lineSpacingMultiplier="1.5"
-            android:padding="10dp"
-            android:singleLine="false"
-            android:textColor="#000"
             android:textSize="20sp"
+            android:textColor="#000"
             android:visibility="invisible" />
     </LinearLayout>
 </RelativeLayout>
