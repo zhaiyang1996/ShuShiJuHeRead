@@ -50,7 +50,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
- * 刘鹏
+ * 刘鹏&翟阳
  * 书架页面
  */
 public class BookrackFragment extends BaseFragment implements View.OnClickListener{
@@ -330,8 +330,10 @@ public class BookrackFragment extends BaseFragment implements View.OnClickListen
                     @Override
                     public void call(Subscriber<? super String> sub) {
                         //循环拿到被选中的书籍并删除相关参数
-                        for(BookshelfBean bean:list)
-                        bookshelfBeanDaoUtils.deleteBookshelfBean(bean);
+                        for(BookshelfBean bean:list){
+                            if(bean.getIsChecked())
+                            bookshelfBeanDaoUtils.deleteBookshelfBean(bean);
+                        }
                         sub.onNext("删除成功");
                         for(BookshelfBean bean:list){
                             if(bean.getIsChecked()){

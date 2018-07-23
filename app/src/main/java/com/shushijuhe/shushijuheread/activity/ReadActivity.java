@@ -39,7 +39,6 @@ import com.martian.libsliding.slider.OverlappedSlider;
 import com.martian.libsliding.slider.PageSlider;
 import com.shushijuhe.shushijuheread.R;
 import com.shushijuhe.shushijuheread.activity.base.BaseActivity;
-import com.shushijuhe.shushijuheread.activity.base.TxtPageBean;
 import com.shushijuhe.shushijuheread.animation.Read_ainmation;
 import com.shushijuhe.shushijuheread.application.app;
 import com.shushijuhe.shushijuheread.bean.BookData;
@@ -186,6 +185,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     boolean isRefresh = false; //是否需要刷新
     boolean isMix = false;
     boolean isError = false; //获取书籍是否异常
+    private boolean isTTS = true;//TTS是否开启
     BookshelfBeanDaoUtils bookshelfBeanDaoUtils; //书架数据库操作类
     BookMixATocLocalBeanDaoUtils bookMixATocLocalBeanDaoUtils; //书籍章节数据库操作类
     BookReadHistoryDaoUtils bookReadHistoryDaoUtils; //书籍阅读记录数据库操作类
@@ -195,7 +195,6 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     DownloadService.MyBind myBind;
     String bookid;
     String formattedDate = "";
-
     //定义一个ServiceConnection对象
     private ServiceConnection connn = new ServiceConnection() {
         @Override
@@ -478,8 +477,11 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                         }
                     }
                     break;
+                case 0:
+                    //播放完成后的回调
+                    toast("播放完成");
+                    break;
             }
-
         }
     };
 
@@ -507,12 +509,16 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
         slidingContainer.setVisibility(View.VISIBLE);
         // 默认为左右平移模式
         switchSlidingMode();
-
+//        if(isTTS){
+//         //执行语音朗读
+//            baiDuTTS.speak(bookBodylist.get(page));
+//        }
     }
 
     TextView bookName;
     TextView bookZj;
     TextView bookTime;
+    TextView bookpage;
     ReadingTextView bookBody;
     RelativeLayout huadongBeijingZhu;
 
@@ -537,8 +543,15 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             }else{
                 s =bookMixATocLocalBean.get(mixAtoc).title;
             }
+            String[] strings1 = strings.split("/////");
             bookZj.setText(s);
-            bookBody.setText(strings);
+            bookBody.setText(strings1[0]);
+            if(strings1.length>1){
+                s = strings1[1]+"/"+(bookBodylist.size()-1);
+            }else{
+                s = 1+"/"+(bookBodylist.size()-1);
+            }
+            bookpage.setText(s);
             if(page >= bookBodylist.size()-2){
                 bookBody.setGravity(Gravity.TOP);
             }else{
@@ -574,19 +587,19 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             }
 
             // 获取当前要显示的内容实例
-            return bookBodylist.size() > 0 ? bookBodylist.get(page) : "内容获取失败......";
+            return bookBodylist.size() > 0 ? bookBodylist.get(page) +"/////"+page: "内容获取失败......";
         }
 
         @Override
         public String getNext() {
             // 获取下一个要显示的内容实例
-            return bookBodylist.size() > 0 &&(page + 1)<=bookBodylist.size()-1? bookBodylist.get(page + 1) : "数据正在加载中......";
+            return bookBodylist.size() > 0 &&(page + 1)<=bookBodylist.size()-1? bookBodylist.get(page + 1) +"/////"+(page + 1): "数据正在加载中......";
         }
 
         @Override
         public String getPrevious() {
             // 获取前一个要显示的内容实例
-            return bookBodylist.size() > 0&&(page - 1)>=0? bookBodylist.get(page - 1) : "数据正在加载中......";
+            return bookBodylist.size() > 0&&(page - 1)>=0? bookBodylist.get(page - 1) +"/////"+(page - 1): "数据正在加载中......";
         }
 
         @Override
@@ -684,6 +697,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             mBattery = view.findViewById(R.id.mybattxxx);
             bookTime = view.findViewById(R.id.zt_time_x);
             bookBody = view.findViewById(R.id.book_x);
+            bookpage = view.findViewById(R.id.read_bookpage);
             huadongBeijingZhu = view.findViewById(R.id.huadong_beijing);
             huadongBeijingZhu.setBackground(drawable);
             bookBody.setTextColor(fontcor);
