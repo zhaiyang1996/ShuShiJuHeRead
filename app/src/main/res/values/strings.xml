@@ -53,5 +53,6 @@
     
     <!--关于我们-->
     <string name="aboutus_ed">版本</string>
+    <string name="aboutus_log">更新日志</string>
 
 </resources>
