@@ -276,7 +276,7 @@
             android:id="@+id/read_rel_text_web"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textColor="#fff"
+            android:textColor="#ffff"
             android:singleLine="true"
             android:ellipsize="end"
             android:gravity="center"
