@@ -15,7 +15,29 @@
         android:gravity="center"
         android:background="@drawable/hubeijin"
         android:orientation="vertical">
-
+        <TextView
+            android:id="@+id/zt_bookzj_x"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:textColor="#707070"
+            android:singleLine="true"
+            android:focusable="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:focusableInTouchMode="true"
+            android:textSize="12dp"
+            android:layout_marginLeft="5dp"
+            android:gravity="center_vertical"/>
+        <TextView
+            android:id="@+id/read_bookpage"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginRight="5dp"
+            android:gravity="center_vertical"
+            android:layout_alignParentRight="true"
+            android:textColor="#707070"
+            android:text="页码"
+            android:textSize="12dp"/>
         <RelativeLayout
             android:id="@+id/relativeLayout2_x"
             android:layout_width="fill_parent"
@@ -35,12 +57,12 @@
                     android:layout_marginLeft="5dp"
                     android:textColor="#707070"
                     android:text="书名"
+                    android:maxEms="9"
                     android:textSize="12dp"/>
                 <TextView
-                    android:id="@+id/zt_bookzj_x"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="章节名"
+                    android:text="书视聚合"
                     android:textColor="#707070"
                     android:layout_marginLeft="5dp"
                     android:maxEms="9"
@@ -82,7 +104,7 @@
                     android:singleLine="false"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:paddingTop="10dp"
+                    android:paddingTop="20dp"
                     android:letterSpacing="0.1"
                     android:lineSpacingMultiplier="1.5"
                     android:textSize="20sp"

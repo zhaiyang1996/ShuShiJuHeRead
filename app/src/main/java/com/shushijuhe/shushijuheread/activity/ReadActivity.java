@@ -14,6 +14,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -147,7 +148,10 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     Button readTextA;
     @BindView(R.id.read_text_b)
     Button readTextB;
-
+    @BindView(R.id.read_rel_web)
+    RelativeLayout read_rel_web;
+    @BindView(R.id.read_rel_text_web)
+    TextView read_rel_text_web;
 
     private TestSlidingAdapter myslid;
     private OverlappedSlider myover;
@@ -338,6 +342,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             titble = bookMixATocLocalBean.get(mixAtoc).title;
         }
         if(isOnline){
+            read_rel_text_web.setText(link);
             //没有离线则获取网络数据
             DataManager.getInstance().getBookChapter(new ProgressSubscriber<ChapterRead>(new SubscriberOnNextListenerInstance() {
                 @Override
@@ -367,6 +372,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                 }
             }, this, null),link);
         }else{
+            read_rel_text_web.setText("此章节已离线，不支持网页查看！");
             //若离线则加载本地数据
             bookData = bookDataDaoUtils.queryBookDataDaoByQueryBuilder(bookid,titble);
             if(bookData!=null&&bookData.size()>0&&bookData.size()<2){
@@ -487,7 +493,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void initEvent() {
-
+        read_rel_web.setOnClickListener(this);
     }
 
     /**
@@ -807,6 +813,14 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                 //执行下载方法
                 read_Download();
                 break;
+            case R.id.read_rel_web:
+                //打开游览器跳转
+                if(!read_rel_text_web.getText().toString().equals("此章节已离线，不支持网页查看！")){
+                    Uri uri = Uri.parse(read_rel_text_web.getText().toString());
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                }
+                break;
         }
     }
     public void read_Download(){
@@ -1028,7 +1042,6 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                     }else{
                         return;
                     }
-
                     break;
             }
             // 执行字体布局保存方法
