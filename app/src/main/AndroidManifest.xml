@@ -66,6 +66,7 @@
         <activity android:name=".activity.BookRankActivity" />
         <activity android:name=".activity.BookCategoryActivity" />
         <activity android:name=".activity.RankDetailsActivity" />
+        <activity android:name=".activity.AboutUsActivity"></activity>
 
         <service android:name=".service.DownloadService"/>
         <service android:name="cn.jpush.android.service.PushService"
