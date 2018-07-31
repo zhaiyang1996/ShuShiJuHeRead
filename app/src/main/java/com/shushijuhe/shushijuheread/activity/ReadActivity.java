@@ -1102,6 +1102,13 @@ public void isTiemx(){
         }
         return true;
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        setReadHistory();
+    }
+
     //退出应用执行是否加入书架方法
     public void bookShelf(){
     String id;
