@@ -3,37 +3,48 @@ package com.shushijuhe.shushijuheread.activity;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.res.Resources;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.dingmouren.colorpicker.ColorPickerDialog;
+import com.dingmouren.colorpicker.OnColorPickerListener;
 import com.martian.libsliding.SlidingAdapter;
 import com.martian.libsliding.SlidingLayout;
 import com.martian.libsliding.slider.OverlappedSlider;
@@ -49,6 +60,7 @@ import com.shushijuhe.shushijuheread.bean.BookReadHistory;
 import com.shushijuhe.shushijuheread.bean.BookshelfBean;
 import com.shushijuhe.shushijuheread.bean.ChapterRead;
 import com.shushijuhe.shushijuheread.bean.ReadPatternBean;
+import com.shushijuhe.shushijuheread.bean.ThecustomBJ;
 import com.shushijuhe.shushijuheread.constants.Constants;
 import com.shushijuhe.shushijuheread.dao.BookDataDaoUtils;
 import com.shushijuhe.shushijuheread.dao.BookMixATocLocalBeanDaoUtils;
@@ -58,6 +70,7 @@ import com.shushijuhe.shushijuheread.http.DataManager;
 import com.shushijuhe.shushijuheread.http.ProgressSubscriber;
 import com.shushijuhe.shushijuheread.http.SubscriberOnNextListenerInstance;
 import com.shushijuhe.shushijuheread.service.DownloadService;
+import com.shushijuhe.shushijuheread.utils.GetImagePath;
 import com.shushijuhe.shushijuheread.utils.IOUtils;
 import com.shushijuhe.shushijuheread.utils.Tool;
 import com.shushijuhe.shushijuheread.utils.paging.TextViewUtils;
@@ -152,6 +165,10 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     RelativeLayout read_rel_web;
     @BindView(R.id.read_rel_text_web)
     TextView read_rel_text_web;
+    @BindView(R.id.read_thecustom_background)
+    Button read_thecustom_background;
+    @BindView(R.id.read_thecustom_text)
+    Button read_thecustom_text;
 
     private TestSlidingAdapter myslid;
     private OverlappedSlider myover;
@@ -171,6 +188,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     private BatteryView mBattery;//电池控件
     private int cell = 100; //电量
     private ReadPatternBean yd;
+    private ThecustomBJ thecustomBJ;
     private int ziticr = 0;
     private int buju = 0;
     private int zitidaxiao = 20;//字体大小
@@ -190,6 +208,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     boolean isMix = false;
     boolean isError = false; //获取书籍是否异常
     private boolean isTTS = true;//TTS是否开启
+    private boolean isReadText = false;//自定义选择是否为字体颜色
     BookshelfBeanDaoUtils bookshelfBeanDaoUtils; //书架数据库操作类
     BookMixATocLocalBeanDaoUtils bookMixATocLocalBeanDaoUtils; //书籍章节数据库操作类
     BookReadHistoryDaoUtils bookReadHistoryDaoUtils; //书籍阅读记录数据库操作类
@@ -234,6 +253,8 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             zitidaxiao = yd.getSize();
             getMoShi();
         }
+        //读取用户自定义阅读模式
+        thecustomBJ = Tool.getThecustomBJ(this);
         ZhuBeiJing.setBackground(drawable);
         btnUp.setOnClickListener(this);
         btnDown.setOnClickListener(this);
@@ -283,7 +304,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                 if(bookMixATocLocalBean!=null){
                     bookid = bookMixATocLocalBean.get(0).bookid;
                 }else {
-                    toast("书籍发生了错误，重新添加此书到书架看看！");
+                    toast("书籍发生了错误，重新打开看看！");
                     return;
                 }
             }
@@ -494,6 +515,8 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void initEvent() {
         read_rel_web.setOnClickListener(this);
+        read_thecustom_background.setOnClickListener(this);
+        read_thecustom_text.setOnClickListener(this);
     }
 
     /**
@@ -705,8 +728,31 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             bookBody = view.findViewById(R.id.book_x);
             bookpage = view.findViewById(R.id.read_bookpage);
             huadongBeijingZhu = view.findViewById(R.id.huadong_beijing);
-            huadongBeijingZhu.setBackground(drawable);
-            bookBody.setTextColor(fontcor);
+            if(thecustomBJ!=null&&thecustomBJ.getIs()!=-1){
+                if(!thecustomBJ.getBjColor().equals("-1")){
+                    if(thecustomBJ.getIsImg()==0){
+                        //根据路径设置图片
+                        Bitmap bitm  = BitmapFactory.decodeFile(thecustomBJ.getBjColor());
+                        Drawable drawable = new BitmapDrawable(bitm);
+                        huadongBeijingZhu.setBackground(drawable);
+                    }else{
+                        int i = Integer.parseInt(thecustomBJ.getBjColor());
+                        huadongBeijingZhu.setBackgroundColor(i);
+                    }
+                }else{
+                    huadongBeijingZhu.setBackground(drawable);
+                }
+                if(!(thecustomBJ.getTextColor()==-1)){
+                    bookBody.setTextColor(thecustomBJ.getTextColor());
+                }else{
+                    bookBody.setTextColor(fontcor);
+                }
+
+            }else{
+                huadongBeijingZhu.setBackground(drawable);
+                bookBody.setTextColor(fontcor);
+            }
+
             bookBody.setTextSize(zitidaxiao);
             if(page>=bookBodylist.size()){
                 page = bookBodylist.size()-1;
@@ -780,7 +826,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
         }
         return statusBarHeight;
     }
-
+    Dialog dialog;
     /**
      * 点击事件
      *
@@ -811,7 +857,11 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.read_download:
                 //执行下载方法
-                read_Download();
+                if(Tool.isGrantExternalRW(ReadActivity.this)){
+                    read_Download();
+                }else{
+                 toast("没有权限无法下载哦~");
+                }
                 break;
             case R.id.read_rel_web:
                 //打开游览器跳转
@@ -821,8 +871,116 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                     startActivity(intent);
                 }
                 break;
+            case R.id.read_thecustom_background:
+                //自定义阅读背景选择
+                String[] strings = {"图片","纯色"};
+                AlertDialog.Builder customizeDialog = new AlertDialog.Builder(this);
+                ListView listView = new ListView(this);
+                ArrayAdapter arrayAdapter = new ArrayAdapter(this,android.R.layout.simple_dropdown_item_1line,strings);
+                listView.setAdapter(arrayAdapter);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        if(position == 0){
+                            //导入图片，从相册选择
+                            //使用intent调用系统提供的相册功能，使用startActivityForResult是为了获取用户选择的图片
+                            if(Tool.isGrantExternalRW(ReadActivity.this)){
+                                Intent intent = new Intent();
+                                intent.setType("image/*");
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(intent, 1);
+                            }else{
+                                toast("没有文件获取权限哦~");
+                            }
+                        }else{
+                            //打开颜色选择器
+                            isReadText = false;
+                            openColorChoose();
+                        }
+                        dialog.dismiss();
+                    }
+                });
+                customizeDialog.setTitle("选择背景方案：");
+                customizeDialog.setView(listView);
+                dialog = customizeDialog.create();
+                dialog.show();
+                break;
+            case R.id.read_thecustom_text:
+                //自定义阅读字体颜色选择
+                isReadText = true;
+                openColorChoose();
+                break;
         }
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO 自动生成的方法存根
+        System.out.println(requestCode+"");
+        if(requestCode==1)
+        {
+            //获得图片的uri
+            Uri uri = data.getData();
+            try
+            {
+                String path =GetImagePath.getRealPathFromUri(this,uri);
+                thecustomBJ.setIsImg(0);
+                thecustomBJ.setBjColor(path);
+                Tool.setThecustomBJ(ReadActivity.this,thecustomBJ.getIs(),thecustomBJ.getIsImg(),thecustomBJ.getBjColor(),thecustomBJ.getTextColor());
+                //刷新背景
+                refreshRead();
+                toast("图片背景保存成功");
+            }
+            catch (Exception e)
+            {
+                // TODO 自动生成的 catch 块
+                e.printStackTrace();
+                toast("设置失败，图片不支持");
+            }
+
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+    //打开颜色选择器
+    public void openColorChoose(){
+        /*
+         * 创建支持透明度的取色器
+         * @param context 宿主Activity
+         * @param defauleColor 默认的颜色
+         * @param isSupportAlpha 颜色是否支持透明度
+         * @param listener 取色器的监听器
+         */
+        ColorPickerDialog mColorPickerDialog = new ColorPickerDialog(
+                this,
+                getResources().getColor(R.color.colorBackground),
+                true,
+                mOnColorPickerListener
+        ).show();
+    }
+    //取色器的监听器
+    private OnColorPickerListener mOnColorPickerListener = new OnColorPickerListener() {
+        @Override
+        public void onColorCancel(ColorPickerDialog dialog) {//取消选择的颜色
+            toast("临时模式，不保存！");
+        }
+
+        @Override
+        public void onColorChange(ColorPickerDialog dialog, int color) {//实时监听颜色变化
+            thecustomBJ.setIs(0);
+            thecustomBJ.setIsImg(1);
+            if(isReadText){
+                thecustomBJ.setTextColor(color);
+            }else{
+                thecustomBJ.setBjColor(""+color);
+            }
+            refreshRead();
+        }
+
+        @Override
+        public void onColorConfirm(ColorPickerDialog dialog, int color) {//确定的颜色
+            Tool.setThecustomBJ(ReadActivity.this,thecustomBJ.getIs(),thecustomBJ.getIsImg(),thecustomBJ.getBjColor(),thecustomBJ.getTextColor());
+            toast("已保存自定义模式");
+        }
+    };
     public void read_Download(){
         if(Tool.isWifiActive(mContext)){
             if(myBind.downloadIs(bookid)){
@@ -855,7 +1013,6 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
         }
 
     }
-
     public void getMoShi() {
         isRefresh = false;
         bookZitisizex.setText(zitidaxiao + "");
@@ -1046,31 +1203,10 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             }
             // 执行字体布局保存方法
             Tool.setBuJu(mContext, zitidaxiao, fontsrc, buju, ziticr);
-            //判断是否需要重新排版数据
-            if(isRefresh){
-                isTiemx();
-                //重新排版
-//                setBooksData();
-                read_book_x.setTextSize(zitidaxiao);
-                bookZitisizex.setText(zitidaxiao + "");
-                if (bookBodylist.size() > 0)
-                    bookBodylist.removeAll(bookBodylist);
-                String s;
-                if(bookMixAToc!=null){
-                  s = bookMixAToc.mixToc.chapters.get(mixAtoc).title;
-                }else{
-                  s = bookMixATocLocalBean .get(mixAtoc).title;
-                }
-                bookBodylist.add(s);
-                book = bookx;
-                read_book_x.setText(book);
-                bookBodylist.add(book);
-                handler.sendEmptyMessage(0x223);
-            }else{
-                // 默认为左右平移模式
-                switchSlidingMode();
-            }
-
+            //删除自定义模式
+            thecustomBJ.setIs(-1);
+            Tool.delThecustomBJ(mContext);
+            refreshRead();
         }
     };
     //判断两次时间点击
@@ -1106,7 +1242,13 @@ public void isTiemx(){
     @Override
     protected void onStop() {
         super.onStop();
-        setReadHistory();
+        String id;
+        if(bookMixAToc!=null){
+            id = bookMixAToc.mixToc.book;
+        }else{
+            id = bookMixATocLocalBean.get(0).bookid;
+        }
+        setReadHistory(id);
     }
 
     //退出应用执行是否加入书架方法
@@ -1174,6 +1316,15 @@ public void isTiemx(){
         }else{
             id = bookMixATocLocalBean.get(0).bookid;
         }
+        setReadHistory(id);
+        //关闭数据库
+        bookshelfBeanDaoUtils.closeConnection();
+        bookMixATocLocalBeanDaoUtils.closeConnection();
+        bookReadHistoryDaoUtils.closeConnection();
+        bookDataDaoUtils.closeConnection();
+        finish();
+    }
+    public void setReadHistory(String id){
         //加入书籍历史记录
         List<BookReadHistory> bookshelfBeans = bookReadHistoryDaoUtils.queryBookReadHistoryQueryBuilder(id);
         if(bookshelfBeans!=null&&bookshelfBeans.size()>0){
@@ -1192,12 +1343,32 @@ public void isTiemx(){
             bookReadHistory.setPaga(page);
             bookReadHistoryDaoUtils.insertBookReadHistory(bookReadHistory);
         }
-        //关闭数据库
-        bookshelfBeanDaoUtils.closeConnection();
-        bookMixATocLocalBeanDaoUtils.closeConnection();
-        bookReadHistoryDaoUtils.closeConnection();
-        bookDataDaoUtils.closeConnection();
-        finish();
+    }
+    public void refreshRead(){
+        //判断是否需要重新排版数据
+        if(isRefresh){
+            isTiemx();
+            //重新排版
+//                setBooksData();
+            read_book_x.setTextSize(zitidaxiao);
+            bookZitisizex.setText(zitidaxiao + "");
+            if (bookBodylist.size() > 0)
+                bookBodylist.removeAll(bookBodylist);
+            String s;
+            if(bookMixAToc!=null){
+                s = bookMixAToc.mixToc.chapters.get(mixAtoc).title;
+            }else{
+                s = bookMixATocLocalBean .get(mixAtoc).title;
+            }
+            bookBodylist.add(s);
+            book = bookx;
+            read_book_x.setText(book);
+            bookBodylist.add(book);
+            handler.sendEmptyMessage(0x223);
+        }else{
+            // 默认为左右平移模式
+            switchSlidingMode();
+        }
     }
 
     @Override

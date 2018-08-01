@@ -43,6 +43,7 @@
     <string name="read_str_typeface">字体：</string>
     <string name="read_str_typeface_x">体</string>
     <string name="read_str_theme">主题：</string>
+    <string name="read_str_Thecustom">自定义：</string>
     <string name="read_str_error">数据获取失败......</string>
     <string name="read_str_error_x">点击重新加载</string>
     <string name="read_str_typeface_sp">已有字体</string>

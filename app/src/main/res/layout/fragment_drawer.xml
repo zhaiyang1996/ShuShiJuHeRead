@@ -27,5 +27,19 @@
             android:textSize="22sp"
             android:textColor="#000"
             android:gravity="center"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorGray"/>
+        <TextView
+            android:id="@+id/drawer_iqy"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/btn_aboutus"
+            android:text="自定义启动页"
+            android:textSize="22sp"
+            android:textColor="#000"
+            android:gravity="center"/>
     </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>

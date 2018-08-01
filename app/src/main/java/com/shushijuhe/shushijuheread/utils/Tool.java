@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -15,6 +17,7 @@ import android.util.DisplayMetrics;
 import android.widget.Toast;
 
 import com.shushijuhe.shushijuheread.bean.ReadPatternBean;
+import com.shushijuhe.shushijuheread.bean.ThecustomBJ;
 
 
 import java.io.BufferedReader;
@@ -147,7 +150,6 @@ public class Tool {
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.CAMERA
             }, 1);
-            Toast.makeText(activity,"无权限，可能无法缓存书籍搜索历史等",Toast.LENGTH_LONG).show();
             return false;
         }
 
@@ -348,6 +350,69 @@ public class Tool {
     }
 
     /**
+     * 缓存自定义阅读模式
+     * @param con 上下文
+     * @param isImg 是否为图片
+     * @param bjColor 布局图片地址或者RGB颜色
+     * @param textColor 字体颜色
+     */
+    public static void setThecustomBJ(Context con,int is, int isImg,String bjColor,int textColor){
+        SharedPreferences sharedPreferences = con.getSharedPreferences("TBJ",
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();// 获取编辑器
+        editor.putInt("is", is);
+        editor.putInt("isImg", isImg);
+        editor.putString("bjColor", bjColor);
+        editor.putInt("textColor", textColor);
+        editor.commit();// 提交修改
+    }
+    //取出自定义阅读模式
+    public static ThecustomBJ getThecustomBJ(Context con){
+        SharedPreferences preferences = con.getSharedPreferences("TBJ",
+                Context.MODE_PRIVATE);
+        int size = preferences.getInt("isImg", 0);
+        int is = preferences.getInt("is", -1);
+        String bjColor = preferences.getString("bjColor", "-1");
+        int textColor = preferences.getInt("textColor", -1);
+        ThecustomBJ yd = new ThecustomBJ();
+        yd.setIs(is);
+        yd.setIsImg(size);
+        yd.setBjColor(bjColor);
+        yd.setTextColor(textColor);
+        return yd;
+    }
+    //删除自定义阅读模式
+    public static void delThecustomBJ(Context con){
+        SharedPreferences preferences = con.getSharedPreferences("TBJ",
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();// 获取编辑器
+        editor.clear();
+        editor.commit();
+    }
+    //缓存自定义启动页背景
+    public static void setTransition(Context con,String path){
+        SharedPreferences sharedPreferences = con.getSharedPreferences("QDY",
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();// 获取编辑器
+        editor.putString("path", path);
+        editor.commit();// 提交修改
+    }
+    //取出自定义启动页背景
+    public static String getTransition(Context con){
+        SharedPreferences preferences = con.getSharedPreferences("QDY",
+                Context.MODE_PRIVATE);
+        String path = preferences.getString("path", "-1");
+        return path;
+    }
+    //删除自定义启动页背景
+    public static void delTransition(Context con){
+        SharedPreferences preferences = con.getSharedPreferences("QDY",
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();// 获取编辑器
+        editor.clear();
+        editor.commit();
+    }
+    /**
      * 将String转换成字符缓冲流
      * @param s
      * @return
@@ -406,5 +471,15 @@ public class Tool {
             e.printStackTrace();
         }
         return verName;
+    }
+    public static Bitmap getBitmap(String path){
+        File mFile=new File(path);
+        //若该文件存在
+        if (mFile.exists()) {
+            System.out.println(path);
+            Bitmap bitmap= BitmapFactory.decodeFile(path);
+            return bitmap;
+        }
+        return null;
     }
 }
