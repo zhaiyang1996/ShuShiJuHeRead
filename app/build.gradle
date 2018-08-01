@@ -88,4 +88,6 @@ dependencies {
     implementation 'com.allenliu.versionchecklib:library:2.0.5'
     //导入颜色选择器
     implementation 'com.dingmouren.colorpicker:colorpicker:1.0.1'
+    //仿魅族轮播
+    implementation 'com.github.pinguo-zhouwei:MZBannerView:v2.0.2'
 }

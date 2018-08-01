@@ -1,21 +1,25 @@
 package com.shushijuhe.shushijuheread.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.shushijuhe.shushijuheread.R;
 import com.shushijuhe.shushijuheread.activity.BookCategoryActivity;
 import com.shushijuhe.shushijuheread.activity.BookRankActivity;
 import com.shushijuhe.shushijuheread.bean.RankBean;
 import com.shushijuhe.shushijuheread.bean.Rank_categoryBean;
+import com.shushijuhe.shushijuheread.constants.Constants;
 import com.shushijuhe.shushijuheread.http.DataManager;
 import com.shushijuhe.shushijuheread.http.ProgressSubscriber;
 import com.shushijuhe.shushijuheread.http.SubscriberOnNextListenerInstance;
-import com.shushijuhe.shushijuheread.utils.GlideImageLoader;
-import com.youth.banner.Banner;
-import com.youth.banner.BannerConfig;
-import com.youth.banner.listener.OnBannerListener;
+import com.zhouwei.mzbanner.MZBannerView;
+import com.zhouwei.mzbanner.holder.MZHolderCreator;
+import com.zhouwei.mzbanner.holder.MZViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +37,8 @@ public class BookstoreFragment extends BaseFragment implements View.OnClickListe
     TextView tvCategory;
     @BindView(R.id.book_store_tv_rank)
     TextView tvRank;
-    @BindView(R.id.book_store_banner_recommend)
-    Banner banner;
+    @BindView(R.id.book_store_mzbanner_recommend)
+    MZBannerView mzbannerRecommend;
     private Context context;
     private List<String> imageUrls;
     private List<String> titleStr;
@@ -74,9 +78,13 @@ public class BookstoreFragment extends BaseFragment implements View.OnClickListe
             @Override
             public void onNext(Object o) {
                 RankBean bean = (RankBean) o;
-                for (int i1 = 0; i1 < bean.ranking.books.size(); i1++) {
-                    imageUrls.add(bean.ranking.books.get(i1).cover);
-                    titleStr.add(bean.ranking.books.get(i1).title);
+                int a = 10;
+                if (a >= bean.ranking.books.size()) {
+                    a = bean.ranking.books.size();
+                }
+                for (int i = 0; i < a; i++) {
+                    imageUrls.add(Constants.IMG_BASE_URL + bean.ranking.books.get(i).cover);
+                    titleStr.add(bean.ranking.books.get(i).title);
                     initBanner();
                 }
             }
@@ -84,26 +92,12 @@ public class BookstoreFragment extends BaseFragment implements View.OnClickListe
     }
 
     private void initBanner() {
-//       设置图片加载器
-        banner.setImageLoader(new GlideImageLoader());
-        //设置图片集合
-        banner.setImages(imageUrls);
-        //设置图片单页显示时间
-        banner.setDelayTime(2000);
-//        banner.setBannerStyle(BannerConfig.NOT_INDICATOR);//	不显示指示器和标题
-//        banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);    //显示圆形指示器
-//        banner.setBannerStyle(BannerConfig.NUM_INDICATOR);    //显示数字指示器
-//        banner.setBannerStyle(BannerConfig.NUM_INDICATOR_TITLE);    //显示数字指示器和标题
-//        banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE);    //显示圆形指示器和标题（垂直显示）
-        banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE);    //显示圆形指示器和标题（水平显示）
-        banner.setBannerTitles(titleStr);
-        //banner设置方法全部调用完毕时最后调用
-        banner.start();
-        //设置条目点击事件
-        banner.setOnBannerListener(new OnBannerListener() {
+        //https://github.com/pinguo-zhouwei/MZBannerView
+        // 设置数据
+        mzbannerRecommend.setPages(imageUrls, new MZHolderCreator<BannerViewHolder>() {
             @Override
-            public void OnBannerClick(int position) {
-
+            public BannerViewHolder createViewHolder() {
+                return new BannerViewHolder();
             }
         });
     }
@@ -126,5 +120,37 @@ public class BookstoreFragment extends BaseFragment implements View.OnClickListe
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context = context;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mzbannerRecommend.start();//开始轮播
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mzbannerRecommend.pause();//暂停轮播
+    }
+
+    public static class BannerViewHolder implements MZViewHolder<String> {
+        private ImageView mImageView;
+
+        @Override
+        public View createView(Context context) {
+            // 返回页面布局
+            @SuppressLint("InflateParams") View view = LayoutInflater.from(context).inflate(R.layout.banner_item, null);
+            mImageView = view.findViewById(R.id.banner_image);
+            return view;
+        }
+
+        @Override
+        public void onBind(Context context, int position, String data) {
+            // 数据绑定
+            Glide.with(context)
+                    .load(data)
+                    .into(mImageView);
+        }
     }
 }
