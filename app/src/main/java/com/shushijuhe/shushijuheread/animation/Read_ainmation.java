@@ -25,7 +25,7 @@ public class Read_ainmation {
         window.setFlags(0, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(viewHead.getLayoutParams());
-            lp.height = 135 + Tool.getZTheight(context);
+            lp.height = Tool.dip2px(context,65) + Tool.getZTheight(context);
             viewHead.setLayoutParams(lp);
             viewHead.setPadding(0,Tool.getZTheight(context),0,0);
             //透明状态栏

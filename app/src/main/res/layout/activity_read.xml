@@ -125,7 +125,40 @@
                 android:gravity="center_vertical"
                 android:background="@mipmap/download"/>
         </LinearLayout>
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:text="@string/read_str_Thecustom"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:textSize="15sp"
+                android:textColor="#fff"/>
+            <Button
+                android:id="@+id/read_thecustom_background"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:background="@drawable/biankuang_size"
+                android:text="背景"
+                android:gravity="center"
+                android:textSize="15sp"
+                android:textColor="#fff"/>
+            <Button
+                android:id="@+id/read_thecustom_text"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:background="@drawable/biankuang_size"
+                android:text="字体"
+                android:gravity="center"
+                android:textSize="15sp"
+                android:layout_marginLeft="20dp"
+                android:textColor="#fff"/>
+        </LinearLayout>
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="0dp"
@@ -216,40 +249,6 @@
                 </LinearLayout>
             </HorizontalScrollView>
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:text="@string/read_str_Thecustom"
-                android:gravity="center_vertical"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:textSize="15sp"
-                android:textColor="#fff"/>
-            <Button
-                android:id="@+id/read_thecustom_background"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:background="@drawable/biankuang_size"
-                android:text="背景"
-                android:gravity="center"
-                android:textSize="15sp"
-                android:textColor="#fff"/>
-            <Button
-                android:id="@+id/read_thecustom_text"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:background="@drawable/biankuang_size"
-                android:text="字体"
-                android:gravity="center"
-                android:textSize="15sp"
-                android:layout_marginLeft="20dp"
-                android:textColor="#fff"/>
-        </LinearLayout>
     </LinearLayout>
     <RelativeLayout
         android:id="@+id/book_caidan_toux"
@@ -257,7 +256,7 @@
         android:layout_width="fill_parent"
         android:layout_height="65dp"
         android:background="#cf000000"
-        android:visibility="gone"
+        android:visibility="invisible"
         android:orientation="horizontal">
 
             <Button

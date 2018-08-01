@@ -4,8 +4,8 @@ package com.shushijuhe.shushijuheread.bean;
  * 自定义阅读背景实体类
  */
 public class ThecustomBJ {
-    private int is;
-    private int isImg;
+    private int is = -1;
+    private int isImg = 1;
     private String bjColor ="-1";
     private int textColor=-1;
 

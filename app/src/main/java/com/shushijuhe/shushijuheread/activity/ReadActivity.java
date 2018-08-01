@@ -25,7 +25,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -41,7 +40,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dingmouren.colorpicker.ColorPickerDialog;
 import com.dingmouren.colorpicker.OnColorPickerListener;
@@ -923,6 +921,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             try
             {
                 String path =GetImagePath.getRealPathFromUri(this,uri);
+                thecustomBJ.setIs(0);
                 thecustomBJ.setIsImg(0);
                 thecustomBJ.setBjColor(path);
                 Tool.setThecustomBJ(ReadActivity.this,thecustomBJ.getIs(),thecustomBJ.getIsImg(),thecustomBJ.getBjColor(),thecustomBJ.getTextColor());
@@ -966,10 +965,10 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
         @Override
         public void onColorChange(ColorPickerDialog dialog, int color) {//实时监听颜色变化
             thecustomBJ.setIs(0);
-            thecustomBJ.setIsImg(1);
             if(isReadText){
                 thecustomBJ.setTextColor(color);
             }else{
+                thecustomBJ.setIsImg(1);
                 thecustomBJ.setBjColor(""+color);
             }
             refreshRead();
