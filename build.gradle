@@ -6,6 +6,7 @@ buildscript {
         google()
         jcenter()
         mavenCentral() // add repository
+        maven { url "https://jitpack.io" }
     }
     dependencies {
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'

@@ -2,8 +2,15 @@ package com.shushijuhe.shushijuheread.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,15 +24,15 @@ import com.shushijuhe.shushijuheread.constants.Constants;
 import com.shushijuhe.shushijuheread.http.DataManager;
 import com.shushijuhe.shushijuheread.http.ProgressSubscriber;
 import com.shushijuhe.shushijuheread.http.SubscriberOnNextListenerInstance;
-import com.zhouwei.mzbanner.MZBannerView;
-import com.zhouwei.mzbanner.holder.MZHolderCreator;
-import com.zhouwei.mzbanner.holder.MZViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import butterknife.BindView;
+import me.crosswall.lib.coverflow.CoverFlow;
+import me.crosswall.lib.coverflow.core.PageItemClickListener;
+import me.crosswall.lib.coverflow.core.PagerContainer;
 
 /**
  * 唐鹏
@@ -38,7 +45,9 @@ public class BookstoreFragment extends BaseFragment implements View.OnClickListe
     @BindView(R.id.book_store_tv_rank)
     TextView tvRank;
     @BindView(R.id.book_store_mzbanner_recommend)
-    MZBannerView mzbannerRecommend;
+    PagerContainer pagerContainer;
+    @BindView(R.id.book_store_overlap_pager)
+    ViewPager viewPager;
     private Context context;
     private List<String> imageUrls;
     private List<String> titleStr;
@@ -85,19 +94,26 @@ public class BookstoreFragment extends BaseFragment implements View.OnClickListe
                 for (int i = 0; i < a; i++) {
                     imageUrls.add(Constants.IMG_BASE_URL + bean.ranking.books.get(i).cover);
                     titleStr.add(bean.ranking.books.get(i).title);
-                    initBanner();
                 }
+                initBanner();
             }
         }, getContext(), "搜索中..."), bean.male.get(i)._id);
     }
 
     private void initBanner() {
-        //https://github.com/pinguo-zhouwei/MZBannerView
+        viewPager.setAdapter(new PageAdapter());
         // 设置数据
-        mzbannerRecommend.setPages(imageUrls, new MZHolderCreator<BannerViewHolder>() {
+        new CoverFlow.Builder()
+                .with(viewPager)
+                .pagerMargin(0f)
+                .scale(0.3f)
+                .spaceSize(0f)
+                .rotationY(0f)
+                .build();
+        pagerContainer.setPageItemClickListener(new PageItemClickListener() {
             @Override
-            public BannerViewHolder createViewHolder() {
-                return new BannerViewHolder();
+            public void onItemClick(View view, int position) {
+                //Toast.makeText(context,"position:" + position,Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -125,32 +141,34 @@ public class BookstoreFragment extends BaseFragment implements View.OnClickListe
     @Override
     public void onResume() {
         super.onResume();
-        mzbannerRecommend.start();//开始轮播
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mzbannerRecommend.pause();//暂停轮播
     }
-
-    public static class BannerViewHolder implements MZViewHolder<String> {
-        private ImageView mImageView;
-
+    class PageAdapter extends PagerAdapter {
+        ImageView imageView;
         @Override
-        public View createView(Context context) {
-            // 返回页面布局
-            @SuppressLint("InflateParams") View view = LayoutInflater.from(context).inflate(R.layout.banner_item, null);
-            mImageView = view.findViewById(R.id.banner_image);
+        public int getCount() {
+            toast(imageUrls.size()+"");
+            return imageUrls!=null&&imageUrls.size()>0?imageUrls.size():0;
+        }
+
+        @NonNull
+        @Override
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
+            View view = View.inflate(getActivity(),R.layout.item_bookstore,null);
+            imageView = view.findViewById(R.id.item_bookstore_img);
+            Glide.with(getActivity())
+                    .load(imageUrls.get(position))
+                    .into(imageView);
             return view;
         }
 
         @Override
-        public void onBind(Context context, int position, String data) {
-            // 数据绑定
-            Glide.with(context)
-                    .load(data)
-                    .into(mImageView);
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
+            return view==object;
         }
     }
 }

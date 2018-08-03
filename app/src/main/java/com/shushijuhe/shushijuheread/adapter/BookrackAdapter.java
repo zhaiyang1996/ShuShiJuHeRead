@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -127,7 +128,12 @@ public class BookrackAdapter extends RecyclerView.Adapter<BookrackAdapter.MyView
         List<BookMixATocLocalBean> bookMixATocLocalBeans = bookMixATocLocalBeanDaoUtils.queryBookMixATocLocalBeanByQueryBuilder(bookId);//根据书籍id查询最新章节
         bookMixATocLocalList.add(bookMixATocLocalBeans);
         bookMixATocLocalBeanDaoUtils.closeConnection();//关闭数据库
-        return bookMixATocLocalList.get(i).get(bookMixATocLocalList.get(i).size()-1).getTitle();
+        Log.d("测试：",""+bookMixATocLocalList.get(i).size());
+        if(bookMixATocLocalList.get(i)!=null&&bookMixATocLocalList.get(i).size()>0){
+            return bookMixATocLocalList.get(i).get(bookMixATocLocalList.get(i).size()-1).getTitle();
+        }else {
+            return  "暂无最新章节";
+        }
     }
 
     @Override
