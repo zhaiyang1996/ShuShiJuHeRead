@@ -160,7 +160,7 @@ public class DrawerFragment extends BaseFragment implements View.OnClickListener
             ArrayList<File> list = ( ArrayList<File>) data.getSerializableExtra("data");
             showWaitingDialog("正在解析中...");
             for(int i=0;i<list.size();i++){
-                getChapter(IOUtils.getText(list.get(i).getPath()),list.get(i).getName(),list.get(i).getPath());
+                getChapter(IOUtils.getText(list.get(i).getPath()),list.get(i).getName(),list.get(i).getName().substring(0,list.get(i).getName().length()-4));
             }
             disWaitingDialog();
         }
