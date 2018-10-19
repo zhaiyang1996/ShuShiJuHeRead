@@ -38,7 +38,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.dingmouren.colorpicker.ColorPickerDialog;
@@ -83,7 +85,10 @@ import java.util.List;
 
 import butterknife.BindView;
 
-
+/**
+ * 翟阳：书籍阅读界面
+ * 用的方法比较蠢，啊哈哈哈
+ */
 public class ReadActivity extends BaseActivity implements View.OnClickListener {
     @BindView(R.id.sliding_container)
     SlidingLayout slidingContainer;
@@ -167,6 +172,8 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     Button read_thecustom_background;
     @BindView(R.id.read_thecustom_text)
     Button read_thecustom_text;
+    @BindView(R.id.read_thecustom_textjianju)
+    Button read_thecustom_textjianju;
 
     private TestSlidingAdapter myslid;
     private OverlappedSlider myover;
@@ -175,7 +182,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     private String book; //书籍详细类容
     private String bookx; //书籍详细类容备份
     private List<String>  bookBodylist = new ArrayList<>();;
-    int mixAtoc = 1;//章节
+    private int mixAtoc = 1;//章节
     private boolean mPagerMode = true;
     private ArrayList<Integer>  offsetArrayList = new ArrayList<>();;
     private int statusBarHeight = 0;
@@ -216,6 +223,8 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
     DownloadService.MyBind myBind;
     String bookid;
     String formattedDate = "";
+    private double text_jian = 0.1;
+    private double text_ju = 1.5;
     //定义一个ServiceConnection对象
     private ServiceConnection connn = new ServiceConnection() {
         @Override
@@ -261,6 +270,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
         btn_back.setOnClickListener(this);
         btn_mix.setOnClickListener(this);
         download.setOnClickListener(this);
+        read_thecustom_textjianju.setOnClickListener(this);
         //设置阅读背景
         readZongse.setOnClickListener(setPattern);
         readNiupix.setOnClickListener(setPattern);
@@ -908,6 +918,18 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
                 isReadText = true;
                 openColorChoose();
                 break;
+            case R.id.read_thecustom_textjianju:
+                //打开字距选择窗口
+                customizeDialog = new AlertDialog.Builder(this);
+                View view = View.inflate(this,R.layout.item_text_ziju,null);
+                SeekBar bar_1 = view.findViewById(R.id.progressBar_1);
+                SeekBar bar_2 = view.findViewById(R.id.progressBar_2);
+                bar_1.setMax(10);
+                bar_1.setProgress(1);
+                customizeDialog.setView(view);
+                dialog = customizeDialog.create();
+                dialog.show();
+                break;
         }
     }
     @Override
@@ -921,8 +943,7 @@ public class ReadActivity extends BaseActivity implements View.OnClickListener {
             try
             {
                 String path =GetImagePath.getRealPathFromUri(this,uri);
-                thecustomBJ.setIs(0);
-                thecustomBJ.setIsImg(0);
+                thecustomBJ.setIs(0); 
                 thecustomBJ.setBjColor(path);
                 Tool.setThecustomBJ(ReadActivity.this,thecustomBJ.getIs(),thecustomBJ.getIsImg(),thecustomBJ.getBjColor(),thecustomBJ.getTextColor());
                 //刷新背景

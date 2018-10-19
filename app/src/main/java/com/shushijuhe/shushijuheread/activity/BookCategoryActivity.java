@@ -68,7 +68,6 @@ public class BookCategoryActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void initEvent() {
-
     }
 
     private void setData() {

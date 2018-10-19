@@ -48,7 +48,7 @@ public class RetrofitHelper {
                     .readTimeout(25, TimeUnit.SECONDS)
                     .retryOnConnectionFailure(true) // 失败重发
                     .addInterceptor(getInterceptor())
-//                    .addInterceptor(new ReceivedCookiesInterceptor())
+//                    .adIntderceptor(new ReceivedCookiesInterceptor())
 //                    .addInterceptor(new AddCookiesInterceptor())
                     .build();
         }

@@ -55,5 +55,9 @@
     <!--关于我们-->
     <string name="aboutus_ed">版本</string>
     <string name="aboutus_log">更新日志</string>
-
+    <string name="aboutus_deve">开发者相关</string>
+    <string name="aboutus_zhaiyang">书视聚合-B站UP:萌萌的萌大人</string>
+    <string name="aboutus_liupeng">书视聚合-刘鹏</string>
+    <string name="aboutus_tangpeng">书视聚合-唐鹏</string>
+    <string name="aboutus_kaiyuan">开源协议及版权信息</string>
 </resources>
