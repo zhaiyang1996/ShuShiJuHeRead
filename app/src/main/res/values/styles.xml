@@ -57,8 +57,8 @@
 
     <!--本地书籍搜索样式-->
     <style name="SearchTheme" parent="FileSearcherActivityTheme">
-        <item name="colorPrimaryDark">#7d8eed</item> <!--status bar color-->
-        <item name="colorPrimary">#7d8eed</item> <!--toolbar,scroll bar color-->
-        <item name="colorAccent">#7d8eed</item> <!-- selected item color-->
+        <item name="colorPrimaryDark">#076142</item> <!--status bar color-->
+        <item name="colorPrimary">#076142</item> <!--toolbar,scroll bar color-->
+        <item name="colorAccent">#076142</item> <!-- selected item color-->
     </style>
 </resources>

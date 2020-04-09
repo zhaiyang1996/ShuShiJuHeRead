@@ -4,18 +4,18 @@ apply plugin: 'org.greenrobot.greendao' // apply plugin
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.shushijuhe.shushijuheread"
-        minSdkVersion 19
+        applicationId "com.zhai.shuyangwx"
+        minSdkVersion 21
         targetSdkVersion 27
-        versionCode 9
-        versionName "6.2.0"
+        versionCode 25
+        versionName "1.8.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters"armeabi","armeabi-v7a","x86","mips"
         }
         manifestPlaceholders = [
                 JPUSH_PKGNAME : applicationId,
-                JPUSH_APPKEY : "a83c416348bff53ab65b1fdd", //JPush上注册的包名对应的appkey.
+                JPUSH_APPKEY : "d5302f9df88a521fc821be82", //JPush上注册的包名对应的appkey.
                 JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
         ]
     }
@@ -27,11 +27,20 @@ android {
     }
     greendao {
         schemaVersion 5
-        daoPackage 'com.shushijuhe.shushijuheread.greendao'
+        daoPackage 'com.zhai.shuyangwx.greendao'
         targetGenDir 'src/main/java'
     }
 }
-
+repositories {
+//    maven {
+//        url 'https://download.01.org/crosswalk/releases/crosswalk/android/maven2'
+//    }
+}
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.1'
@@ -93,4 +102,11 @@ dependencies {
 
     //txt文件检索
     implementation 'com.github.YuanWenHai:FileSearcher:1.3.3'
+    //游览器内核
+//    implementation 'org.xwalk:xwalk_core_library:10.39.235.15'
+
+    //导入B站开源ijk播放器
+    implementation 'com.github.dueeeke.dkplayer:dkplayer-java:3.2.6'
+    implementation 'com.github.dueeeke.dkplayer:player-ijk:3.2.6'
+    implementation 'com.github.dueeeke.dkplayer:dkplayer-ui:3.2.6'
 }

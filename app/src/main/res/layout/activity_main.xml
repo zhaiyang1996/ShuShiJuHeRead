@@ -30,6 +30,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="left"
         android:clickable="true"
-        android:name="com.shushijuhe.shushijuheread.fragment.DrawerFragment"
+        android:name="com.zhai.shuyangwx.fragment.DrawerFragment"
         />
 </android.support.v4.widget.DrawerLayout>

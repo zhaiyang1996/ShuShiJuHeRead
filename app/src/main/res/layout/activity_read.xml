@@ -429,17 +429,16 @@
             android:background="#cff"
             android:text="@string/read_str_typeface_sp_x"
             android:textSize="18sp"/>
+
         <TextView
             android:id="@+id/meiyouzitix"
-            android:layout_below="@id/view_01x"
             android:layout_width="fill_parent"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
             android:layout_height="240dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/ziti_toux"
             android:gravity="center_vertical|center_horizontal"
-            android:visibility="invisible"
             android:text="@string/read_str_typeface_sp_msg"
-            />
+            android:visibility="invisible" />
     </RelativeLayout>
 
     <!-- 字体商城 -->
@@ -525,7 +524,7 @@
         android:layout_alignParentTop="true"
         android:orientation="vertical">
 
-        <com.shushijuhe.shushijuheread.view.ReadingTextView
+        <com.zhai.shuyangwx.view.ReadingTextView
             android:id="@+id/read_book_x"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -69,7 +69,7 @@
                     android:textSize="12dp"
                     android:layout_centerHorizontal="true"/>
 
-                <com.shushijuhe.shushijuheread.view.BatteryView
+                <com.zhai.shuyangwx.view.BatteryView
                     android:id="@+id/mybattxxx"
                     android:layout_width="20dp"
                     android:layout_height="13dp"
@@ -91,7 +91,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical" >
-                <com.shushijuhe.shushijuheread.view.ReadingTextView
+                <com.zhai.shuyangwx.view.ReadingTextView
                     android:id="@+id/book_x"
                     android:layout_height="match_parent"
                     android:layout_width="match_parent"

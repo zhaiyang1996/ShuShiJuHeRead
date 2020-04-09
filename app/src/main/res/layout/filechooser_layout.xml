@@ -9,13 +9,14 @@
     </FrameLayout>
     
 
-    <com.tencent.smtt.sdk.WebView
-        android:layout_width="fill_parent"
+    <com.zhai.shuyangwx.utils.X5WebView
+        android:id="@+id/web_filechooser"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/web_filechooser">
+        >
         
         
-    </com.tencent.smtt.sdk.WebView >
+    </com.zhai.shuyangwx.utils.X5WebView >
     
 
 </RelativeLayout>
