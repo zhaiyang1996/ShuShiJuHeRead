@@ -1,20 +1,35 @@
 package com.zhai.shuyangwx.adapter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.Animation;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dueeeke.videocontroller.component.CompleteView;
@@ -31,6 +46,9 @@ import com.dueeeke.videoplayer.util.PlayerUtils;
 import com.zhai.shuyangwx.R;
 import com.zhai.shuyangwx.activity.Play_accompanyActivity;
 import com.zhai.shuyangwx.utils.Tool;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * 自定义播放控制器
@@ -214,6 +232,9 @@ public class MyVideoController extends GestureVideoController implements View.On
         private ImageView mFullScreen;
         private LinearLayout mBottomContainer;
         private ImageView mPlayButton;
+        private RelativeLayout relativeLayout; //弹幕输入框的父控件
+        private EditText editText; //弹幕输入框
+        private Dialog dialog;
 
         public LiveControlView(@NonNull Context context) {
             super(context);
@@ -230,6 +251,51 @@ public class MyVideoController extends GestureVideoController implements View.On
 
         {
             setVisibility(GONE);
+            Button button; //弹出弹幕输入框
+            View view = View.inflate(this.getContext(),R.layout.item_danmu_btn,null);
+            button = view.findViewById(R.id.item_danmu_btn_btn);
+            relativeLayout = new RelativeLayout(this.getContext());
+            relativeLayout.setGravity(Gravity.CENTER|Gravity.BOTTOM);
+            relativeLayout.setPadding(0,0,0,25);
+            relativeLayout.addView(button);
+            button.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //弹出弹幕框并弹出键盘
+                    AlertDialog.Builder customizeDialog = new AlertDialog.Builder(activity);
+                    View danMuView = View.inflate(activity,R.layout.item_danmu,null);
+                    Button btn = danMuView.findViewById(R.id.item_danmu_btn);
+                    //添加弹幕输入控件
+                    editText= danMuView.findViewById(R.id.item_danmu_ed);
+                    editText.setHint("在这里弹幕和指令");
+                    editText.setHintTextColor(Color.GRAY);
+                    customizeDialog.setView(danMuView);
+                    btn.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //执行发送
+                            String content = editText.getText().toString();
+                            activity.sendOut(content);
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog = customizeDialog.create();
+                    Window window = dialog.getWindow();
+                    window.setGravity(Gravity.TOP);
+                    dialog.show();
+                    //延迟400毫秒打开键盘
+                    Timer timer = new Timer();
+                    timer.schedule(new TimerTask()
+                    {
+                        public void run()
+                        {
+                            Tool.showKeybord(editText,activity);
+                        }
+                    },400);
+
+                }
+            });
+            addView(relativeLayout);
             LayoutInflater.from(getContext()).inflate(com.dueeeke.videocontroller.R.layout.dkplayer_layout_live_control_view, this, true);
             mFullScreen = findViewById(com.dueeeke.videocontroller.R.id.fullscreen);
             mFullScreen.setOnClickListener(this);
@@ -298,9 +364,11 @@ public class MyVideoController extends GestureVideoController implements View.On
             switch (playerState) {
                 case VideoView.PLAYER_NORMAL:
                     mFullScreen.setSelected(false);
+                    relativeLayout.setVisibility(GONE);
                     break;
                 case VideoView.PLAYER_FULL_SCREEN:
                     mFullScreen.setSelected(true);
+                    relativeLayout.setVisibility(VISIBLE);
                     break;
             }
 
@@ -336,7 +404,8 @@ public class MyVideoController extends GestureVideoController implements View.On
             } else if (id == com.dueeeke.videocontroller.R.id.iv_play) {
                 mControlWrapper.togglePlay();
             } else if (id == com.dueeeke.videocontroller.R.id.iv_refresh) {
-                mControlWrapper.replay(true);
+//                mControlWrapper.replay(true);
+                activity.upData(true);
             }
         }
         /**
@@ -345,6 +414,7 @@ public class MyVideoController extends GestureVideoController implements View.On
         private void toggleFullScreen() {
             Activity activity = PlayerUtils.scanForActivity(getContext());
             mControlWrapper.toggleFullScreen(activity);
+            Tool.closeKeybord(activity);
         }
     }
 }

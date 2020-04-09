@@ -9,17 +9,16 @@
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:background="#000">
-        <TextView
-            android:id="@+id/play_accompaby_text"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="﻿一心向学"
-            android:textColor="#fff"
-            android:gravity="center"
-            android:textSize="30dp"
-            android:background="#000"/>
     </com.dueeeke.videoplayer.player.VideoView>
-
+    <TextView
+        android:id="@+id/play_accompaby_text"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:text="﻿一心向学"
+        android:textColor="#fff"
+        android:gravity="center"
+        android:textSize="30dp"
+        android:background="#000"/>
     <ScrollView
         android:id="@+id/play_accrscrol"
         android:layout_width="match_parent"

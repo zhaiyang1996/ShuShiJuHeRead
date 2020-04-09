@@ -55,7 +55,6 @@
     <!--关于我们-->
     <string name="aboutus_ed">版本</string>
     <string name="aboutus_log">更新日志</string>
-<<<<<<< Updated upstream
     <string name="aboutus_deve">开发者相关</string>
     <string name="aboutus_zhaiyang">书视聚合-B站UP:萌萌的萌大人</string>
     <string name="aboutus_liupeng">书视聚合-刘鹏</string>
@@ -66,5 +65,6 @@
     <!--写留言-->
     <string name="msg">请在这里留下你想说的话，少于200字(包括想要添加的影视、BUG和评论)</string>
 
->>>>>>> Stashed changes
+    <!--放映厅相关-->
+    <string name="danmubtn">发个弹幕交流一下呀</string>
 </resources>

@@ -49,7 +49,7 @@
         android:layout_height="220dp"
         android:layout_alignParentBottom="true"
         android:background="#cf000000"
-
+        android:visibility="gone"
         android:orientation="vertical">
 
         <LinearLayout
@@ -266,7 +266,7 @@
         android:layout_width="fill_parent"
         android:layout_height="65dp"
         android:background="#cf000000"
-
+        android:visibility="gone"
         android:orientation="horizontal">
 
             <Button

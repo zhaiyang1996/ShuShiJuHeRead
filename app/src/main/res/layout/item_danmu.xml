@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<Button
+    android:id="@+id/item_danmu_btn"
+    android:layout_width="wrap_content"
+    android:layout_height="60dp"
+    android:text="发送"
+    android:layout_alignParentRight="true"
+    android:textColor="#fc8f8f"
+    android:background="#fff"/>
+    <EditText
+        android:id="@+id/item_danmu_ed"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:hint="输入弹幕或指令"
+        android:singleLine="true"
+        android:imeOptions="flagNoExtractUi"
+        android:background="#fff"
+        android:layout_toLeftOf="@id/item_danmu_btn"
+       />
+</RelativeLayout>

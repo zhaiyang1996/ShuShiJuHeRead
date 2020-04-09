@@ -3,6 +3,7 @@ package com.zhai.shuyangwx.activity;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.pm.ActivityInfo;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -34,6 +35,7 @@ import com.zhai.shuyangwx.http.ProgressSubscriber;
 import com.zhai.shuyangwx.http.SubscriberOnNextListenerInstance;
 import com.zhai.shuyangwx.http.VideoDataManager;
 import com.zhai.shuyangwx.utils.Tool;
+import com.zhai.shuyangwx.view.MyDanmakuView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -84,7 +86,10 @@ public class Play_accompanyActivity extends BaseActivity implements View.OnClick
     private Socket mSocket = null;
     private String name = "萌大人";
     private String vod_Url = "-1"; //当前播放的链条
-    private boolean isDbd = true;
+    private boolean isDbd = true; //是否显示点播单，默认关闭
+    private MyDanmakuView myDanmakuView; //弹幕
+    private boolean isDanMu = true; //是否显示弹幕，默认开启
+    private MyVideoController controller;//视频播放控制器
     @Override
     public int getLayoutId() {
         return R.layout.activity_play_accompaby;
@@ -98,24 +103,10 @@ public class Play_accompanyActivity extends BaseActivity implements View.OnClick
     @Override
     public void initView() {
         name = getIntent().getStringExtra("name");
-        upData();
+        upData(false);
 //        starTimer();
     }
 
-    /**
-     * 定时器刷新视频方法已淘汰，改用通信
-     */
-    public void starTimer(){
-        //创建定时器
-        timer = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                upData();
-            }
-        };
-        timer.schedule(task,0,1000);
-    }
     @Override
     public void initEvent() {
         Tool.closeKeybord(Play_accompanyActivity.this);
@@ -163,7 +154,7 @@ public class Play_accompanyActivity extends BaseActivity implements View.OnClick
             }
         });
     }
-    public  void upData(){
+    public  void upData(final boolean isrefresh){
         DataManager.getInstance().getDBT(new ProgressSubscriber<DBTBean>(new SubscriberOnNextListenerInstance() {
             @Override
             public void onNext(Object o) {
@@ -184,7 +175,9 @@ public class Play_accompanyActivity extends BaseActivity implements View.OnClick
                         videoView.release();
                         play_accompaby_text.setVisibility(View.GONE);
                         videoView.setUrl(vod_Url); //设置视频地址
-                        MyVideoController controller = new MyVideoController(Play_accompanyActivity.this);
+                        myDanmakuView = new MyDanmakuView(Play_accompanyActivity.this);
+                        controller = new MyVideoController(Play_accompanyActivity.this);
+                        controller.addControlComponent(myDanmakuView);
                         controller.setActivity(Play_accompanyActivity.this);
                         controller.addDefaultControlComponent("正在播放："+dbtBean.getData().get(0).getVod_name()+" | 点播人："+dbtBean.getData().get(0).getName(), true);
                         controller.setCanChangePosition(false);
@@ -204,8 +197,30 @@ public class Play_accompanyActivity extends BaseActivity implements View.OnClick
                         play_accompaby_text.setText("当前无点播影片，发送#+影片名进行点播");
                         play_acc_dbd.setText("当前无点播影片，发送#+影片名进行点播");
                     }
+                }else if(videoView.getCurrentPlayState()==3){
+                    if(isrefresh){
+                        videoView.release();
+                        upData(false);
+                    }else{
+                        if(!(dbtBean!=null&&dbtBean.getData().size()>0)){
+                            if(videoView.isFullScreen()){
+                                videoView.stopFullScreen();
+                                Play_accompanyActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                            }
+                            videoView.release();
+                            //延迟400毫秒打开键盘
+                            play_accompaby_text.setVisibility(View.VISIBLE);
+                            play_accompaby_text.setText("当前无点播影片，发送#+影片名进行点播");
+                            play_acc_dbd.setText("当前无点播影片，发送#+影片名进行点播");
+                        }
+                    }
                 }else if(videoView.getCurrentPlayState()==4){
-                    videoView.start();
+                    if(isrefresh){
+                        videoView.release();
+                        upData(false);
+                    }else{
+                        videoView.start();
+                    }
                     //更新点播单
                     StringBuffer stringBuffer = new StringBuffer();
                     int i = 1;
@@ -216,6 +231,11 @@ public class Play_accompanyActivity extends BaseActivity implements View.OnClick
                     play_acc_dbd.setText(stringBuffer.toString());
                 }else{
                     if(!(dbtBean!=null&&dbtBean.getData().size()>0)){
+                        //判断是否为全屏，全屏则退出并旋转为竖屏
+                        if(videoView.isFullScreen()){
+                            videoView.stopFullScreen();
+                            Play_accompanyActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                        }
                         videoView.release();
                         play_accompaby_text.setVisibility(View.VISIBLE);
                         play_accompaby_text.setText("当前无点播影片，发送#+影片名进行点播");
@@ -320,9 +340,9 @@ public class Play_accompanyActivity extends BaseActivity implements View.OnClick
                                             //为服务器发送根据服务器信息做动作
                                             if(userChatBean.getData().get(userChatBean.getData().size()-1).getServerMsg().equals("刷新视频")){
 //                                                toast(userChatBean.getData().get(userChatBean.getData().size()-1).getServerMsg());
-                                                upData();
+                                                upData(false);
                                             }else if(userChatBean.getData().get(userChatBean.getData().size()-1).getServerMsg().equals("无点播")){
-                                                upData();
+                                                upData(false);
                                             }else if (userChatBean.getData().get(userChatBean.getData().size()-1).getServerMsg().equals("-1")){
                                                 //判断是不是当前用户
                                                 if(userChatBean.getData().get(userChatBean.getData().size()-1).getMsg().equals(name)) {
@@ -330,11 +350,15 @@ public class Play_accompanyActivity extends BaseActivity implements View.OnClick
                                                 }
                                                 break;
                                             }else if(userChatBean.getData().get(userChatBean.getData().size()-1).getServerMsg().equals("撤销")){
-                                                upData();
+                                                upData(false);
                                             }
                                         }
                                         play_acc_text.setText(stringBuffer.toString());
                                         play_acc_text_all.setText("在线人数："+userChatBean.getData().get(userChatBean.getData().size()-1).getOnLineS()+" 人");
+                                        String danmu = "["+userChatBean.getData().get(userChatBean.getData().size()-1).getName()+"] "+userChatBean.getData().get(userChatBean.getData().size()-1).getMsg();
+                                        if(myDanmakuView!=null){
+                                            danMu(userChatBean,danmu);
+                                        }
                                         scrollView.fullScroll(ScrollView.FOCUS_UP);
                                         // 输入框失去焦点如果输入框有内容强势获得焦点
                                         if(!editText.getText().toString().isEmpty()){
@@ -661,7 +685,8 @@ public class Play_accompanyActivity extends BaseActivity implements View.OnClick
                         "#：后面加电影名可点播（可模糊搜索）\n" +
                         "cut：撤销自己点播的电影\n" +
                         "dbd：打开或关闭点播单\n" +
-                        "help：查看指令帮助\n";
+                        "help：查看指令帮助\n"+
+                        "danmu：打开或者关闭弹幕";
                 showMsgDialog(help);
                 handler.sendEmptyMessage(0x004);
             }else if(content.length()==3&&content.equals("dbd")){
@@ -672,6 +697,17 @@ public class Play_accompanyActivity extends BaseActivity implements View.OnClick
                     play_acc_dbd.setVisibility(View.GONE);
                 }
                 isDbd = !isDbd;
+                handler.sendEmptyMessage(0x004);
+            }else if(content.length()==5&&content.equals("danmu")){
+                //打开或者关闭弹幕
+                if(isDanMu){
+                    myDanmakuView.hide();
+                    toast("弹幕已关闭");
+                }else{
+                    myDanmakuView.show();
+                    toast("弹幕已打开");
+                }
+                isDanMu = !isDanMu;
                 handler.sendEmptyMessage(0x004);
             }else{
                 if (mSocket!=null && mSocket.isConnected() && !mSocket.isOutputShutdown()) {
@@ -685,6 +721,18 @@ public class Play_accompanyActivity extends BaseActivity implements View.OnClick
                     setMsg(userChatBean);
                     Tool.closeKeybord(Play_accompanyActivity.this);
                 }
+            }
+        }
+    }
+    public void danMu(UserChatBean userChatBean,String danmu){
+        if(userChatBean.getData().get(userChatBean.getData().size()-1).getName().equals(name)){
+            myDanmakuView.addDanmaku(danmu,true,false);
+        }else{
+            //判断是否为服务器的弹幕
+            if(userChatBean.getData().get(userChatBean.getData().size()-1).getName().equals("系统")){
+                myDanmakuView.addDanmaku(danmu,false,true);
+            }else{
+                myDanmakuView.addDanmaku(danmu,false,false);
             }
         }
     }

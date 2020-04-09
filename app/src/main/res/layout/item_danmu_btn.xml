@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Button
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_danmu_btn_btn"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minHeight="0dp"
+    android:minWidth="0dp"
+    android:paddingLeft="60dp"
+    android:paddingRight="60dp"
+    android:paddingTop="7dp"
+    android:paddingBottom="7dp"
+    android:text="@string/danmubtn"
+    android:textColor="#fff"
+    android:background="@drawable/biankuang_danmu"/>
