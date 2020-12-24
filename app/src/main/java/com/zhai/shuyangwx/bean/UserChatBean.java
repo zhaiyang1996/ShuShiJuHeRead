@@ -32,6 +32,7 @@ public class UserChatBean {
         private String isServer;
         private String serverMsg;
         private String onLineS;
+        private String sex;
 
         public String getIsOnline() {
             return isOnline;
@@ -88,5 +89,14 @@ public class UserChatBean {
         public void setOnLineS(String onLineS) {
             this.onLineS = onLineS;
         }
+
+        public String getSex() {
+            return sex;
+        }
+
+        public void setSex(String sex) {
+            this.sex = sex;
+        }
+
     }
 }

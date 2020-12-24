@@ -7,8 +7,8 @@ android {
         applicationId "com.zhai.shuyangwx"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 25
-        versionName "1.8.4"
+        versionCode 26
+        versionName "1.8.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters"armeabi","armeabi-v7a","x86","mips"

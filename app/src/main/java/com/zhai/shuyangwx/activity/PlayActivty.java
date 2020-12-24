@@ -3,55 +3,39 @@ package com.zhai.shuyangwx.activity;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.net.Uri;
-import android.os.Bundle;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.dueeeke.videoplayer.player.VideoView;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.tencent.smtt.export.external.interfaces.WebResourceResponse;
-import com.tencent.smtt.sdk.QbSdk;
-import com.tencent.smtt.sdk.TbsVideo;
 import com.zhai.shuyangwx.R;
 import com.zhai.shuyangwx.activity.base.BaseActivity;
 import com.zhai.shuyangwx.adapter.GridViewAdapter;
+import com.zhai.shuyangwx.adapter.MyVideoController;
 import com.zhai.shuyangwx.adapter.VideoListEngineAdapter;
+import com.zhai.shuyangwx.bean.DBTBean;
 import com.zhai.shuyangwx.bean.VideoList;
 import com.zhai.shuyangwx.bean.VideoUrl;
-import com.zhai.shuyangwx.constants.Constants;
 import com.zhai.shuyangwx.http.VideoDataManager;
 import com.zhai.shuyangwx.utils.Tool;
-import com.zhai.shuyangwx.utils.X5WebView;
+import com.zhai.shuyangwx.utils.TopMenuHeader;
+import com.zhai.shuyangwx.view.MyDanmakuView;
 import com.zhai.shuyangwx.view.MyGridView;
-import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient.CustomViewCallback;
-import com.tencent.smtt.export.external.interfaces.JsResult;
-import com.tencent.smtt.sdk.CookieSyncManager;
-import com.tencent.smtt.sdk.DownloadListener;
 import com.tencent.smtt.sdk.ValueCallback;
-import com.tencent.smtt.sdk.WebChromeClient;
-import com.tencent.smtt.sdk.WebSettings;
-import com.tencent.smtt.sdk.WebView;
-import com.tencent.smtt.sdk.WebViewClient;
-import com.tencent.smtt.utils.TbsLog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -70,11 +54,8 @@ import rx.schedulers.Schedulers;
  */
 
 public class PlayActivty extends BaseActivity {
-    /**
-     * 作为一个浏览器的示例展示出来，采用android+web的模式
-     */
     @BindView(R.id.webView)
-    ViewGroup mViewParent;
+    VideoView videoView;
     @BindView(R.id.play_name)
     TextView play_name;
     @BindView(R.id.play_year)
@@ -95,7 +76,9 @@ public class PlayActivty extends BaseActivity {
     TextView engineView;
     @BindView(R.id.play_circuitcuit)
     Button play_circuitcuit;
-    private X5WebView mWebView;
+    @BindView(R.id.textView2)
+    TextView textView2;
+//    private X5WebView mWebView;
 
 
     private static  String mHomeUrl = "";
@@ -123,7 +106,7 @@ public class PlayActivty extends BaseActivity {
     String videoUrlStr;
     private boolean pay_type = true;
     private String type ="-1";
-
+    private TopMenuHeader topMenu;
     @Override
     public int getLayoutId() {
         return R.layout.activity_play;
@@ -131,7 +114,18 @@ public class PlayActivty extends BaseActivity {
 
     @Override
     public void initToolBar() {
-
+        topMenu = new TopMenuHeader(getWindow().getDecorView(), this);
+        topMenu.setTopMenuHeader(true, "视频播放",
+                "", false, false);
+        //标题栏点击事件，get相应控件
+        topMenu.getTopIvLeft().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        //使主控件透明
+//        topMenu.getLinearLayout().setBackgroundResource(0);
     }
     //设置APP横屏不刷新
     @Override
@@ -173,7 +167,7 @@ public class PlayActivty extends BaseActivity {
     //初始化B站播放四
     @Override
     public void initView() {
-        mHomeUrl = Constants.CIRCUIT[0];
+        play_circuitcuit.setVisibility(View.GONE); //取消播放器选择
         mTestHandler.sendEmptyMessageDelayed(MSG_INIT_UI, 10);
         gridViewAdapter = new GridViewAdapter();
         gridView.setAdapter(gridViewAdapter);
@@ -194,16 +188,6 @@ public class PlayActivty extends BaseActivity {
         play_circuitcuit.setOnClickListener(onClick);
         gridViewAdapter.setData(this,playlist.length-1,collect);
         gridView.setOnItemClickListener(gridItemOnClick);
-        //根据来源默认选择不同的引擎
-        if(vod_type){
-            if(yPath.contains("m3u8")){
-                play_circuitcuit.setText("播放器一");
-                player = 0;
-            }else{
-                play_circuitcuit.setText("播放器二");
-                player = 1;
-            }
-        }
     }
     View.OnClickListener onClick = new View.OnClickListener() {
         @Override
@@ -221,9 +205,6 @@ public class PlayActivty extends BaseActivity {
                     break;
                 case R.id.play_engine:
                     showDialog();
-                    break;
-                case R.id.play_circuitcuit:
-                    showCircuitDialog();
                     break;
             }
         }
@@ -289,11 +270,16 @@ public class PlayActivty extends BaseActivity {
 
             @Override
             public void onError(Throwable e) {
+
             }
 
             @Override
             public void onNext(String str) {
 //                Log.d("视频播放数据:", str);
+                if(str.equals("-1")){
+                    initEvent();
+                    return;
+                }
                 Gson gson = new Gson();
                 videoList = gson.fromJson(str, VideoList.class);
                 Log.d("视频名：", videoList.getName());
@@ -314,231 +300,15 @@ public class PlayActivty extends BaseActivity {
 
 
     private void init() {
-        mWebView = new X5WebView(this, null);
-        mViewParent.addView(mWebView, new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT));
-        if(mWebView.getX5WebViewExtension()!=null){
-            Bundle data = new Bundle();
-            data.putBoolean("standardFullScreen", true);
-            //true表示标准全屏，false表示X5全屏；不设置默认false，
-            data.putBoolean("supportLiteWnd", false);
-            //false：关闭小窗；true：开启小窗；不设置默认true，
-            data.putInt("DefaultVideoScreen", 1);
-            //1：以页面内开始播放，2：以全屏开始播放；不设置默认：1
-            mWebView.getX5WebViewExtension().invokeMiscMethod("setVideoParams", data);
-        }
 
-
-        //拦截超链接挑战
-        mWebView.setWebViewClient(new WebViewClient(){
-                                     public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//                                         toast("跳转无效!");
-                                         return true;
-                                     }
-                                 });
-        mWebView.setWebChromeClient(new WebChromeClient() {
-
-            @Override
-            public boolean onJsConfirm(WebView arg0, String arg1, String arg2,
-                                       JsResult arg3) {
-                return super.onJsConfirm(arg0, arg1, arg2, arg3);
-            }
-
-            View myVideoView;
-            View myNormalView;
-            CustomViewCallback callback;
-
-            // /////////////////////////////////////////////////////////
-            //
-            /**
-             * 全屏播放配置
-             */
-            @Override
-            public void onShowCustomView(View view,
-                                         CustomViewCallback customViewCallback) {
-                ViewGroup.LayoutParams layoutParams = mViewParent.getLayoutParams();
-                int height = Tool.dip2px(PlayActivty.this,200);
-                toast("点击了全屏");
-                if(layoutParams.height==height){
-                    layoutParams.height=getZmKuan();
-                }else{
-                    layoutParams.height=height;
-                }
-                mViewParent.setLayoutParams(layoutParams);
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);//横屏
-                getWindow().setFlags(
-                        WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                        WindowManager.LayoutParams.FLAG_FULLSCREEN);//全屏
-                FrameLayout normalView = mWebView;
-                ViewGroup viewGroup = (ViewGroup) normalView.getParent();
-                viewGroup.removeView(normalView);
-                viewGroup.addView(view);
-                myVideoView = view;
-                myNormalView = normalView;
-                callback = customViewCallback;
-                Bundle bundle = new Bundle();
-                bundle.putInt("screenMode", 102);
-
-            }
-
-            @Override
-            public void onHideCustomView() {
-                ViewGroup.LayoutParams layoutParams = mViewParent.getLayoutParams();
-                int height = Tool.dip2px(PlayActivty.this,200);
-//                toast("点击了缩小");
-                if(layoutParams.height==height){
-                    layoutParams.height=getZmGao();
-                }else{
-                    layoutParams.height=height;
-                }
-                mViewParent.setLayoutParams(layoutParams);
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
-                getWindow().clearFlags(
-                        WindowManager.LayoutParams.FLAG_FULLSCREEN);//取消全屏
-                if (callback != null) {
-                    callback.onCustomViewHidden();
-                    callback = null;
-                }
-                if (myVideoView != null) {
-                    ViewGroup viewGroup = (ViewGroup) myVideoView.getParent();
-                    viewGroup.removeView(myVideoView);
-                    viewGroup.addView(myNormalView);
-                }
-            }
-
-            @Override
-            public boolean onJsAlert(WebView arg0, String arg1, String arg2,
-                                     JsResult arg3) {
-                /**
-                 * 这里写入你自定义的window alert
-                 */
-                return super.onJsAlert(null, arg1, arg2, arg3);
-            }
-        });
-
-        mWebView.setDownloadListener(new DownloadListener() {
-
-            @Override
-            public void onDownloadStart(String arg0, String arg1, String arg2,
-                                        String arg3, long arg4) {
-                TbsLog.d(TAG, "url: " + arg0);
-                new AlertDialog.Builder(PlayActivty.this)
-                        .setTitle("allow to download？")
-                        .setPositiveButton("yes",
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        Toast.makeText(
-                                                PlayActivty.this,
-                                                "fake message: i'll download...",
-                                                Toast.LENGTH_SHORT).show();
-                                    }
-                                })
-                        .setNegativeButton("no",
-                                new DialogInterface.OnClickListener() {
-
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        // TODO Auto-generated method stub
-                                        Toast.makeText(
-                                                PlayActivty.this,
-                                                "fake message: refuse download...",
-                                                Toast.LENGTH_SHORT).show();
-                                    }
-                                })
-                        .setOnCancelListener(
-                                new DialogInterface.OnCancelListener() {
-
-                                    @Override
-                                    public void onCancel(DialogInterface dialog) {
-                                        // TODO Auto-generated method stub
-                                        Toast.makeText(
-                                                PlayActivty.this,
-                                                "fake message: refuse download...",
-                                                Toast.LENGTH_SHORT).show();
-                                    }
-                                }).show();
-            }
-        });
-
-        WebSettings webSetting = mWebView.getSettings();
-        webSetting.setAllowFileAccess(true);
-        webSetting.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
-        webSetting.setSupportZoom(true);
-        webSetting.setBuiltInZoomControls(true);
-        webSetting.setUseWideViewPort(true);
-        webSetting.setSupportMultipleWindows(false);
-        // webSetting.setLoadWithOverviewMode(true);
-        webSetting.setAppCacheEnabled(true);
-        // webSetting.setDatabaseEnabled(true);
-        webSetting.setDomStorageEnabled(true);
-        webSetting.setJavaScriptEnabled(true);
-        webSetting.setGeolocationEnabled(true);
-        webSetting.setAppCacheMaxSize(Long.MAX_VALUE);
-        webSetting.setAppCachePath(this.getDir("appcache", 0).getPath());
-        webSetting.setDatabasePath(this.getDir("databases", 0).getPath());
-        webSetting.setGeolocationDatabasePath(this.getDir("geolocation", 0)
-                .getPath());
-        webSetting.setSupportZoom(false);
-        webSetting.setBuiltInZoomControls(false);
-        webSetting.setDisplayZoomControls(false);
-        // webSetting.setPageCacheCapacity(IX5WebSettings.DEFAULT_CACHE_CAPACITY);
-        webSetting.setPluginState(WebSettings.PluginState.ON_DEMAND);
-        //采用PC游览器标识
-        webSetting.setUserAgentString("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/537.36");
-        // webSetting.setRenderPriority(WebSettings.RenderPriority.HIGH);
-        // webSetting.setPreFectch(true);
-        long time = System.currentTimeMillis();
-        TbsLog.d("time-cost", "cost time: "
-                + (System.currentTimeMillis() - time));
-        CookieSyncManager.createInstance(this);
-        CookieSyncManager.getInstance().sync();
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        TbsLog.d(TAG, "onActivityResult, requestCode:" + requestCode
-                + ",resultCode:" + resultCode);
-
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case 0:
-                    if (null != uploadFile) {
-                        Uri result = data == null || resultCode != RESULT_OK ? null
-                                : data.getData();
-                        uploadFile.onReceiveValue(result);
-                        uploadFile = null;
-                    }
-                    break;
-                default:
-                    break;
-            }
-        } else if (resultCode == RESULT_CANCELED) {
-            if (null != uploadFile) {
-                uploadFile.onReceiveValue(null);
-                uploadFile = null;
-            }
-
-        }
-
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        if (intent == null || mWebView == null || intent.getData() == null)
-            return;
-        mWebView.loadUrl(intent.getData().toString());
     }
 
     @Override
     protected void onDestroy() {
         if (mTestHandler != null)
             mTestHandler.removeCallbacksAndMessages(null);
-        if (mWebView != null)
-            mWebView.destroy();
         super.onDestroy();
+        videoView.release();
     }
 
     public static final int MSG_OPEN_TEST_URL = 0;
@@ -558,10 +328,6 @@ public class PlayActivty extends BaseActivity {
 
                     String testUrl = "file:///sdcard/outputHtml/html/"
                             + Integer.toString(mCurrentUrl) + ".html";
-                    if (mWebView != null) {
-                        mWebView.loadUrl(testUrl);
-                    }
-
                     mCurrentUrl++;
                     break;
                 case MSG_INIT_UI:
@@ -575,7 +341,8 @@ public class PlayActivty extends BaseActivity {
                             JSONObject jsonObject = new JSONObject(str);
                             if (jsonObject!=null){
                                 videoUrl = gson.fromJson(str, VideoUrl.class);
-                                mWebView.loadUrl(videoUrl.getUrl());
+//                                mWebView.loadUrl(videoUrl.getUrl()); //开始播放
+                                upVideo(path);
                             }else {
                                 String mssg = jsonObject.getString("Message");
                                 throw  new RuntimeException(mssg);
@@ -610,38 +377,6 @@ public class PlayActivty extends BaseActivity {
         dialog = customizeDialog.create();
         dialog.show();
     }
-    public void showCircuitDialog(){
-        AlertDialog.Builder customizeDialog = new AlertDialog.Builder(this);
-        ListView listView = new ListView(this);
-        ArrayAdapter arrayAdapter = new ArrayAdapter(this,android.R.layout.simple_dropdown_item_1line, Constants.CIRCUIT_NAME);
-        listView.setAdapter(arrayAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(position==3){
-                    toast("不要着急嘛~");
-                    return;
-                }
-//                if(position==2){
-//                    circuit_id = 1;
-//                    mHomeUrl="";
-//                    play_circuitcuit.setText(Constants.CIRCUIT_NAME[position]);
-//                    playVideo(collect-1);
-//                    dialog.dismiss();
-//                    return;
-//                }
-                circuit_id = 0;
-                player = position;
-                play_circuitcuit.setText(Constants.CIRCUIT_NAME[position]);
-                playVideo(collect-1,false);
-                dialog.dismiss();
-            }
-        });
-        customizeDialog.setTitle("选择播放线路：");
-        customizeDialog.setView(listView);
-        dialog = customizeDialog.create();
-        dialog.show();
-    }
     public void playVideo(int position,boolean type){
         String str;
         pay_type =type;
@@ -656,33 +391,16 @@ public class PlayActivty extends BaseActivity {
 //            toast("执行的1");
             yPath = playlist[position];
             //根据不同来源选择默认引擎
-            if (pay_type){
-                if(yPath.contains("m3u8")){
-                    mHomeUrl = Constants.CIRCUIT[0];
-                }else{
-                    mHomeUrl = Constants.CIRCUIT[1];
-                }
-            }else{
-                mHomeUrl = Constants.CIRCUIT[player];
-            }
-            path = mHomeUrl+playlist[position];
+            path = playlist[position];
         }else{
             yPath = playlist[position+1].substring(0,playlist[position+1].length());
-            if (pay_type){
-                if(yPath.contains("m3u8")){
-                    mHomeUrl = Constants.CIRCUIT[0];
-                }else{
-                    mHomeUrl = Constants.CIRCUIT[1];
-                }
-            }else{
-                mHomeUrl = Constants.CIRCUIT[player];
-            }
+
             if(playlist.length>=0){
-                path = mHomeUrl+playlist[position+1].substring(0,playlist[position+1].length());
+                path = playlist[position+1].substring(0,playlist[position+1].length());
             }else if(playlist.length>=9){
-                path = mHomeUrl+playlist[position+1].substring(0,playlist[position+1].length());
+                path = playlist[position+1].substring(0,playlist[position+1].length());
             }else if(playlist.length>=99){
-                path = mHomeUrl+playlist[position+1].substring(0,playlist[position+1].length());
+                path = playlist[position+1].substring(0,playlist[position+1].length());
             }
         }
         collect = position+1;
@@ -700,37 +418,108 @@ public class PlayActivty extends BaseActivity {
 
         //播放器是否可以使用
         Log.d("播放地址", path);
-        mWebView.loadUrl(path);
-        mWebView.setWebViewClient(new WebViewClient() {
-            @Override
-            public WebResourceResponse shouldInterceptRequest(WebView webView, String s) {
-                return super.shouldInterceptRequest(webView, s);
-                //做广告拦截，ADFIlterTool 为广告拦截工具类
+//        mWebView.loadUrl(path); //开始播放
+        upVideo(path);
+    }
+ /**
+  * 开始初始化播放器
+  */
+  public void initVideo(){
+      videoView.setOnStateChangeListener(new VideoView.OnStateChangeListener() {
+          @Override
+          public void onPlayerStateChanged(int playerState) {
 
-            }
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                return false;
-            }
+          }
 
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                //去除标题栏
-                String js= "javascript:function callJS(){\n" +
-                        "      document.getElementsByTagName(\"title\")[0].innerText = '正在播放：" +videoList.getName()+
-                        "';" +
-                        "   }";
-//                    //创建方法
-                view.loadUrl(js);
-                //加载方法
-                view.loadUrl("javascript:callJS()");
-            }
-        });
-
-        if(!TbsVideo.canUseTbsPlayer(PlayActivty.this)){
-            toast("TBS播放器不可用，调用H5播放器");
+          @Override
+          public void onPlayStateChanged(int playState) {
+              switch (playState){
+                  case 0:
+//                        toast("0");
+                      break;
+                  case 2:
+                      //预留播放进度
+//                      if(!dbtBean.getData().isEmpty())
+//                          videoView.seekTo(Long.parseLong(dbtBean.getData().get(0).getVod_dq_time()));
+//                        toast("视频总时长："+videoView.getDuration());
+                      break;
+                  case 4:
+//                        toast("4");
+                      break;
+                  case 5:
+                      videoView.release();
+                      break;
+                  case 6:
+//                        toast("6");
+                      break;
+                  case 7:
+//                        toast("7");
+                      break;
+              }
+          }
+      });
+  }
+  private MyVideoController controller;//视频播放控制器
+  //更新和播放
+  public void upVideo(String path){
+//                toast(videoView.getCurrentPlayState()+"");//播放器当前状态
+      //判断是否更改了播放地址
+      if(videoView.getCurrentPlayState()==0){
+          if(!path.isEmpty()){
+              videoView.release();
+              textView2.setVisibility(View.GONE);
+              videoView.setUrl(path); //设置视频地址
+              controller = new MyVideoController(this);
+//              controller.addControlComponent(myDanmakuView); //加入弹幕功能
+              controller.setActivity(PlayActivty.this,1);
+              controller.addDefaultControlComponent("正在播放："+videoList.getName(), false);
+              topMenu.setTopMenuHeader(true, "正在播放："+videoList.getName(),
+                      "", false, false);
+//              controller.setCanChangePosition(false);
+              controller.setEnableInNormal(true);
+              videoView.setVideoController(controller); //设置控制器
+              videoView.start(); //开始播放，不调用则不自动播放
+          }else{
+              textView2.setVisibility(View.VISIBLE);
+              textView2.setText("当前影片播放出错拉，请刷新试试");
+          }
+      }else{
+          //其他状态处理方案
+          if(!path.isEmpty()){
+              videoView.release();
+              textView2.setVisibility(View.GONE);
+              videoView.setUrl(path); //设置视频地址
+              controller = new MyVideoController(this);
+//              controller.addControlComponent(myDanmakuView); //加入弹幕功能
+              controller.setActivity(PlayActivty.this,1);
+              controller.addDefaultControlComponent("正在播放："+videoList.getName(), false);
+              topMenu.setTopMenuHeader(true, "正在播放："+videoList.getName(),
+                      "", false, false);
+//              controller.setCanChangePosition(false);
+              controller.setEnableInNormal(true);
+              videoView.setVideoController(controller); //设置控制器
+              videoView.start(); //开始播放，不调用则不自动播放
+          }else{
+              textView2.setVisibility(View.VISIBLE);
+              textView2.setText("当前影片播放出错拉，请刷新试试");
+          }
+      }
+  }
+    @Override
+    public void onBackPressed() {
+        if (!videoView.onBackPressed()) {
+            super.onBackPressed();
         }
     }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        videoView.pause();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        videoView.resume();
+    }
 }

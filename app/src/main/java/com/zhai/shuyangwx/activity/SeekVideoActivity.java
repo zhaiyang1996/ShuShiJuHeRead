@@ -212,8 +212,8 @@ public class SeekVideoActivity extends BaseActivity {
             View view = View.inflate(SeekVideoActivity.this, R.layout.item_seekvideo, null);
             ImageView imageView = view.findViewById(R.id.item_seekvideo_img);
             ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
-            layoutParams.width = getZmKuan()/4;
-            layoutParams.height = getZmGao()/6;
+            layoutParams.width = getZmKuan()/3;
+            layoutParams.height = getZmGao()/4;
             imageView.setLayoutParams(layoutParams);
             TextView name = view.findViewById(R.id.item_seekvideo_name);
             TextView cont = view.findViewById(R.id.item_seekvideo_cont);
@@ -228,7 +228,7 @@ public class SeekVideoActivity extends BaseActivity {
                     .placeholder(R.mipmap.imag)
                     .error(R.mipmap.imag)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .override(200, 100);
+                    .override(800, 400);
             Glide.with(SeekVideoActivity.this)
                     .load(img)
                     .apply(options)

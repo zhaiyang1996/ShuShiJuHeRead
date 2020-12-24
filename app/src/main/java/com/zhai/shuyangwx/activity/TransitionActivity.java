@@ -55,13 +55,19 @@ public class TransitionActivity extends BaseActivity {
 
     @Override
     public void initEvent() {
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startActivity(new Intent(TransitionActivity.this, MainActivity.class));
-                finish();
-            }
-        },2500);
+        if(!Tool.getUser(mContext).getIsQd().equals("-1")){
+            startActivity(new Intent(TransitionActivity.this, Play_accompanyActivity.class));
+            finish();
+        }else{
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(new Intent(TransitionActivity.this, MainActivity.class));
+                    finish();
+                }
+            },2500);
+        }
+
     }
     @SuppressLint("HandlerLeak")
     private Handler handler=new Handler(){

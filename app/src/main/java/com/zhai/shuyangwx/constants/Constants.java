@@ -10,14 +10,6 @@ import java.io.File;
 public class Constants {
     public static final String IMG_BASE_URL = "http://statics.zhuishushenqi.com";
     public static  String API_BASE_URL = "http://api.zhuishushenqi.com";
-    public static final String[] CIRCUIT = {"https://www.coolcoolcloud.com/m3u8.php?url=",
-                                             "https://vip.mpos.ren/v/?url=",
-            "http://jx.598110.com/?url="
-    };
-    public static final String[] CIRCUIT_NAME = {"播放器一",
-            "播放器二",
-            "播放器三",
-            "自定义播放器研发中"};
     public static final String[] TRANSITIONIMAGEURL = {"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1531220256823&di=d759f5bc206f7206bd358407c4a44cd1&imgtype=0&src=http%3A%2F%2Fimgfs.oppo.cn%2Fuploads%2Fthread%2Fattachment%2F2017%2F05%2F19%2F14951566699727.jpg",
     "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1531220256822&di=f95eb04025979dae4dcbe53101355f91&imgtype=0&src=http%3A%2F%2Fwww.vsread.com%2Ficonograph1%2F2015-11-18%2Fb953bd9f3942b5adfa433700aaefa1c7.jpg",
     "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1531220387891&di=25567fc37663c79178a46e688acca81d&imgtype=jpg&src=http%3A%2F%2Fimg0.imgtn.bdimg.com%2Fit%2Fu%3D1897359835%2C1190554384%26fm%3D214%26gp%3D0.jpg",

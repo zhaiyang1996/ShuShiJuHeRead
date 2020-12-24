@@ -14,11 +14,17 @@
         android:id="@+id/play_accompaby_text"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:text="﻿一心向学"
         android:textColor="#fff"
         android:gravity="center"
         android:textSize="30dp"
         android:background="#000"/>
+    <EditText
+        android:id="@+id/play_acc_ed"
+        android:layout_below="@id/play_accompaby_videoview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="输入信息或指令(输入help可查看所有指令)"
+        />
     <ScrollView
         android:id="@+id/play_accrscrol"
         android:layout_width="match_parent"
@@ -47,13 +53,7 @@
         android:text="当前在线："
         android:textColor="#f56464"
         android:textSize="15sp"/>
-    <EditText
-        android:id="@+id/play_acc_ed"
-        android:layout_below="@id/play_accompaby_videoview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="输入信息或指令(输入help可查看所有指令)"
-        />
+
     <ScrollView
         android:layout_above="@id/play_acc_ed"
         android:layout_width="200dp"

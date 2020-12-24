@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.zhai.shuyangwx.R;
+import com.zhai.shuyangwx.bean.BdUser;
 import com.zhai.shuyangwx.bean.ReadPatternBean;
 import com.zhai.shuyangwx.bean.ThecustomBJ;
 
@@ -160,7 +161,8 @@ public class Tool {
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.CAMERA
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.SYSTEM_ALERT_WINDOW
             }, 1);
             return false;
         }
@@ -563,5 +565,34 @@ public class Tool {
         str = str.replaceAll("\"","\\\""); //替换"
         str = str.replaceAll("\\\\","\\\\\\\\"); //替换/
         return str;
+    }
+    /**
+     * 缓存用户
+     * @param con 上下文
+     * @param name 姓名
+     * @param sex 性别
+     * @param isQD 是否为首启动页码
+     */
+    public static void setUser(Context con,String name, String sex,String isQD){
+        SharedPreferences sharedPreferences = con.getSharedPreferences("USER",
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();// 获取编辑器
+        editor.putString("name", name);
+        editor.putString("sex", sex);
+        editor.putString("isQD", isQD);
+        editor.commit();// 提交修改
+    }
+    //取出用户
+    public static BdUser getUser(Context con){
+        SharedPreferences preferences = con.getSharedPreferences("USER",
+                Context.MODE_PRIVATE);
+        String name = preferences.getString("name", "");
+        String sex = preferences.getString("sex", "-1");
+        String isQD = preferences.getString("isQD", "-1");
+        BdUser bdUser = new BdUser();
+        bdUser.setName(name);
+        bdUser.setSex(sex);
+        bdUser.setIsQd(isQD);
+        return bdUser;
     }
 }

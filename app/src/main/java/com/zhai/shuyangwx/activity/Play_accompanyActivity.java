@@ -79,17 +79,19 @@ public class Play_accompanyActivity extends BaseActivity implements View.OnClick
     private String vod_time;//视频总时长
     private DBTBean dbtBean; //点播单
     private String room_id = "1";//当前房间_默认1号房间
-
     private String mServerIp = "106.14.82.67";	// 服务器地址192.168.1.103 106.14.82.67
-    private int mServerHost = 8893;
+    private int mServerHost = 8894;
     private OutputStream os; //输出流
     private Socket mSocket = null;
     private String name = "萌大人";
+    private String sex = "男";
     private String vod_Url = "-1"; //当前播放的链条
     private boolean isDbd = true; //是否显示点播单，默认关闭
     private MyDanmakuView myDanmakuView; //弹幕
     private boolean isDanMu = true; //是否显示弹幕，默认开启
     private MyVideoController controller;//视频播放控制器
+    private boolean isXP = false;//是否开启画中画，默认关闭
+    private boolean isServer =false; //聊天服务器是否上线，默认下线
     @Override
     public int getLayoutId() {
         return R.layout.activity_play_accompaby;
@@ -102,7 +104,8 @@ public class Play_accompanyActivity extends BaseActivity implements View.OnClick
     Timer timer;
     @Override
     public void initView() {
-        name = getIntent().getStringExtra("name");
+        name = Tool.getUser(mContext).getName();
+        sex = Tool.getUser(mContext).getSex();
         upData(false);
 //        starTimer();
     }
@@ -178,7 +181,7 @@ public class Play_accompanyActivity extends BaseActivity implements View.OnClick
                         myDanmakuView = new MyDanmakuView(Play_accompanyActivity.this);
                         controller = new MyVideoController(Play_accompanyActivity.this);
                         controller.addControlComponent(myDanmakuView);
-                        controller.setActivity(Play_accompanyActivity.this);
+                        controller.setActivity(Play_accompanyActivity.this,0);
                         controller.addDefaultControlComponent("正在播放："+dbtBean.getData().get(0).getVod_name()+" | 点播人："+dbtBean.getData().get(0).getName(), true);
                         controller.setCanChangePosition(false);
                         controller.setEnableInNormal(true);
@@ -428,14 +431,18 @@ public class Play_accompanyActivity extends BaseActivity implements View.OnClick
             public void run() {
                 try {
                     StringBuffer stringBuffer = new StringBuffer();
-                    stringBuffer.append( userChatBean.getIsOnline()+"@@@"+userChatBean.getMsg()+"@@@"+userChatBean.getName()+"@@@"+userChatBean.getTime());
+                    stringBuffer.append( userChatBean.getIsOnline()+"###"+userChatBean.getMsg()+"###"+userChatBean.getName()+"###"+userChatBean.getTime()+"###"+userChatBean.getSex());
                     String string = Tool.replaceBlank(stringBuffer.toString())+"\n";
                     Log.d("发送数据", string);
+                    if(os==null)
+                        return;
                     os.write(string.getBytes());
                     os.flush();
-//                    mSocket.shutdownInput();
-//                    os.close();
-//                    mSocket.close();
+                    if(!isServer){
+                        mSocket.shutdownInput();
+                        os.close();
+                        mSocket.close();
+                    }
                     handler.sendEmptyMessage(0x004);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -452,12 +459,15 @@ public class Play_accompanyActivity extends BaseActivity implements View.OnClick
             //1为在线，0为离线
             userBean.setIsOnline("1");
             userBean.setMsg(name+"加入聊天室");
+            isServer = true;
         }else{
             userBean.setIsOnline("0");
             userBean.setMsg(name+"离开了聊天室");
+            isServer = false;
         }
         userBean.setName("系统");
         userBean.setTime(Tool.getTime());
+        userBean.setSex(sex);
         setMsg(userBean);
     }
 
@@ -686,7 +696,8 @@ public class Play_accompanyActivity extends BaseActivity implements View.OnClick
                         "cut：撤销自己点播的电影\n" +
                         "dbd：打开或关闭点播单\n" +
                         "help：查看指令帮助\n"+
-                        "danmu：打开或者关闭弹幕";
+                        "danmu：打开或者关闭弹幕\n"+
+                        "star：设置或取消聊天室为启动页";
                 showMsgDialog(help);
                 handler.sendEmptyMessage(0x004);
             }else if(content.length()==3&&content.equals("dbd")){
@@ -709,6 +720,20 @@ public class Play_accompanyActivity extends BaseActivity implements View.OnClick
                 }
                 isDanMu = !isDanMu;
                 handler.sendEmptyMessage(0x004);
+            }else if(content.length()==2&&content.equals("xp")){
+                //打开或悬浮窗
+                startFloatWindow(isXP);
+                isXP = !isXP;
+            }else if(content.length()==4&&content.equals("star")){
+                //设置或取消默认启动页
+                if(Tool.getUser(mContext).getIsQd().equals("-1")){
+                    Tool.setUser(mContext,name,sex,"0");
+                    toast("设置聊天室为启动页");
+                }else{
+                    Tool.setUser(mContext,name,sex,"-1");
+                    toast("取消聊天室为启动页");
+                }
+                handler.sendEmptyMessage(0x004);
             }else{
                 if (mSocket!=null && mSocket.isConnected() && !mSocket.isOutputShutdown()) {
                     // 将用户在文本框内输入的内容写入网络
@@ -718,6 +743,7 @@ public class Play_accompanyActivity extends BaseActivity implements View.OnClick
                     userChatBean.setMsg(Tool.changeFH(content));
                     userChatBean.setName(name);
                     userChatBean.setTime(Tool.getTime());
+                    userChatBean.setSex(sex);
                     setMsg(userChatBean);
                     Tool.closeKeybord(Play_accompanyActivity.this);
                 }
@@ -734,6 +760,21 @@ public class Play_accompanyActivity extends BaseActivity implements View.OnClick
             }else{
                 myDanmakuView.addDanmaku(danmu,false,false);
             }
+        }
+    }
+    /**
+     * 打开画中画窗口
+     */
+    public void startFloatWindow(final boolean is) {
+        if(Tool.isGrantExternalRW(this)){
+            if(is){
+
+            }else{
+
+            }
+        }else{
+            toast("没有悬浮窗权限");
+            isXP = !isXP;
         }
     }
 }

@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +27,7 @@ import com.zhai.shuyangwx.activity.BookCategoryActivity;
 import com.zhai.shuyangwx.activity.Play_accompanyActivity;
 import com.zhai.shuyangwx.activity.ReadActivity;
 import com.zhai.shuyangwx.activity.SeekVideoActivity;
+import com.zhai.shuyangwx.activity.TransitionActivity;
 import com.zhai.shuyangwx.application.app;
 import com.zhai.shuyangwx.bean.BookData;
 import com.zhai.shuyangwx.bean.BookMixAToc;
@@ -101,6 +103,7 @@ public class DrawerFragment extends BaseFragment implements View.OnClickListener
     public void onClick(View v) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         final EditText editText = new EditText(getActivity());
+        final EditText sexEditText = new EditText(getActivity());
         switch (v.getId()){
             case R.id.drawer_me:
                 startActivity(new Intent(getActivity(), AboutUsActivity.class));
@@ -133,24 +136,42 @@ public class DrawerFragment extends BaseFragment implements View.OnClickListener
                 break;
             case R.id.drawer_vod_acc:
                 editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(6)});
+                editText.setHint("输入聊天室名称，最多6个字");
+                sexEditText.setHint("输入性别(只能输入男或女，偷懒就让你们自己输啦)");
+                LinearLayout linearLayout = new LinearLayout(mContext);
+                linearLayout.setOrientation(LinearLayout.VERTICAL);
+                linearLayout.addView(editText);
+                linearLayout.addView(sexEditText);
+
                 //打开放映厅
-                dialog.setView(editText);
-                dialog.setTitle("你想用什么名字进入放映厅：");
+                dialog.setView(linearLayout);
+                dialog.setTitle("输一次后保存，更改得重装APP：");
                 dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         String str = editText.getText().toString();
+                        String sex = sexEditText.getText().toString();
                         if(!str.isEmpty()){
-                            Intent intent = new Intent(getActivity(),Play_accompanyActivity.class);
-                            intent.putExtra("name",str);
-                            startActivity(intent);
+                            if(!sex.isEmpty()&&sex.equals("男")||sex.equals("女")){
+                                Intent intent = new Intent(getActivity(),Play_accompanyActivity.class);
+                                //缓存本地
+                                Tool.setUser(getContext(),str,sex,"-1");
+                                startActivity(intent);
+                            }else{
+                                toast("性别只能输入男或女");
+                            }
                         }else{
                             toast("你的名字是空的呀！！！");
                         }
                     }
                 });
                 dialog.setNegativeButton("取消",null);
-                dialog.show();
+                if(Tool.getUser(mContext).getSex().equals("-1")){
+                    dialog.show();
+                }else{
+                    startActivity(new Intent(getActivity(), Play_accompanyActivity.class));
+                }
+
                 break;
         }
     }

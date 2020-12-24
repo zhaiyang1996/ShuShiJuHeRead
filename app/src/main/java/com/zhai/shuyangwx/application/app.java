@@ -2,6 +2,10 @@ package com.zhai.shuyangwx.application;
 
 import android.app.Application;
 import android.util.Log;
+
+import com.dueeeke.videoplayer.ijk.IjkPlayerFactory;
+import com.dueeeke.videoplayer.player.VideoViewConfig;
+import com.dueeeke.videoplayer.player.VideoViewManager;
 import com.zhai.shuyangwx.bean.BookDetailBean;
 import com.zhai.shuyangwx.bean.BookMixAToc;
 import com.zhai.shuyangwx.bean.BookMixATocLocalBean;
@@ -21,7 +25,7 @@ public class app extends Application{
     public static List<BookMixATocLocalBean> bookMixATocLocalBean;
     public static BookDetailBean bookDetailBean;
     //视频静态资源地址
-    public static String url = "http://106.14.82.67/";
+    public static String url = "https://yangzimeng.vip/";
     //动态XX视频URL地址
     public static String xxUrl= "";
     //动态XX视频卡密
@@ -34,6 +38,8 @@ public class app extends Application{
         JPushInterface.init(this);
         //初始化极光统计
         JAnalyticsInterface.init(this);
+        //初始化播放器
+        initDk();
     }
      /**
      *初始化X5
@@ -55,5 +61,14 @@ public class app extends Application{
         };
         //x5内核初始化接口
         QbSdk.initX5Environment(getApplicationContext(),  cb);
+    }
+    /**
+     * 切换DK播放库的播放核心
+     */
+    private void initDk(){
+        VideoViewManager.setConfig(VideoViewConfig.newBuilder()
+                //使用使用IjkPlayer解码
+                .setPlayerFactory(IjkPlayerFactory.create())
+                .build());
     }
 }

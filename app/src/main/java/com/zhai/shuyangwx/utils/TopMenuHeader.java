@@ -18,6 +18,7 @@ public class TopMenuHeader {
     private ImageView topIvLeft, topIvRight, topIvRight2;
     private TextView topTextcentre, topTextLeft;
     private View topViewFill;
+    private LinearLayout top;
 
     public TopMenuHeader(View v, Context context) {
         initView(v);
@@ -38,6 +39,8 @@ public class TopMenuHeader {
         topTextcentre = v.findViewById(R.id.top_tv_centre);
         //top填充沉浸式状态栏view
         topViewFill = v.findViewById(R.id.top_view_fill);
+        //主控件
+        top = v.findViewById(R.id.top_top);
     }
 
     //填充沉浸式状态高度
@@ -108,4 +111,6 @@ public class TopMenuHeader {
     public TextView getTopTextLeft() {
         return topTextLeft;
     }
+
+    public LinearLayout getLinearLayout(){ return top; }
 }

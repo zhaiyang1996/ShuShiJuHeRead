@@ -23,7 +23,8 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-
+    <!-- 悬浮窗所需权限 -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <!-- 硬件加速对X5视频播放非常重要，建议开启 -->
     <uses-permission android:name="android.permission.GET_TASKS"/>
     <!--<action android:name="android.intent.action.BOOT_COMPLETED" />&lt;!&ndash;开机广播&ndash;&gt;-->
@@ -47,7 +48,8 @@
         </activity>
         <activity
             android:name=".activity.PlayActivty"
-            android:configChanges="orientation|screenSize|keyboardHidden">
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait">
         </activity>
         <activity android:name=".activity.SeekBookActivity"/>
         <activity android:name=".activity.SeekVideoActivity" >
